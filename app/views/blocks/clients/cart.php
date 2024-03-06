@@ -31,7 +31,7 @@
                 echo '<h5 class="mb-0 total-amount">'.number_format($cartItem['price'] * $cartItem['quantity'], 0, ',', '.') . ' đ</h5>';
                 echo '</div>';
                 echo '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">';
-                echo '<a class="dlt-product-in-the-cart" href="http://localhost/shop/carts/deleteProductInTheCartById?cart_id='.$cartItem['id'].'" style="font-size: 25px"><i class="fas fa-times"></i></a>';
+                echo '<a class="dlt-product-in-the-cart" href="http://localhost/webmobile/carts/deleteProductInTheCartById?cart_id='.$cartItem['id'].'" style="font-size: 25px"><i class="fas fa-times"></i></a>';
                 echo '</div>';
                 echo '</div>';
                 echo '<hr class="my-4">';
@@ -119,7 +119,7 @@
             I've read and accept the <a href="#">terms & conditions</a>
           </label>
         </div>
-        <a href="http://localhost/shop/carts/placeOrder" class="primary-btn order-submit">Place order</a>
+        <a href="http://localhost/webmobile/carts/placeOrder" class="primary-btn order-submit">Place order</a>
       </div>
       <!-- /Order Details -->
     </div>

@@ -12,11 +12,11 @@
 						if (isset($_SESSION['user_session']['user'])) {
 							echo '<ul class="header-links pull-right">';
 							echo '<li><a href="#"><i class="fa fa-user-o"></i>' . $_SESSION['user_session']['user']['name'] . '</a></li>';
-                            echo '<li><a href="http://localhost/shop/signin/logout"><i class="fa fa-sign-out"></i> Logout</a></li>';
+                            echo '<li><a href="http://localhost/webmobile/signin/logout"><i class="fa fa-sign-out"></i> Logout</a></li>';
                             echo '</ul>';
 						} else {
                             echo '<ul class="header-links pull-right">';
-                            echo '<li><a href="http://localhost/shop/dang-nhap"><i class="fa fa-user-o"></i>signin/up</a></li>';
+                            echo '<li><a href="http://localhost/webmobile/dang-nhap"><i class="fa fa-user-o"></i>signin/up</a></li>';
                             echo '</ul>';
                         }
 					?>

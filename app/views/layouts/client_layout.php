@@ -57,7 +57,7 @@
 		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/nouislider.min.js"></script>
 		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/jquery.zoom.min.js"></script>
 		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/script.js"></script>
-        <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/product.js"></script>
+        <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/products.js"></script>
         <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/carts.js"></script>
 </body>
 </html>

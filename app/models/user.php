@@ -21,6 +21,21 @@ class User {
             return false;
         }
     }
+
+    public function getUserByGoogle($email) {
+
+        $sql = "SELECT * FROM tbl_users WHERE email = ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result->num_rows > 0) { 
+            $user = $result->fetch_assoc();
+            return $user;
+        } else {
+            return false;
+        }
+    }
     
     public function getIdUserByEmail($email) {
         $sql = 'SELECT id FROM tbl_users WHERE email = ?';
@@ -41,6 +56,20 @@ class User {
         } else {
             return false;
         }
+    }
+
+    public function addUserByGoogle($name, $email) {
+        $sql = 'INSERT INTO tbl_users(role_id, name, email) VALUES(?, ?, ?)';
+        $stmt = $this->__conn->prepare($sql);
+        if (!$stmt) {
+            die('Prepare failed: '. $this->__conn->error);
+        }
+        $role_id = 2;
+        $stmt->bind_param('iss', $role_id, $name, $email);
+        if ($stmt->execute()) {
+            return true; 
+        }
+        return false;
     }
 
     public function addUser($name, $email, $password) {

@@ -12,11 +12,45 @@ class Signin extends Controller {
         $this->render('blocks/clients/signin', $this->data);
     }
 
+    public function loginWithGoogle($name, $email) {
+        $response = new Response();
+        $authenticated = $this->authenticate_user_by_google($email);
+
+        if($authenticated) {
+            if($authenticated['role_id'] == 2) {
+                Session::data('user', $authenticated);
+                $response->redirect('home/index');
+            } else {
+                Session::data('user', $authenticated);
+                $response->redirect('admin/index');
+            }
+        } else {
+            try {
+                $user = $this->model('user');
+                $user->addUserByGoogle($name, $email);
+                $authenticated = $this->authenticate_user_by_google($email);
+                if($authenticated) {
+                    if($authenticated['role_id'] == 2) {
+                        Session::data('user', $authenticated);
+                        $response->redirect('home/index');
+                    } else {
+                        Session::data('user', $authenticated);
+                        $response->redirect('admin/index');
+                    }
+                }
+            } catch (Exception $e) {
+                $response['error_messages'][] = 'Đã có lỗi trong quá trình đăng ký: ' . $e->getMessage();
+            }
+        }
+
+        
+    }
+
     public function processLogin() {
         if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $response = Array();
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-            $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+            $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
 
             if(empty($email)) {
                 $response += [
@@ -44,12 +78,12 @@ class Signin extends Controller {
                     Session::data('user', $authenticated);
                     $response += [
                         'success' => true,
-                        'redirect_url' => 'http://localhost/shop'
+                        'redirect_url' => 'http://localhost/webmobile'
                     ];
                 } else {
                     $response += [
                         'success' => true,
-                        'redirect_url' => 'http://localhost/shop/admin/index'
+                        'redirect_url' => 'http://localhost/webmobile/admin/index'
                     ];
                 }
             } else {
@@ -100,7 +134,7 @@ class Signin extends Controller {
                 $user = $this->model('user');
                 $user->addUser($name, $email, $password); 
                 $response['success'] = true;
-                $response['redirect_url'] = 'http://localhost/shop/dang-nhap';
+                $response['redirect_url'] = 'http://localhost/webmobile/dang-nhap';
             } catch (Exception $e) {
                 $response['error_messages'][] = 'Đã có lỗi trong quá trình đăng ký: ' . $e->getMessage();
             }
@@ -114,6 +148,12 @@ class Signin extends Controller {
     public function authenticate_user($email, $password) {
         $user = $this->model('user');
         $dataUser = $user->getUserByEmailAndPassword($email, $password);
+        return $dataUser;
+    }
+
+    public function authenticate_user_by_google($email) {
+        $user = $this->model('user');
+        $dataUser = $user->getUserByGoogle($email);
         return $dataUser;
     }
 

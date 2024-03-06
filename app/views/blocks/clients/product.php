@@ -136,8 +136,5 @@
 		</div>	
 		<!-- /SECTION -->
 		<script>
-
-
-
-
+			
 		</script>

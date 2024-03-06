@@ -267,7 +267,38 @@ footer a {
 }
 </style>
 <body>
+<?php
+require_once 'vendor/autoload.php';
 
+// init configuration
+$clientID = '1042224953790-6pclfk6bg2jtjhc1hjhsiedj8dsmuj5d.apps.googleusercontent.com';
+$clientSecret = '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';
+$redirectUri = 'http://localhost/webmobile/signin/login';
+
+// create Client Request to access Google API
+$client = new Google_Client();
+$client->setClientId($clientID);
+$client->setClientSecret($clientSecret);
+$client->setRedirectUri($redirectUri);
+$client->addScope("email");
+$client->addScope("profile");
+
+// authenticate code from Google OAuth Flow
+if (isset($_GET['code'])) {
+  $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+  $client->setAccessToken($token['access_token']);
+
+  // get profile info
+  $google_oauth = new Google_Service_Oauth2($client);
+  $google_account_info = $google_oauth->userinfo->get();
+  $email =  $google_account_info->email;
+  $name =  $google_account_info->name;
+
+  $response = new Response();
+  $response->redirect('http://localhost/webmobile/signin/loginWithGoogle/'.$name.'/'.$email);
+  // now you can use this profile info to create account in your website and make user logged in.
+
+} else {?>
 <h2>Sign in/up Form</h2>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
@@ -293,7 +324,7 @@ footer a {
                 <h1>Sign in</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="<?php echo $client->createAuthUrl();?>" class="social"><i class="fab fa-google-plus-g"></i></a>
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your account</span>
@@ -322,6 +353,10 @@ footer a {
             </div>
         </div>
     </div>
+  <?php
+}
+?>
+
     <script>
         const signUpButton = document.getElementById('signUp');
         const signInButton = document.getElementById('signIn');
@@ -342,7 +377,7 @@ footer a {
             var password = $("#password-signin").val();
 
             $.ajax({
-                url: "http://localhost/shop/signin/processLogin",
+                url: "http://localhost/webmobile/signin/processLogin",
                 type: "POST",
                 data: {
                     email: email,
@@ -382,7 +417,7 @@ footer a {
             var password = $('#password-signup').val();
 
             $.ajax({
-                url: "http://localhost/shop/signin/processSignUp",
+                url: "http://localhost/webmobile/signin/processSignUp",
                 type: "POST",
                 data: {
                     name: name,
