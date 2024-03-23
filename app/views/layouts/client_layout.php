@@ -2,46 +2,32 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta charset="utf-8">
+        <title>Fruitables - Vegetable Website Template</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
 
-    <title>Electro</title>
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
 
-    <!-- Google font -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+        <!-- Icon Font Stylesheet -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-     <!-- jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <!-- Libraries Stylesheet -->
+        <link href="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+        <link href="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
-    <!-- Bootstrap -->
-    <link type="text/css" rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/bootstrap.min.css"/>
 
-    <!-- Slick -->
-    <link type="text/css" rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/slick.css"/>
-    <link type="text/css" rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/slick-theme.css"/>
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- nouislider -->
-    <link type="text/css" rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/nouislider.min.css"/>
-
-    <!-- Font Awesome Icon -->
-    <link rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/font-awesome.min.css">
-
-    <script src="https://kit.fontawesome.com/82758490c7.js" crossorigin="anonymous"></script>
-
-    <!-- Custom stlylesheet -->
-    <link type="text/css" rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/main.css"/>
-    <link type="text/css" rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/cart.css"/>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
+        <!-- Template Stylesheet -->
+        <link href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/style.css" rel="stylesheet">
+    </head>
 
 <body>
 
@@ -51,13 +37,14 @@
         $this->render('blocks/clients/footer');
     ?>
     </div>
-		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/jquery.min.js"></script>
-		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/bootstrap.min.js"></script>
-		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/slick.min.js"></script>
-		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/nouislider.min.js"></script>
-		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/jquery.zoom.min.js"></script>
-		<script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/script.js"></script>
-        <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/products.js"></script>
-        <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/carts.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/easing/easing.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/waypoints/waypoints.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/main.js"></script>
 </body>
 </html>

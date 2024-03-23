@@ -66,7 +66,7 @@ class Signin extends Controller {
                 }
             }
 
-            if(empty($password)) {
+            if(empty($password)) { 
                 $response += [
                     'error_message_password' => 'Vui lòng nhập vào trường này'
                 ];
