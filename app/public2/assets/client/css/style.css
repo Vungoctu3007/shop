@@ -1,0 +1,28 @@
+
+.main {
+    overflow: hidden; /* Đảm bảo rằng div .main tự điều chỉnh kích thước để bao quanh nội dung */
+
+}
+
+.mainleft {
+    float: left;
+    width: 20%; /* Điều chỉnh kích thước phần bên trái tùy thuộc vào nội dung */
+    background-color: #8B4513;
+}
+
+
+.mainright {
+    float: right;
+    width: 80%; /* Điều chỉnh kích thước phần bên phải tùy thuộc vào nội dung */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+
+
+
+
+
+
