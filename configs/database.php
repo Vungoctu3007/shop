@@ -3,6 +3,6 @@ $config['database'] = [
   'host' => 'localhost',
   'user' => 'root',
   'pass' => '',
-  'db' => 'webmobile'
+  'db' => 'shop'
 ];
 ?>
