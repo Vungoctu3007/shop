@@ -15,8 +15,6 @@ class ControllerAdmin extends Controller{
        }
 
 
-
-
        public function index(){
             $this->render('layouts/admin_layout');
        }

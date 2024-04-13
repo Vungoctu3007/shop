@@ -10,7 +10,7 @@ class Cart
     }
 
     public function getNumOfProductInTheCartByUserId($userId) {
-        $sql = "SELECT COUNT(*) AS num_rows FROM tbl_cart WHERE user_id = ?";
+        $sql = "SELECT COUNT(*) AS num_rows FROM  cart WHERE user_id = ?";
 
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('s', $userId);
@@ -27,7 +27,7 @@ class Cart
     }
 
     public function getAllOrdersInTheCart() {
-        $sql = "SELECT * FROM tbl_cart";
+        $sql = "SELECT * FROM  cart";
         $result = $this->__conn->query($sql);
         if($result) {
             $data = array();
@@ -40,7 +40,7 @@ class Cart
     }
 
     public function getProductsInTheCartByUserId($user_id) {
-        $sql = "SELECT * FROM tbl_cart WHERE user_id =?";
+        $sql = "SELECT * FROM  cart WHERE user_id =?";
 
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('s', $user_id);
@@ -60,7 +60,7 @@ class Cart
  * 
  */
     public function deleteProductInTheCartById($cart_id) {
-        $sql = 'DELETE FROM tbl_cart WHERE id = ?';
+        $sql = 'DELETE FROM  cart WHERE id = ?';
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('s', $cart_id);
         $stmt->execute();
@@ -72,7 +72,7 @@ class Cart
     }
 
     public function updateQuantityOfProductInTheCartByCartId($cart_id, $quantity) {
-        $sql = 'UPDATE tbl_cart SET quantity = ? WHERE id = ?';
+        $sql = 'UPDATE  cart SET quantity = ? WHERE id = ?';
         $stmt = $this->__conn->prepare($sql);
 
         if ($stmt === false) {
@@ -90,7 +90,7 @@ class Cart
     }
     
     public function getQuantityOfProductInTheCartByCartId($cart_id) {
-        $sql = 'SELECT quantity FROM tbl_cart WHERE id =?';
+        $sql = 'SELECT quantity FROM  cart WHERE id =?';
 
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('i', $cart_id);
@@ -107,9 +107,9 @@ class Cart
     }
 
     public function getJoinDataCartAndProducts() {
-        $sql = 'SELECT tbl_cart.quantity, tbl_cart.id, tbl_products.price, tbl_products.image, tbl_products.name
-                FROM tbl_cart JOIN tbl_products ON tbl_cart.product_id = tbl_products.id
-                WHERE tbl_cart.user_id = ?';
+        $sql = 'SELECT  cart.quantity,  cart.id,  products.price,  products.image,  products.name
+                FROM  cart JOIN  products ON  cart.product_id =  products.id
+                WHERE  cart.user_id = ?';
 
         $stmt = $this->__conn->prepare($sql);
         if (!$stmt) {
@@ -136,7 +136,7 @@ class Cart
     }
     
     public function deleteAllProductsInTheCartByUserId($user_id) {
-        $sql = 'DELETE FROM tbl_cart WHERE user_id =?';
+        $sql = 'DELETE FROM  cart WHERE user_id =?';
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('s', $user_id);
         $stmt->execute();
@@ -148,7 +148,7 @@ class Cart
     }
     
     public function getTotalAmountByUserId($user_id) {
-        $sql = 'SELECT SUM(tbl_cart.quantity * tbl_products.price) AS total_amount FROM tbl_cart JOIN tbl_products ON tbl_cart.product_id = tbl_products.id WHERE tbl_cart.user_id =?';
+        $sql = 'SELECT SUM( cart.quantity *  products.price) AS total_amount FROM  cart JOIN  products ON  cart.product_id =  products.id WHERE  cart.user_id =?';
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();

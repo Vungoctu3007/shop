@@ -8,7 +8,7 @@ class Products {
     }
 
     public function getAllProducts() {
-        $sql = 'SELECT * FROM tbl_products';
+        $sql = 'SELECT * FROM  products';
         $result = $this->conn->query($sql);
         if($result) {
             $data = array();
@@ -21,7 +21,7 @@ class Products {
     }
 
     public function getProductByUrl($url) {
-        $sql = 'SELECT * FROM tbl_products WHERE url = ?';
+        $sql = 'SELECT * FROM  products WHERE url = ?';
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('s', $url);
         $stmt->execute();
@@ -34,7 +34,7 @@ class Products {
     }
 
     public function getProductsByName($name) {
-        $sql = "SELECT * FROM tbl_products WHERE name LIKE ?";
+        $sql = "SELECT * FROM  products WHERE name LIKE ?";
         $stmt = $this->conn->prepare($sql);
         $searchTerm = "%{$name}%";
         $stmt->bind_param('s', $searchTerm);
@@ -49,7 +49,7 @@ class Products {
     
     public function getProductsByCategoryAndFilters($categoryIds, $nameQuery = '', $priceRangeStart = '', $priceRangeEnd = '') {
         // Khởi tạo biến $sql với phần truy vấn cơ bản
-        $sql = 'SELECT * FROM tbl_products';
+        $sql = 'SELECT * FROM  products';
     
         // Khởi tạo mảng $params để lưu trữ các tham số của truy vấn
         $params = array();

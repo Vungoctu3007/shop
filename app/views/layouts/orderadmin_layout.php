@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
     <title>Admin</title>
     <meta charset="utf-8" />
@@ -23,7 +21,7 @@
                   include './app/views/blocks/admin/headerAdmin.php';
 
                   //  $this->render('home/homeAdmin');
-                  include './app/views/home/homeAdmin.php';
+                  include './app/views/blocks/admin/orderView.php';
 
                   //  $this->render('blocks/footerAdmin');
                   include './app/views/blocks/admin/footerAdmin.php';

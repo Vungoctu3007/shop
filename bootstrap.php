@@ -60,6 +60,7 @@ require_once 'core/Middlewares.php';
 
 require_once 'core/Route.php'; //Load Route class
 
+
 //Kiểm tra config và load Database
 if (!empty($config['database'])) {
 

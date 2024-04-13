@@ -7,7 +7,7 @@ class Categories {
     }
 
     public function getAllCategories() {
-        $sql = 'SELECT * FROM tbl_categories';
+        $sql = 'SELECT * FROM category';
         $result = $this->conn->query($sql);
         if($result) {
             $data = array();

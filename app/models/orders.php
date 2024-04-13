@@ -18,7 +18,7 @@ class Orders {
         $created_at = $now->format('Y-m-d H:i:s');
         $updated_at = $now->format('Y-m-d H:i:s');
     
-        $sql = 'INSERT INTO tbl_orders (user_id, status, total_amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO  orders (user_id, status, total_amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?)';
         $stmt = $this->conn->prepare($sql);
         if ($stmt === false) {
             echo "Prepare statement failed: " . $this->conn->error;
@@ -41,7 +41,7 @@ class Orders {
 
     public function placeOrderWithItems($user_id, $order_id, $cartItems) {
         foreach ($cartItems as $cartItem) {
-            $sql = 'INSERT INTO tbl_order_items (order_id, product_id, price, quantity) VALUES (?, ?, ?, ?)';
+            $sql = 'INSERT INTO  order_items (order_id, product_id, price, quantity) VALUES (?, ?, ?, ?)';
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('iiii', $orderId, $cartItem['product_id'], $cartItem['price'], $cartItem['quantity']);
     

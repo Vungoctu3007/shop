@@ -9,7 +9,7 @@ class User {
 
     public function getUserByEmailAndPassword($email, $password) {
 
-        $sql = "SELECT * FROM tbl_users WHERE email = ? AND `password` = ?";
+        $sql = "SELECT * FROM  users WHERE email = ? AND `password` = ?";
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('ss', $email, $password);
         $stmt->execute();
@@ -24,7 +24,7 @@ class User {
 
     public function getUserByGoogle($email) {
 
-        $sql = "SELECT * FROM tbl_users WHERE email = ?";
+        $sql = "SELECT * FROM  users WHERE email = ?";
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param('s', $email);
         $stmt->execute();
@@ -38,7 +38,7 @@ class User {
     }
     
     public function getIdUserByEmail($email) {
-        $sql = 'SELECT id FROM tbl_users WHERE email = ?';
+        $sql = 'SELECT id FROM  users WHERE email = ?';
         $stmt = $this->__conn->prepare($sql);
         if (!$stmt) {
             die('Prepare failed: ' . $this->__conn->error);
@@ -59,7 +59,7 @@ class User {
     }
 
     public function addUserByGoogle($name, $email) {
-        $sql = 'INSERT INTO tbl_users(role_id, name, email) VALUES(?, ?, ?)';
+        $sql = 'INSERT INTO  users(role_id, name, email) VALUES(?, ?, ?)';
         $stmt = $this->__conn->prepare($sql);
         if (!$stmt) {
             die('Prepare failed: '. $this->__conn->error);
@@ -73,7 +73,7 @@ class User {
     }
 
     public function addUser($name, $email, $password) {
-        $sql = 'INSERT INTO tbl_users(role_id, name, email, password) VALUES(?, ?, ?, ?)';
+        $sql = 'INSERT INTO  users(role_id, name, email, password) VALUES(?, ?, ?, ?)';
         $stmt = $this->__conn->prepare($sql);
         if (!$stmt) {
             die('Prepare failed: '. $this->__conn->error);
