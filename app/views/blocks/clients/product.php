@@ -36,10 +36,10 @@
 								$i = 1;
 								foreach($dataCategories as $category) {
 									echo '<div class="input-checkbox">';
-									echo '<input class="category-checkbox" type="checkbox" value="'.$category['id'].'" id="category-'.$i.'">';
+									echo '<input class="category-checkbox" type="checkbox" value="'.$category['category_id'].'" id="category-'.$i.'">';
 									echo '<label for="category-'.$i.'">';
 									echo '<span></span>';
-									echo $category['name'];
+									echo $category['category_name'];
 									echo '</label>';
 									echo '</div>';
 									$i++;

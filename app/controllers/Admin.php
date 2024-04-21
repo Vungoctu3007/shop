@@ -8,6 +8,6 @@ class Admin extends Controller {
     }
 
     public function index() {
-        $this->render('blocks/admin/index', $this->data);
+        $this->render('layouts/admin_layout', $this->data);
     }
 }

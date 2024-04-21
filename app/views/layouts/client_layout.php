@@ -32,18 +32,25 @@
 <body>
 
     <?php
+
+    if (isset($content) && isset($sub_content)) {
         $this->render('blocks/clients/header', $sub_content);
         $this->render($content, $sub_content);
         $this->render('blocks/clients/footer');
+    } else {
+        $this->render('blocks/clients/header');
+        $this->render('home/home');
+        $this->render('blocks/clients/footer');
+    }
     ?>
-    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/easing/easing.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/waypoints/waypoints.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/lightbox/js/lightbox.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/lib/owlcarousel/owl.carousel.min.js"></script>
-
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/product.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/carts.js"></script>
     <!-- Template Javascript -->
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/main.js"></script>
 </body>

@@ -9,7 +9,7 @@ class Products {
     }
 
     public function getAllProducts() {
-        $sql = 'SELECT * FROM  products';
+        $sql = 'SELECT * FROM  product';
         $result = $this->conn->query($sql);
         if($result) {
             $data = array();
@@ -22,7 +22,7 @@ class Products {
     }
 
     public function getProductByUrl($url) {
-        $sql = 'SELECT * FROM  products WHERE url = ?';
+        $sql = 'SELECT * FROM  product WHERE url = ?';
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('s', $url);
         $stmt->execute();
@@ -35,7 +35,7 @@ class Products {
     }
 
     public function getProductsByName($name) {
-        $sql = "SELECT * FROM  products WHERE name LIKE ?";
+        $sql = "SELECT * FROM  product WHERE name LIKE ?";
         $stmt = $this->conn->prepare($sql);
         $searchTerm = "%{$name}%";
         $stmt->bind_param('s', $searchTerm);
@@ -50,7 +50,7 @@ class Products {
     
     public function getProductsByCategoryAndFilters($categoryIds, $nameQuery = '', $priceRangeStart = '', $priceRangeEnd = '') {
         // Khởi tạo biến $sql với phần truy vấn cơ bản
-        $sql = 'SELECT * FROM  products';
+        $sql = 'SELECT * FROM  product';
     
         // Khởi tạo mảng $params để lưu trữ các tham số của truy vấn
         $params = array();
@@ -65,7 +65,7 @@ class Products {
         if (!empty($nameQuery)) {
             // Kiểm tra nếu đã thêm điều kiện WHERE vào câu truy vấn
             $sql .= !empty($params) ? ' AND' : ' WHERE';
-            $sql .= ' name LIKE ?';
+            $sql .= ' product_name LIKE ?';
             $params[] = '%'.$nameQuery.'%';
         }
     
@@ -73,7 +73,7 @@ class Products {
         if (!empty($priceRangeStart) && !empty($priceRangeEnd)) {
             // Kiểm tra nếu đã thêm điều kiện WHERE vào câu truy vấn
             $sql .= !empty($params) ? ' AND' : ' WHERE';
-            $sql .= ' price BETWEEN ? AND ?';
+            $sql .= ' product_price BETWEEN ? AND ?';
             $params[] = $priceRangeStart;
             $params[] = $priceRangeEnd;
         }
