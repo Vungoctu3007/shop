@@ -44,10 +44,6 @@ class App{
 
         $url = $this->__routes->handleRoute($url);
 
-        //Middleware App
-        $this->handleGlobalMiddleware($this->__db);
-        $this->handleRouteMiddleware($this->__routes->getUri(), $this->__db);
-
         //App Service Provider
         $this->handleAppServiceProvider($this->__db);
 
@@ -139,44 +135,6 @@ class App{
         require_once 'errors/'.$name.'.php';
     }
 
-    public function handleRouteMiddleware($routeKey, $db){
-        global $config;
-        if (!empty($config['app']['routeMiddleware'])){
-            $routeMiddleWareArr = $config['app']['routeMiddleware'];
-            foreach ($routeMiddleWareArr as $key=>$middleWareItem){
-                if ($routeKey==trim($key) && file_exists('app/middlewares/'.$middleWareItem.'.php')){
-                    require_once 'app/middlewares/'.$middleWareItem.'.php';
-                    if (class_exists($middleWareItem)){
-                        $middleWareObject = new $middleWareItem();
-                        if (!empty($db)){
-                            $middleWareObject->db = $db;
-                        }
-                        $middleWareObject->handle();
-                    } 
-                }
-            }
-        }
-    }
-
-    public function handleGlobalMiddleware($db){
-        global $config;
-        if (!empty($config['app']['globalMiddleware'])){
-            $globalMiddleWareArr = $config['app']['globalMiddleware'];
-            foreach ($globalMiddleWareArr as $key=>$middleWareItem){
-                if (file_exists('app/middlewares/'.$middleWareItem.'.php')){
-                    require_once 'app/middlewares/'.$middleWareItem.'.php';
-                    if (class_exists($middleWareItem)){
-                        $middleWareObject = new $middleWareItem();
-                        if (!empty($db)){
-                            $middleWareObject->db = $db;
-                        }
-
-                        $middleWareObject->handle();
-                    }
-                }
-            }
-        }
-    }
 
     public function handleAppServiceProvider($db){
         global $config;

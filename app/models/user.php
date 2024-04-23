@@ -73,7 +73,6 @@ class User {
             return false;
         }
     }
-    
-    
+
     
 }

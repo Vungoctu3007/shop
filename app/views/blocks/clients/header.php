@@ -13,8 +13,13 @@
                         <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Email@Example.com</a></small>
                     </div>
                     <div class="top-link pe-2">
+                        <?php if(isset($_SESSION['user_session']['user'])) {?> 
+                            <small class="text-white mx-2">Xin chào <?php echo $_SESSION['user_session']['customer']['customer_name'];?></small>
+                            <a href="<?php echo _WEB_ROOT; ?>/authenticate/logout" class="text-white">/<small class="text-white mx-2">Đăng xuất</small>/</a>
+                        <?php } else {?>
                         <a href="<?php echo _WEB_ROOT; ?>/authenticate/signin" class="text-white"><small class="text-white mx-2">Đăng nhập</small>/</a>
                         <a href="<?php echo _WEB_ROOT; ?>/authenticate/signup" class="text-white"><small class="text-white mx-2">Đăng ký</small></a>
+                        <?php }?>
                     </div>
                 </div>
             </div>

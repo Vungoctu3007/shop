@@ -62,7 +62,7 @@
               <button onclick="signUp()" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
                 Đăng ký ngay
               </button>
-
+              <p class="fw-lighter">Bạn đã có tài khoản? <a href="<?php echo _WEB_ROOT; ?>/authenticate/signin">Đăng nhập</a></p>
             </form>
           </div>
         </div>

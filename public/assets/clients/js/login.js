@@ -20,6 +20,10 @@ function signIn() {
                 }, 1000); 
 
             } else {
+                if(data.error_message != null) {
+                    toastr.warning(data.error_message);
+                }
+                
                 if(data.error_message_username != null ) {
                     $('.error-message-username').html(data.error_message_username);
                 }else {

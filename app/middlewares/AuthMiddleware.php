@@ -2,9 +2,9 @@
 
 class AuthMiddleware extends Middlewares {
     public function handle(){
-        if(Session::data('user') != null) {
+        if($_SESSION['user_session']['user']['role_id'] == 3) {
             $response = new Response();
-            $response->redirect('trang-chu');
-        } 
+            $response->redirect('home/index');
+        }
     }
 }

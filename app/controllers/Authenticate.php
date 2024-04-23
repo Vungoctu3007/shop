@@ -5,20 +5,44 @@ class Authenticate extends Controller {
     public $data = [], $model = [];
 
     public function __construct() {
-
+        
     }
 
     public function signin() {
-        $this->render('blocks/clients/signin');
+        if(isset($_SESSION['user_session']['user'])) {
+            if($_SESSION['user_session']['user']['role_id'] == 3) {
+                $redirectUrl = 'trang-chu';
+            } else {
+                $redirectUrl = 'admin';
+            }
+            $response = new Response();
+            $response->redirect($redirectUrl);
+        } else {
+            $this->render('blocks/clients/signin'); 
+        }
+        
     }
 
     public function signup() {
-        $this->render('blocks/clients/signup');
+        if(isset($_SESSION['user_session']['user'])) {
+            if($_SESSION['user_session']['user']['role_id'] == 3) {
+                $redirectUrl = 'trang-chu';
+            } else {
+                $redirectUrl = 'admin';
+            }
+            $response = new Response();
+            $response->redirect($redirectUrl);  
+        } else {
+            $this->render('blocks/clients/signup'); 
+        }
     }
 
 
     public function processSignin() {
-        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            http_response_code(403);
+            exit('Access denied');
+        }
             $response = Array();
             $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
             $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -35,20 +59,24 @@ class Authenticate extends Controller {
                 ];
             }
             $user = $this->authenticate_user($username);
-    
+
+            $customerModel = $this->model('CustomerModel');
+            
             if ($user && password_verify($password, $user['password'])) {
+                $customer = $customerModel->getCustomerById($user['username']);
                 $response += [
                     'login_success' => 'Đăng nhập thành công',
                     'success' => true
                 ];
     
                 Session::data('user', $user);
-    
+
                 if($user['role_id'] == 1) {
                     $response += [
                         'redirect_url' => 'http://localhost/shop/admin'
                     ];
                 } else if($user['role_id'] == 3) { 
+                    Session::data('customer', $customer);
                     $response += [
                         'redirect_url' => 'http://localhost/shop'
                     ];
@@ -61,7 +89,6 @@ class Authenticate extends Controller {
             }
             header('Content-Type: application/json');
             echo json_encode($response);
-        }
     }
     
 
