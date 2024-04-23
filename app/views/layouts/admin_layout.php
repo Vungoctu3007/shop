@@ -28,7 +28,7 @@
         echo '<div class="body-wrapper">';
         $this->render('blocks/admin/headerAdmin');
         echo '<div class="container-fluid">';
-        $this->render('home/home');
+        $this->render('home/homeAdmin');
         $this->render('blocks/admin/footerAdmin');
         echo '</div>';
         echo '</div>';

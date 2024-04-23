@@ -127,12 +127,12 @@ CREATE TABLE detail_good_receipt (
 );
 CREATE TABLE role ( 
 	role_id INT PRIMARY KEY AUTO_INCREMENT,
-	role_name varchar(50)
+	role_name varchar(60)
 );
 CREATE TABLE account (
 	account_id INT PRIMARY KEY AUTO_INCREMENT,
 	username varchar(5),
-	password varchar(50) not null,
+	password varchar(60) not null,
 	role_id INT,
 	status_account INT,
 	CONSTRAINT fk_role_id_account FOREIGN KEY (role_id) REFERENCES role(role_id)
@@ -154,6 +154,17 @@ CREATE TABLE detail_task_role (
 	CONSTRAINT fk_task_id_detail_task_role FOREIGN KEY (task_id) REFERENCES task(task_id),
 	CONSTRAINT fk_activity_id_detail_task_role FOREIGN KEY (activity_id) REFERENCES activity(activity_id)
 );
+
+CREATE TABLE `cart` (
+  `cart_id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `account_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `quantity` int,
+  `total_money` int,
+  CONSTRAINT fk_account_id_cart FOREIGN KEY (account_id) REFERENCES account(account_id),
+  CONSTRAINT fk_product_id_cart FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
 
 -- Thêm dữ liệu vào bảng supplier
 INSERT INTO supplier (supplier_name, supplier_address, supplier_phone, supplier_email)
