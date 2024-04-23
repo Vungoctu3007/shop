@@ -1,6 +1,7 @@
 <?php
 class OrderController extends Controller
 {
+
     public $data = [], $model = [];
 
     public function __construct()
@@ -11,81 +12,171 @@ class OrderController extends Controller
 
     public function index()
     {
+        $employee_id = $_GET['employee_id'] ?? null;
+        if ($employee_id) {
+            // Tìm kiếm hóa đơn theo mã nhân viên
+            $orders = $this->model->getOrdersByEmployeeId($employee_id);
+        } else {
+            // Lấy tất cả hóa đơn nếu không có thông tin tìm kiếm
+            $orders = $this->model->getAllorder();
+            // var_dump($orders);
+        }
 
-        $order = $this->model->getAllorder();
+        // Đặt dữ liệu và view
+        // Đường dẹn tới 'orderView' phải chính xác, bao gồm thư mục chứa nó
+        $this->data['content'] = 'blocks/admin/orderView';
 
-        // Đặt dữ liệu và view cần sử dụng cho danh sách hóa đơn
-        $this->data['content'] = 'blocks/admin/orderView'; // Đường dẫn đến file view danh sách hóa đơn trong phần quản trị
-        $this->data['sub_content']['order'] = $order;
+        // Đảm bảo dữ liệu được truyền vào 'sub_content' là đúng
+        $this->data['sub_content'] = [
+            'orders' => $orders
+        ];
 
-        // Render view sử dụng layout của admin
-        $this->render('layouts/orderadmin_layout', $this->data); // Đường dẫn đến layout của admin
+        // Gọi đến layout chính của admin và truyền mảng data
+        $this->render('layouts/admin_layout', $this->data);
     }
 
     // Thêm các phương thức khác nếu cần (ví dụ: xem chi tiết hóa đơn, cập nhật, xóa...)
+    // Phương thức xử lý yêu cầu xóa hóa đơn
+    public function delete($orderId)
+    {
+        $result = $this->model->deleteOrder($orderId);
+        if ($result) {
+            // Xóa thành công, bạn có thể chuyển hướng người dùng hoặc hiển thị thông báo
+            header('Location: ' . _WEB_ROOT . '/bill');
+        } else {
+            // Xử lý khi không thể xóa hóa đơn
+            echo "Không thể xóa hóa đơn.";
+        }
+    }
+
+
+
+    // Phương thức xử lý thêm hóa đơn
     public function add()
     {
-        // Kiểm tra dữ liệu POST và gọi model để thêm đơn hàng
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST)) {
-            // Tiền xử lý dữ liệu $_POST ở đây
-            $result = $this->model->addOrder($_POST);
-            if ($result) {
-                // Handle success (e.g., redirect, set a success message, etc.)
-            } else {
-                // Handle error
-            }
-        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Lấy dữ liệu từ form
+            $customer_id = $_POST['customer_id'];
+            $employee_id = $_POST['employee_id'];
+            $total = $_POST['total'];
+            $date_buy = $_POST['date_buy'];
 
-        // Load view để thêm đơn hàng
-        // $this->data['content'] = 'path/to/add_order_view';
-        // $this->render('layouts/orderadmin_layout', $this->data);
+            // Bạn có thể muốn thêm các bước validate dữ liệu ở đây
+
+            // Chuẩn bị dữ liệu để thêm vào database
+            $orderData = [
+                'customer_id' => $customer_id,
+                'employee_id' => $employee_id,
+                'total' => $total,
+                'date_buy' => $date_buy
+            ];
+
+            // Thực hiện thêm hóa đơn thông qua model
+            $result = $this->model->addOrder($orderData);
+
+            // Kiểm tra kết quả và phản hồi
+            if ($result) {
+                // Chuyển hướng đến trang danh sách hóa đơn sau khi thêm thành công
+                header('Location: ' . _WEB_ROOT . '/bill');
+                exit;
+            } else {
+                // Hiển thị thông báo lỗi
+                echo "Có lỗi khi thêm hóa đơn. Vui lòng thử lại.";
+            }
+        } else {
+            // Nếu không phải POST request, chỉ hiển thị form thêm hóa đơn
+            $this->showAddForm();
+        }
     }
+
+    // Phương thức hiển thị form thêm hóa đơn
+    public function showAddForm()
+    {
+        // Tạo instance của CustomerModel và EmployeeModel
+        $customerModel = $this->model("CustomerModel");
+        $employeeModel = $this->model("EmployeeModel");
+
+        // Lấy danh sách khách hàng và nhân viên từ các model
+        $customers = $customerModel->getCustomers();
+        $employees = $employeeModel->getEmployees();
+
+        // Truyền danh sách khách hàng và nhân viên tới view thông qua mảng data
+        $this->data['customers'] = $customers;
+        $this->data['employees'] = $employees;
+
+        // Render view addorder với dữ liệu đã truyền
+        $this->render('blocks/admin/addorder', $this->data);
+    }
+
 
     public function edit($orderId)
     {
-        // Kiểm tra dữ liệu POST và gọi model để cập nhật đơn hàng
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST)) {
-            // Tiền xử lý dữ liệu $_POST ở đây
-            $result = $this->model->updateOrder($orderId, $_POST);
+
+
+        // Lấy thông tin khách hàng và nhân viên để hiển thị danh sách lựa chọn
+        $customerModel = $this->model("CustomerModel");
+        $employeeModel = $this->model("EmployeeModel");
+
+
+        $orderInfo = $this->model->getOrderById($orderId);
+        $customers = $customerModel->getCustomers();
+        $employees = $employeeModel->getEmployees();
+
+        $this->data['order_info'] = $orderInfo;
+        $this->data['customers'] = $customers;
+        $this->data['employees'] = $employees;
+
+
+        // Render view sử dụng layout của admin
+        $this->render('blocks/admin/editOrder', $this->data);
+    }
+
+    public function update($orderId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Lấy dữ liệu từ form
+            $customer_id = $_POST['customer_id'];
+            $employee_id = $_POST['employee_id'];
+            $total = $_POST['total'];
+            $date_buy = $_POST['date_buy'];
+
+            // Chuẩn bị dữ liệu để cập nhật
+            $orderData = [
+                'customer_id' => $customer_id,
+                'employee_id' => $employee_id,
+                'total' => $total,
+                'date_buy' => $date_buy
+            ];
+
+            // Thực hiện cập nhật thông qua model
+            $result = $this->model->updateOrder($orderId, $orderData);
+
             if ($result) {
-                // Handle success
+                // Chuyển hướng đến trang danh sách hóa đơn sau khi cập nhật thành công
+                header('Location: ' . _WEB_ROOT . '/bill');
+                exit;
             } else {
-                // Handle error
+                // Hiển thị thông báo lỗi
+                echo "Có lỗi khi cập nhật hóa đơn. Vui lòng thử lại.";
             }
         }
-
-        // Nạp dữ liệu đơn hàng cần chỉnh sửa để hiển thị lên form
-        // $order = $this->model->getOrderById($orderId);
-        // $this->data['sub_content']['order'] = $order;
-
-        // Load view để sửa đơn hàng
-        // $this->data['content'] = 'path/to/edit_order_view';
-        // $this->render('layouts/orderadmin_layout', $this->data);
     }
 
-    public function delete($orderId) {
-        // Kiểm tra ID và quyền hạn xóa ở đây
-        // Bạn cũng có thể muốn kiểm tra xem người dùng đã đăng nhập và có quyền xóa hay không
 
-        // Gọi phương thức deleteOrder từ model và truyền vào orderId
-        $result = $this->model->deleteOrder($orderId);
-        
-        // Xử lý kết quả
-        if ($result) {
-            // Xóa thành công
-            // Bạn có thể thêm một thông báo thành công vào session flash message ở đây nếu muốn
+    // tiềm kiếm
 
-            // Chuyển hướng người dùng về trang danh sách hóa đơn hoặc thông báo thành công
-            header('Location: index.php?route=bill');
-            exit();
+    public function searchByEmployee()
+    {
+        $employee_id = $_GET['employee_id'] ?? null;
+
+        if ($employee_id) {
+            $orders = $this->model->getOrdersByEmployeeId($employee_id);
         } else {
-            // Xóa thất bại
-            // Bạn có thể thêm một thông báo lỗi vào session flash message ở đây nếu muốn
-
-            // Hiển thị thông báo lỗi hoặc chuyển hướng người dùng về trang lỗi
-            // header('Location: index.php?route=errorPage');
-            exit();
+            $orders = $this->model->getAllOrders();
         }
-    }
 
+        // Đặt dữ liệu và view
+        $this->data['sub_content']['order'] = $orders;
+        $this->render('layouts/orderadmin_layout', $this->data);
+    }
 }

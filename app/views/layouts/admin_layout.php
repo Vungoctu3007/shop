@@ -2,14 +2,15 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize</title>
-  <link rel="shortcut icon" type="image/png" href="<?php echo _WEB_ROOT; ?>/public/assets/admin/images/logos/favicon.png" />
-  <link rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/admin/css/styles.min.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize</title>
+    <link rel="shortcut icon" type="image/png" href="<?php echo _WEB_ROOT; ?>/public/assets/admin/images/logos/favicon.png" />
+    <link rel="stylesheet" href="<?php echo _WEB_ROOT; ?>/public/assets/admin/css/styles.min.css" />
 </head>
 
 <body>
+
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <?php
@@ -43,4 +44,5 @@
 <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/simplebar/dist/simplebar.js"></script>
 <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
 </body>
+
 </html>
