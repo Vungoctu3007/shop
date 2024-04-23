@@ -10,3 +10,13 @@ $routes['bill'] =  'OrderController/index';
 
 // Route admin
 $routes['admin/dashboard'] = 'admin/index';
+//phần hóa đơn
+
+$routes['bill'] = 'OrderController/index';
+$routes['xoa-hoa-don/([0-9]+)'] = 'OrderController/delete/$1';
+$routes['them-hoa-don'] = 'OrderController/showAddForm';
+$routes['xu-ly-them-hoa-don'] = 'OrderController/add'; 
+$routes['sua-hoa-don/([0-9]+)'] = 'OrderController/edit/$1';
+$routes['cap-nhat-hoa-don/([0-9]+)'] = 'OrderController/update/$1';
+$routes['tim-kiem-theo-ma-nhan-vien'] = 'OrderController/searchByEmployee';
+//end hóa đơn 
