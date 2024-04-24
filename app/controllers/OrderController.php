@@ -19,6 +19,7 @@ class OrderController extends Controller
         } else {
             // Lấy tất cả hóa đơn nếu không có thông tin tìm kiếm
             $orders = $this->model->getAllorder();
+           
             // var_dump($orders);
         }
 
@@ -47,6 +48,7 @@ class OrderController extends Controller
             // Xử lý khi không thể xóa hóa đơn
             echo "Không thể xóa hóa đơn.";
         }
+        
     }
 
 
@@ -54,6 +56,7 @@ class OrderController extends Controller
     // Phương thức xử lý thêm hóa đơn
     public function add()
     {
+        $this->data['content'] = 'addOrder';
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Lấy dữ liệu từ form
             $customer_id = $_POST['customer_id'];
@@ -112,7 +115,7 @@ class OrderController extends Controller
     public function edit($orderId)
     {
 
-
+        $this->data['content'] = 'editOrder';
         // Lấy thông tin khách hàng và nhân viên để hiển thị danh sách lựa chọn
         $customerModel = $this->model("CustomerModel");
         $employeeModel = $this->model("EmployeeModel");

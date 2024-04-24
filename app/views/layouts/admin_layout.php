@@ -10,39 +10,37 @@
 </head>
 
 <body>
-
-<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <?php
-    // Kiểm tra xem biến $content tồn tại và không rỗng
-    if (isset($content) && !empty($sub_content)) {
-        $this->render('blocks/admin/navAdmin');
-        echo '<div class="body-wrapper">';
-        $this->render('blocks/admin/headerAdmin', $sub_content);
-        echo '<div class="container-fluid">';
-        $this->render($content, $sub_content);
-        $this->render('blocks/admin/footerAdmin');
-        echo '</div>';
-        echo '</div>';
-    } else {
-        $this->render('blocks/admin/navAdmin');
-        echo '<div class="body-wrapper">';
-        $this->render('blocks/admin/headerAdmin');
-        echo '<div class="container-fluid">';
-        $this->render('home/homeAdmin');
-        $this->render('blocks/admin/footerAdmin');
-        echo '</div>';
-        echo '</div>';
-    }
-    ?>
-</div>
-<script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
-<script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/sidebarmenu.js"></script>
-<script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/app.min.js"></script>
-<script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
-<script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/simplebar/dist/simplebar.js"></script>
-<script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <?php
+        // Kiểm tra xem biến $content tồn tại và không rỗng
+        if (isset($content) && !empty($sub_content)) {
+            $this->render('blocks/admin/navAdmin');
+            echo '<div class="body-wrapper">';
+            $this->render('blocks/admin/headerAdmin');
+            echo '<div class="container-fluid">';
+            include('app/views/blocks/admin/orderView.php');
+            $this->render('blocks/admin/footerAdmin');
+            echo '</div>';
+            echo '</div>';
+        } else {
+            $this->render('blocks/admin/navAdmin');
+            echo '<div class="body-wrapper">';
+            $this->render('blocks/admin/headerAdmin');
+            echo '<div class="container-fluid">';
+            $this->render('home/home');
+            $this->render('blocks/admin/footerAdmin');
+            echo '</div>';
+            echo '</div>';
+        }
+        ?>
+    </div>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/sidebarmenu.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/app.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/simplebar/dist/simplebar.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
 </body>
 
 </html>
