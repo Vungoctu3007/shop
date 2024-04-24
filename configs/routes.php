@@ -10,6 +10,7 @@ $routes['bill'] =  'OrderController/index';
 
 // Route admin
 $routes['admin/dashboard'] = 'admin/index';
+$routes['admin/product'] = 'Product_Admin/index';
 //phần hóa đơn
 
 $routes['bill'] = 'OrderController/index';
