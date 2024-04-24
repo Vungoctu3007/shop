@@ -21,3 +21,8 @@ $routes['sua-hoa-don/([0-9]+)'] = 'OrderController/edit/$1';
 $routes['cap-nhat-hoa-don/([0-9]+)'] = 'OrderController/update/$1';
 $routes['tim-kiem-theo-ma-nhan-vien'] = 'OrderController/searchByEmployee';
 //end hóa đơn 
+
+
+//thống kê
+
+$routes['thongke'] = 'ThongKeController/index';

@@ -12,29 +12,23 @@ class OrderController extends Controller
 
     public function index()
     {
-        $employee_id = $_GET['employee_id'] ?? null;
-        if ($employee_id) {
-            // Tìm kiếm hóa đơn theo mã nhân viên
-            $orders = $this->model->getOrdersByEmployeeId($employee_id);
+        $start_date = $_GET['start_date'] ?? null;
+        $end_date = $_GET['end_date'] ?? null;
+
+        if ($start_date && $end_date) {
+            // Tìm kiếm hóa đơn trong khoảng thời gian
+            $orders = $this->model->getOrdersByDateRange($start_date, $end_date);
         } else {
             // Lấy tất cả hóa đơn nếu không có thông tin tìm kiếm
             $orders = $this->model->getAllorder();
-           
-            // var_dump($orders);
         }
 
         // Đặt dữ liệu và view
-        // Đường dẹn tới 'orderView' phải chính xác, bao gồm thư mục chứa nó
         $this->data['content'] = 'blocks/admin/orderView';
-
-        // Đảm bảo dữ liệu được truyền vào 'sub_content' là đúng
-        $this->data['sub_content'] = [
-            'orders' => $orders
-        ];
-
-        // Gọi đến layout chính của admin và truyền mảng data
+        $this->data['sub_content'] = ['orders' => $orders];
         $this->render('layouts/admin_layout', $this->data);
     }
+
 
     // Thêm các phương thức khác nếu cần (ví dụ: xem chi tiết hóa đơn, cập nhật, xóa...)
     // Phương thức xử lý yêu cầu xóa hóa đơn
@@ -48,7 +42,6 @@ class OrderController extends Controller
             // Xử lý khi không thể xóa hóa đơn
             echo "Không thể xóa hóa đơn.";
         }
-        
     }
 
 
@@ -61,6 +54,7 @@ class OrderController extends Controller
             // Lấy dữ liệu từ form
             $customer_id = $_POST['customer_id'];
             $employee_id = $_POST['employee_id'];
+            $status_order_id = $_POST['status_order_id'];
             $total = $_POST['total'];
             $date_buy = $_POST['date_buy'];
 
@@ -70,6 +64,7 @@ class OrderController extends Controller
             $orderData = [
                 'customer_id' => $customer_id,
                 'employee_id' => $employee_id,
+                'status_order_id' => $status_order_id, // Thêm dòng này
                 'total' => $total,
                 'date_buy' => $date_buy
             ];
@@ -142,13 +137,15 @@ class OrderController extends Controller
             $employee_id = $_POST['employee_id'];
             $total = $_POST['total'];
             $date_buy = $_POST['date_buy'];
+            $status_order_id = $_POST['status_order_id']; // Đảm bảo rằng form gửi lên có trường này
 
             // Chuẩn bị dữ liệu để cập nhật
             $orderData = [
                 'customer_id' => $customer_id,
                 'employee_id' => $employee_id,
                 'total' => $total,
-                'date_buy' => $date_buy
+                'date_buy' => $date_buy,
+                'status_order_id' => $status_order_id // Thêm trạng thái vào dữ liệu cập nhật
             ];
 
             // Thực hiện cập nhật thông qua model
@@ -162,9 +159,11 @@ class OrderController extends Controller
                 // Hiển thị thông báo lỗi
                 echo "Có lỗi khi cập nhật hóa đơn. Vui lòng thử lại.";
             }
+        } else {
+            // Trường hợp không phải POST request, có thể xử lý khác hoặc trả về lỗi
+            echo "Yêu cầu không hợp lệ.";
         }
     }
-
 
     // tiềm kiếm
 

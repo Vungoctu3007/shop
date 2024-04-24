@@ -71,6 +71,8 @@
             <?php endforeach; ?>
         </select>
 
+
+
         <!-- Trường chọn Nhân Viên -->
         <label for="employee_id">Chọn Nhân Viên:</label>
         <select name="employee_id" id="employee_id">
@@ -81,6 +83,14 @@
                 </option>
             <?php endforeach; ?>
         </select>
+
+        <label for="status_order_id">Trạng Thái:</label>
+        <select name="status_order_id" id="status_order_id" required>
+            <option value="1" <?php echo $order_info['status_order_id'] == 1 ? 'selected' : ''; ?>>Chờ Xử Lý</option>
+            <option value="2" <?php echo $order_info['status_order_id'] == 2 ? 'selected' : ''; ?>>Đã Xử Lý</option>
+            <option value="3" <?php echo $order_info['status_order_id'] == 3 ? 'selected' : ''; ?>>Đã Hủy</option>
+        </select>
+
 
         <!-- Trường nhập Tổng Cộng -->
         <label for="total">Tổng Cộng:</label>

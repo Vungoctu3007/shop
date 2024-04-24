@@ -10,15 +10,18 @@
 </head>
 
 <body>
+    
+
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <?php
         // Kiểm tra xem biến $content tồn tại và không rỗng
         if (isset($content) && !empty($sub_content)) {
             $this->render('blocks/admin/navAdmin');
             echo '<div class="body-wrapper">';
-            $this->render('blocks/admin/headerAdmin');
+            $this->render('blocks/admin/headerAdmin', $sub_content);
             echo '<div class="container-fluid">';
             include('app/views/blocks/admin/orderView.php');
+        ///$this->render($content, $sub_content);
             $this->render('blocks/admin/footerAdmin');
             echo '</div>';
             echo '</div>';
@@ -27,7 +30,7 @@
             echo '<div class="body-wrapper">';
             $this->render('blocks/admin/headerAdmin');
             echo '<div class="container-fluid">';
-            $this->render('home/home');
+            $this->render('home/homeAdmin');
             $this->render('blocks/admin/footerAdmin');
             echo '</div>';
             echo '</div>';

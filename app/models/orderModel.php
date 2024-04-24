@@ -28,25 +28,34 @@ class orderModel
     }
 
 
-
-    //cập nhật hóa đơn
     public function updateOrder($orderId, $orderData)
     {
         $setValues = [];
         foreach ($orderData as $key => $value) {
+            $value = $this->__conn->real_escape_string($value);
             $setValues[] = "$key = '$value'";
         }
         $setValuesString = implode(", ", $setValues);
 
-        $sql = "UPDATE `orders` SET $setValuesString WHERE order_id = $orderId";
-
-        if ($this->__conn->query($sql)) {
-            return $this->__conn->affected_rows;
+        $sql = "UPDATE `orders` SET $setValuesString WHERE order_id = ?";
+        $stmt = $this->__conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("i", $orderId);
+            if ($stmt->execute()) {
+                $affectedRows = $stmt->affected_rows;
+                $stmt->close();
+                return $affectedRows > 0;
+            } else {
+                error_log("SQL Error: " . $this->__conn->error);
+                $stmt->close();
+                return false;
+            }
         } else {
-            error_log("SQL Error: " . $this->__conn->error);
+            error_log("Prepare Statement Error: " . $this->__conn->error);
             return false;
         }
     }
+
 
     // Phương thức xóa hóa đơn
     public function deleteOrder($orderId)
@@ -73,15 +82,16 @@ class orderModel
         // Kiểm tra dữ liệu đầu vào ở đây...
 
         // Chuẩn bị câu lệnh SQL để chèn dữ liệu
-        $stmt = $this->__conn->prepare("INSERT INTO orders (customer_id, employee_id, total, date_buy) VALUES (?, ?, ?, ?)");
+        $stmt = $this->__conn->prepare("INSERT INTO orders (customer_id, employee_id, total, date_buy, status_order_id) VALUES (?, ?, ?, ?, ?)");
 
-        // Đối với NVARCHAR, sử dụng 's' thay vì 'i'
+        // Ràng buộc tham số status
         $stmt->bind_param(
-            "ssds",
+            "ssdsi",
             $orderData['customer_id'],
             $orderData['employee_id'],
             $orderData['total'],
-            $orderData['date_buy']
+            $orderData['date_buy'],
+            $orderData['status_order_id'] // Giả định bạn có khóa này trong mảng $orderData
         );
 
         // Thực hiện câu lệnh và kiểm tra kết quả
@@ -95,11 +105,12 @@ class orderModel
         }
     }
 
-    public function getOrderById($orderId) {
+    public function getOrderById($orderId)
+    {
         $sql = "SELECT * FROM `orders` WHERE order_id = ?";
         $stmt = $this->__conn->prepare($sql);
         if ($stmt) {
-         
+
             $stmt->bind_param("i", $orderId);
             if ($stmt->execute()) {
                 $result = $stmt->get_result();
@@ -117,45 +128,16 @@ class orderModel
         }
     }
 
-    public function updateOrderedit($orderId, $orderData) {
-        // Câu lệnh SQL cập nhật dữ liệu hóa đơn với các tham số đã được bind
-        $sql = "UPDATE `orders` SET customer_id = ?, employee_id = ?, total = ?, date_buy = ? WHERE order_id = ?";
-        
-        // Chuẩn bị câu lệnh
-        $stmt = $this->__conn->prepare($sql);
-        
-        if ($stmt) {
-            // Bind các giá trị vào câu lệnh SQL
-            $stmt->bind_param("ssdsi",
-                $orderData['customer_id'],
-                $orderData['employee_id'],
-                $orderData['total'],
-                $orderData['date_buy'],
-                $orderId
-            );
 
-            // Thực thi câu lệnh và kiểm tra kết quả
-            if ($stmt->execute()) {
-                $stmt->close();
-                return true;
-            } else {
-                error_log("SQL Error: " . $this->__conn->error);
-                $stmt->close();
-                return false;
-            }
-        } else {
-            error_log("Prepare Statement Error: " . $this->__conn->error);
-            return false;
-        }
-    }
 
 
     //tìm kiếm
-    public function getOrdersByEmployeeId($employee_id) {
-        $sql = "SELECT * FROM orders WHERE employee_id = ?";
+    public function getOrdersByDateRange($start_date, $end_date)
+    {
+        $sql = "SELECT * FROM `orders` WHERE date_buy BETWEEN ? AND ?";
         $stmt = $this->__conn->prepare($sql);
         if ($stmt) {
-            $stmt->bind_param("s", $employee_id);
+            $stmt->bind_param("ss", $start_date, $end_date);
             $stmt->execute();
             $result = $stmt->get_result();
             $orders = [];
@@ -168,7 +150,6 @@ class orderModel
             error_log("Prepare Statement Error: " . $this->__conn->error);
             return false;
         }
-       
     }
     
 }

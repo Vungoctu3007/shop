@@ -79,6 +79,14 @@
             <?php endforeach; ?>
         </select>
 
+        <label for="status_order_id">Trạng Thái:</label>
+        <select name="status_order_id" id="status_order_id" required>
+            <option value="1">Chờ Xử Lý</option>
+            <option value="2">Đã Xử Lý</option>
+            <option value="3">Đã Hủy</option>
+        </select>
+
+
         <!-- Các trường khác của form... -->
         <!-- Trường nhập tổng cộng -->
         <input type="text" name="total" placeholder="Tổng Cộng" required>
