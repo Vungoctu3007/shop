@@ -216,7 +216,7 @@
             <input type="date" id="end_date" name="end_date" required>
             <input type="submit" value="Tìm Kiếm">
         </form>
-        <a href="<?php echo _WEB_ROOT; ?>/them-hoa-don" class="btn-add">Thêm Hóa Đơn</a>
+        <!-- <a href="<?php echo _WEB_ROOT; ?>/them-hoa-don" class="btn-add">Thêm Hóa Đơn</a>  -->
     </div>
 
     <div class="table-container">
@@ -229,7 +229,7 @@
                     <th>Trạng Thái</th> <!-- Tiêu đề cột mới -->
                     <th>Tổng Cộng</th>
                     <th>Ngày Mua</th>
-                    <th>Hành động</th>
+                    <th class="action-column">Hành động</th>
                 </tr>
             </thead>
             <tbody>
@@ -244,8 +244,10 @@
                 // Đảm bảo rằng biến $order được truyền vào từ Controller đúng cách
                 if (!empty($order)) {
                     foreach ($order as $row) {
+                        $jsonData = htmlspecialchars(json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                        echo "<tr onclick='showDetails($jsonData)'>"; // Thêm sự kiện onclick vào đây
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['order_id']) . "</td>";
+                        echo "<td >" . htmlspecialchars($row['order_id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['customer_id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['employee_id']) . "</td>";
                         // Cột trạng thái
@@ -268,9 +270,10 @@
                         echo "<td>" . htmlspecialchars($row['date_buy']) . "</td>";
 
                         // Trong file view, thêm vào cột Hành động cho mỗi dòng hóa đơn
-                        echo "<td>";
+                        echo "<td >";
                         // Thêm nút sửa
-                        echo "<a href='" . _WEB_ROOT . "/sua-hoa-don/" . $row['order_id'] . "' class='btn-edit'>Sửa</a>";
+                        echo "<a href='" . _WEB_ROOT . "/sua-hoa-don/" . $row['order_id'] . "' class='btn-edit'>sửa</a>";
+                        // echo "<a href='" . _WEB_ROOT . "/get-order-products/" . $row['order_id'] . "' class='btn-view'>Xem Sản Phẩm</a>";
 
                         echo "<a href='" . _WEB_ROOT . "/xoa-hoa-don/" . $row['order_id'] . "' class='btn-delete' >Xóa</a>";
                         echo "<a href='javascript:void(0);' class='btn-view' onclick='showDetails(" . json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ")'>Xem Chi Tiết</a>";
@@ -283,21 +286,36 @@
                     echo "<tr><td colspan='6'>Không có hóa đơn nào.</td></tr>";
                 }
 
+
                 ?>
+
             </tbody>
         </table>
 
     </div>
 
+    <!---  show chi tiết hóa đơn --->
     <div id="orderDetails" style="display: none; padding: 20px; background-color: white; border: 1px solid #ccc; margin-top: 20px;">
         <!-- Thông tin chi tiết sẽ được thêm vào đây bởi JavaScript -->
         <button onclick="closeDetails()" style="position: absolute; top: 5px; right: 10px; cursor: pointer;">Đóng</button>
+        <!-- Trong file view, thêm vào cột Hành động cho mỗi dòng hóa đơn -->
     </div>
+
+
+
 
 </body>
 
 
 <script>
+    var _WEB_ROOT = '<?php echo _WEB_ROOT; ?>';
+
+
+
+    function showOrderProducts(orderId) {
+        window.location.href = _WEB_ROOT + '/get-order-products/' + orderId;
+    }
+
     function showDetails(orderData) {
         var detailDiv = document.getElementById('orderDetails');
         var detailsHtml = '<div><strong>Mã Hóa Đơn:</strong> ' + orderData.order_id + '</div>' +
@@ -306,21 +324,24 @@
             '<div><strong>Tổng Cộng:</strong> ' + orderData.total + '</div>' +
             '<div><strong>Ngày Mua:</strong> ' + orderData.date_buy + '</div>' +
             '<div><strong>Trạng Thái:</strong> ' + getStatusText(orderData.status_order_id) + '</div>';
+
+        // Thêm nút Xem Sản Phẩm
+        detailsHtml += '<button onclick="showOrderProducts(' + orderData.order_id + ')">Xem Sản Phẩm</button>';
+
         detailDiv.innerHTML = detailsHtml;
         detailDiv.style.display = 'block';
 
-
-        // Thêm đoạn code này để đảm bảo nút đóng hiển thị
+        // Đảm bảo nút đóng được thêm vào div chi tiết
         var closeButton = document.createElement('button');
         closeButton.textContent = 'Đóng';
         closeButton.onclick = closeDetails;
         closeButton.style = 'position: absolute; top: 5px; right: 10px; cursor: pointer;';
-        // Đảm bảo nút đóng được thêm vào div chi tiết
         detailDiv.appendChild(closeButton);
-
-        detailDiv.style.display = 'block';
-
     }
+
+
+
+
 
     // Đảm bảo rằng giá trị trạng thái được xử lý đúng cách
     function getStatusText(statusId) {
@@ -339,6 +360,8 @@
     function closeDetails() {
         var detailDiv = document.getElementById('orderDetails');
         detailDiv.style.display = 'none';
+
+      
     }
 </script>
 

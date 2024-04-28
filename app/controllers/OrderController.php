@@ -10,8 +10,11 @@ class OrderController extends Controller
         $this->model = $this->model("orderModel"); // Đảm bảo rằng bạn có model tên là 'hoadonadmin'
     }
 
+
     public function index()
     {
+       
+
         $start_date = $_GET['start_date'] ?? null;
         $end_date = $_GET['end_date'] ?? null;
 
@@ -181,4 +184,25 @@ class OrderController extends Controller
         $this->data['sub_content']['order'] = $orders;
         $this->render('layouts/orderadmin_layout', $this->data);
     }
+
+    // chi tiết hóa đơn
+    public function getOrderProductDetails($orderId)
+    {
+        $productDetails = $this->model->getOrderDetails($orderId);
+    
+        // Kiểm tra xem có dữ liệu không
+        if (!$productDetails) {
+            // Xử lý trường hợp không lấy được dữ liệu
+            echo "Không thể lấy chi tiết sản phẩm của hóa đơn.";
+            return;
+        }
+    
+        // Nếu có dữ liệu, gán nó vào mảng data và gọi view
+        $this->data['product_details'] = $productDetails;
+        $this->data['content'] = 'chitietsp'; 
+
+        $this->render('blocks/admin/chitietsp', $this->data);
+       // $this->render('layouts/admin_layout', $this->data); // đảm bảo bạn có layout này
+    }
+    
 }

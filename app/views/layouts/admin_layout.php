@@ -35,6 +35,8 @@
             echo '</div>';
             echo '</div>';
         }
+
+        
         ?>
     </div>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
