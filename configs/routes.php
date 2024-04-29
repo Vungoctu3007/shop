@@ -10,3 +10,4 @@ $routes['bill'] =  'OrderController/index';
 
 // Route admin
 $routes['admin/dashboard'] = 'admin/index';
+
