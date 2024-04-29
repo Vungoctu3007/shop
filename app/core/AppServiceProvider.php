@@ -7,7 +7,7 @@ class AppServiceProvider extends ServiceProvider
         $categories = $this->model("categories");
         $allCategories = $categories->getAllCategories();
         if(isset($_SESSION['user_session']['user'])) {
-            $dataCart = $cart->getNumOfProductInTheCartByUserId($_SESSION['user_session']['user']['id']);
+            $dataCart = $cart->getNumOfProductInTheCartByUserId($_SESSION['user_session']['user']['account_id']);
             $data['numOfProductInCart'] = $dataCart;
         }
         $data['allCategories'] = $allCategories;
