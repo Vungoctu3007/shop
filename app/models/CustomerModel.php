@@ -21,21 +21,6 @@ class CustomerModel {
         }
         return $customers;
     }
-
-    public function getCustomerById($customer_id) {
-        $sql = "SELECT * FROM customer WHERE customer_id = ?";
-        $stmt = $this->__conn->prepare($sql);
-        $stmt->bind_param('s', $customer_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if($result->num_rows > 0) {
-            $customer = $result->fetch_assoc();
-            return $customer;
-        }else {
-            return false;
-        }
-    }
-
 }
 
 
