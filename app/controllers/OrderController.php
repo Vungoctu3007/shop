@@ -136,18 +136,18 @@ class OrderController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Lấy dữ liệu từ form
-            $customer_id = $_POST['customer_id'];
-            $employee_id = $_POST['employee_id'];
-            $total = $_POST['total'];
-            $date_buy = $_POST['date_buy'];
+            //$customer_id = $_POST['customer_id'];
+           //// $employee_id = $_POST['employee_id'];
+           // $total = $_POST['total'];
+           // $date_buy = $_POST['date_buy'];
             $status_order_id = $_POST['status_order_id']; // Đảm bảo rằng form gửi lên có trường này
 
             // Chuẩn bị dữ liệu để cập nhật
             $orderData = [
-                'customer_id' => $customer_id,
-                'employee_id' => $employee_id,
-                'total' => $total,
-                'date_buy' => $date_buy,
+             //   'customer_id' => $customer_id,
+               // 'employee_id' => $employee_id,
+               // 'total' => $total,
+              //  'date_buy' => $date_buy,
                 'status_order_id' => $status_order_id // Thêm trạng thái vào dữ liệu cập nhật
             ];
 

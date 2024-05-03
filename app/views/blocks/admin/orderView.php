@@ -272,11 +272,11 @@
                         // Trong file view, thêm vào cột Hành động cho mỗi dòng hóa đơn
                         echo "<td >";
                         // Thêm nút sửa
-                        echo "<a href='" . _WEB_ROOT . "/sua-hoa-don/" . $row['order_id'] . "' class='btn-edit'>sửa</a>";
+                        echo "<a href='" . _WEB_ROOT . "/sua-hoa-don/" . $row['order_id'] . "' class='btn-edit'>Sửa</a>";
                         // echo "<a href='" . _WEB_ROOT . "/get-order-products/" . $row['order_id'] . "' class='btn-view'>Xem Sản Phẩm</a>";
 
                         echo "<a href='" . _WEB_ROOT . "/xoa-hoa-don/" . $row['order_id'] . "' class='btn-delete' >Xóa</a>";
-                        echo "<a href='javascript:void(0);' class='btn-view' onclick='showDetails(" . json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ")'>Xem Chi Tiết</a>";
+                        echo "<a href='javascript:void(0);' class='btn-view' onclick='showDetails(" . json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ")'>Chi Tiết</a>";
                         echo "</td>";
 
                         // Thêm nút sửa
