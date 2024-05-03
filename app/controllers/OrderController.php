@@ -28,8 +28,10 @@ class OrderController extends Controller
 
         // Đặt dữ liệu và view
         $this->data['content'] = 'blocks/admin/orderView';
-        $this->data['sub_content'] = ['orders' => $orders];
+        $this->data['sub_content']['dataorders'] = $orders;
         $this->render('layouts/admin_layout', $this->data);
+      
+   
     }
 
 

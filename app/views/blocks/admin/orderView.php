@@ -233,17 +233,12 @@
                 </tr>
             </thead>
             <tbody>
-
-
-
                 <?php
 
-
-                $order = (isset($sub_content['orders']) && !empty($sub_content['orders'])) ? $sub_content['orders'] : null;
-
+              
                 // Đảm bảo rằng biến $order được truyền vào từ Controller đúng cách
-                if (!empty($order)) {
-                    foreach ($order as $row) {
+                if (!empty($dataorders)) {
+                    foreach ($dataorders as $row) {
                         $jsonData = htmlspecialchars(json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
                         echo "<tr onclick='showDetails($jsonData)'>"; // Thêm sự kiện onclick vào đây
                         echo "<tr>";
