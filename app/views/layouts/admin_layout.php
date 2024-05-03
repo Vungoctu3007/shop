@@ -46,11 +46,7 @@
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/app.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/simplebar/dist/simplebar.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/formUpdateProduct.js"></script>;
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/formDetailProduct.js"></script>;
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/updateProduct.js"></script>;
-    <!-- <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/loadProduct.js"></script> -->
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/panigationProduct.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/productAdmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
 

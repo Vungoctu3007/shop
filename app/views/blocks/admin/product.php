@@ -1,20 +1,55 @@
+<div class="input-group mb-3">
+    <input style="width: 300px;" type="text" class="form-control" placeholder="Search Product"
+        aria-label="Search Product" aria-describedby="search-product-icon" id="search-product-input"
+        onkeyup="searchProduct()">
+    <div class="input-group-append">
+        <button class="btn btn-danger" onclick="searchProduct()">Search</button>
+    </div>
+</div>
+
+
+
 <div class="container" id="allProduct">
     <table class="table table-striped text-center">
         <thead>
             <tr>
                 <th>Image</th>
-                <th><?php echo ucfirst('Category Name'); ?></th>
-                <th>Product Name</th>
-                <th>Stock</th>
-                <th>Made In</th>
-                <th>Year Produce</th>
-                <th>Time Insurance(Month)</th>
-                <th>Price</th>
+                <th>
+                    <button class="btn btn-link p-0 text-decoration-none" onclick="softInfo('product_name', 'soft')"
+                        style="background-color: #fff;color: black">Category Name</button>
+                </th>
+                <th>
+                    <button class="btn btn-link p-0 text-decoration-none" onclick="softInfo('product_name', 'soft')"
+                        style="background-color: #fff;color: black">Product Name</button>
+                </th>
+                <th>
+                    <button class="btn btn-link p-0 text-decoration-none" onclick="softInfo('quantity', 'soft')"
+                        style="background-color: #fff;color: black">Stock</button>
+                </th>
+                <th>
+                    <button class="btn btn-link p-0 text-decoration-none" onclick="softInfo('product_made_in', 'soft')"
+                        style="background-color: #fff;color: black">Made In</button>
+                </th>
+                <th>
+                    <button class="btn btn-link p-0 text-decoration-none"
+                        onclick="softInfo('product_year_produce', 'soft')" style="background-color: #fff;color: black">Year
+                        Produce</button>
+                </th>
+                <th>
+                    <button class="btn btn-link p-0 text-decoration-none"
+                        onclick="softInfo('product_time_insurance', 'soft')" style="background-color: #fff; color: black">Time
+                        Insurance(Month)</button>
+                </th>
+                <th>
+                    <button class="btn btn-link p-0 text-decoration-none" onclick="softInfo('product_price', 'soft')"
+                        style="background-color: #fff;color: black">Price</button>
+                </th>
+
                 <th>Operations</th>
             </tr>
         </thead>
         <tbody id="contentDataProduct">
-            
+
         </tbody>
     </table>
 
@@ -27,7 +62,8 @@
                 </a>
             </li>
             <li class="page-item">
-                <span class="page-link text-dark fw-semibold"> <span id="current_page" class="text-primary"></span>/<span id="total_pages"></span></span>
+                <span class="page-link text-dark fw-semibold"> <span id="current_page"
+                        class="text-primary"></span>/<span id="total_pages"></span></span>
             </li>
             <li class="page-item">
                 <a onclick="load_next_page()" class="page-link  text-dark fs-3" href="#" aria-label="Next">
@@ -51,7 +87,8 @@
                 <div id="productDetails" class="text-center"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" loadProductTable()>Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    loadProductTable()>Close</button>
             </div>
         </div>
     </div>
