@@ -170,23 +170,7 @@ class OrderController extends Controller
         }
     }
 
-    // tiềm kiếm
-
-    public function searchByEmployee()
-    {
-        $employee_id = $_GET['employee_id'] ?? null;
-
-        if ($employee_id) {
-            $orders = $this->model->getOrdersByEmployeeId($employee_id);
-        } else {
-            $orders = $this->model->getAllOrders();
-        }
-
-        // Đặt dữ liệu và view
-        $this->data['sub_content']['order'] = $orders;
-        $this->render('layouts/orderadmin_layout', $this->data);
-    }
-
+   
     // chi tiết hóa đơn
     public function getOrderProductDetails($orderId)
     {

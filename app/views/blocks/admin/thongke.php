@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Quản Lý Đơn Hàng</title>
+    <title>Thống kê</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,48 +23,34 @@
             margin-top: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             table-layout: fixed;
-            /* Add this to maintain column widths */
             height: 500px;
-            /* Example default height */
             overflow-y: auto;
-            /* Adds a vertical scrollbar to the table body */
         }
 
         tbody {
             display: block;
             max-height: 500px;
-            /* Set max-height to the desired value */
             overflow-y: auto;
-            /* Enables scrolling */
         }
 
         thead,
         tbody tr {
             display: table;
             width: 100%;
-            /* Table width is 100% */
             table-layout: fixed;
-            /* Table layout is fixed */
         }
 
         thead {
-            width: calc(100% - 1em)
-                /* Adjust table header width to account for scrollbar */
+            width: calc(100% - 1em);
         }
 
         td {
             padding-top: 12px;
-            /* Increases padding at the top of the cell */
             padding-bottom: 12px;
-            /* Increases padding at the bottom of the cell */
-            /* Retain your existing left/right padding if any, or set new values as desired */
             text-align: left;
-            /* Ensures content is aligned to the left */
             vertical-align: middle;
-            /* Centers content vertically in the cell */
         }
 
-        /* Optional: Add a border or a different background color to alternate rows for better distinction */
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
@@ -82,15 +68,15 @@
         }
 
         .btn-edit {
-            margin-right: 8px;
             background-color: #ffc107;
             color: #fff;
+            margin-right: 8px;
         }
 
         .btn-delete {
-            margin-left: 8px;
             background-color: #dc3545;
             color: #fff;
+            margin-left: 8px;
         }
 
         .search-container {
@@ -102,7 +88,8 @@
             display: inline-block;
         }
 
-        .search-container input[type="text"] {
+        .search-container input[type="text"],
+        .search-container input[type="date"] {
             padding: 5px;
             margin-right: 10px;
             border: 1px solid #ccc;
@@ -118,103 +105,80 @@
         }
 
         .btn-add {
-            display: inline-block;
-            text-decoration: none;
             padding: 5px 15px;
             background-color: #007bff;
             color: white;
             border-radius: 5px;
             margin-left: 10px;
-        }
-
-        /* css cho form chi tiết  */
-        #orderDetails {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: auto;
-            max-width: 600px;
-            /* Giới hạn chiều rộng tối đa */
-            box-sizing: border-box;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-            /* Bo góc cho khung */
-            z-index: 1000;
-            display: none;
-            /* Ẩn div cho đến khi được gọi */
-
-            /* Đặt giá trị này cao hơn các phần tử khác */
-            overflow: visible;
-
-            overflow: auto;
-            /* cho phép scroll nếu nội dung quá dài */
-            padding-top: 30px;
-            /* Thêm đủ không gian cho nút đóng */
-        }
-
-        #orderDetails>div {
-            margin-bottom: 10px;
-            /* Khoảng cách giữa các thông tin */
-        }
-
-        /* nút xem chi tiết */
-        .btn-view {
-            padding: 5px 10px;
             text-decoration: none;
+        }
+
+        #revenueChartContainer {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .statistics-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .statistic {
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+            padding: 10px;
             border-radius: 5px;
-            font-size: 0.9rem;
-            background-color: #f0ad4e;
-            /* Màu cam cho nút Xem Chi Tiết */
-            color: #fff;
-            margin-left: 8px;
-            border: none;
-            cursor: pointer;
-            white-space: nowrap;
-            /* Đảm bảo văn bản trong nút không bị xuống dòng */
-        }
-
-        .btn-view:hover {
-            background-color: #ec971f;
-            /* Màu sẫm hơn khi hover */
+            width: 20%;
+            text-align: center;
         }
 
 
-        /* nút đóng chi tiết */
-        #orderDetails button {
-            padding: 5px 10px;
-            border: none;
-            background-color: #dc3545;
-            color: white;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            position: relative;
-            /* hoặc `absolute` tùy thuộc vào cấu trúc của bạn */
-            z-index: 1001;
-            /* Giá trị phải lớn hơn z-index của các phần tử khác */
 
-        }
 
-        #orderDetails button:hover {
-            background-color: #c82333;
+
+
+        canvas {
+            width: 100%;
+            max-width: 800px;
+            /* Adjust as needed */
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <h2>Thống kê</h2>
+
+    <div class="statistics-container">
+        <h1>Thống Kê Tổng Quan</h1>
+        <div class="statistic">
+            <h2>Tổng Doanh Thu</h2>
+            <p><?= number_format($totalRevenue); ?> VND</p>
+        </div>
+        <div class="statistic">
+            <h2>Tổng Sản Phẩm Đã Bán</h2>
+            <p><?= number_format($totalProductsSold); ?> sản phẩm </p>
+        </div>
+        <div class="statistic">
+            <h2>Tổng Nhân Viên Bán Hàng</h2>
+            <p><?= number_format($totalSalesStaff); ?> nhân viên </p>
+        </div>
+        <div class="statistic">
+            <h2>Tổng Khách Hàng</h2>
+            <p><?= number_format($totalCustomers); ?> khách hàng</p>
+        </div>
+    </div>
+
+
 
     <div class="search-container">
-        <form action="<?php echo _WEB_ROOT; ?>/bill" method="get">
+        <form action="<?php echo _WEB_ROOT; ?>/thongke" method="get">
             <label for="start_date">Ngày Bắt Đầu:</label>
             <input type="date" id="start_date" name="start_date" required>
             <label for="end_date">Ngày Kết Thúc:</label>
             <input type="date" id="end_date" name="end_date" required>
             <input type="submit" value="Tìm Kiếm">
-    </form>
+        </form>
     </div>
 
     <div class="table-container">
@@ -226,53 +190,75 @@
                     <th>Mã Nhân Viên</th>
                     <th>Tổng Cộng</th>
                     <th>Ngày Mua</th>
-                    <th>Tên sản phẩm/th>
+                    <th>Tên sản phẩm</th>
                     <th>Số lượng</th>
                 </tr>
             </thead>
             <tbody>
-
                 <?php
+                if (!empty($datathongke)) {
+                    foreach ($datathongke as $row) {
+                        echo "<tr>"; // Start of row
+                        echo "<td>" . htmlspecialchars($row['order_id'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['customer_id'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['employee_id'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['total'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['date_buy'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['product_name'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['quantity'] ?? '') . "</td>";
+                        echo "</tr>"; // End of row
 
 
-                $thongke = (isset($sub_content['thongke']) && !empty($sub_content['thongke'])) ? $sub_content['thongke'] : null;
-
-                // Đảm bảo rằng biến $thongke được truyền vào từ Controller đúng cách
-                if (!empty($thongke)) {
-                    foreach ($thongke as $row) {
-                        $jsonData = htmlspecialchars(json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
-                        echo "<tr onclick='showDetails($jsonData)'>"; // Thêm sự kiện onclick vào đây
-                        echo "<tr>";
-                        echo "<td >" . htmlspecialchars($row['order_id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['customer_id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['employee_id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['total']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['date_buy']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['product_name']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['quantity']) . "</td>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>Không có dữ liệu</td></tr>";
+                    echo "<tr><td colspan='7'>Không có dữ liệu</td></tr>";
                 }
-
-
                 ?>
+
+
 
             </tbody>
         </table>
-
+    </div>
+    <!-- Container for the revenue chart -->
+    <div id="revenueChartContainer">
+        <canvas id="revenueChart"></canvas>
     </div>
 
-   
-
-
+    <script>
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctx, {
+            type: 'line', // Type of chart: line chart
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // Full year labels
+                datasets: [{
+                    label: 'Doanh thu 2024',
+                    data: [0,1500000, 1200000, 1800000, 1600000, 2000000, 2100000, 1900000, 2200000, 2050000, 1950000, 2300000, 2500000], // Example data for each month
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 30000000, // Set maximum scale value to 100 million VND
+                        ticks: {
+                            // Include a dollar sign in the ticks and format numbers with commas for readability
+                            callback: function(value, index, values) {
+                                return value.toLocaleString() + ' VND';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 
 
 </body>
 
 
-<script>
-    
-</script>
 
 </html>
