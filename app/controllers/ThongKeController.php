@@ -11,7 +11,7 @@ class ThongkeController extends Controller
 
 
     public function index()
-    {
+    {  
 
         $start_date = $_GET['start_date'] ?? null;
         $end_date = $_GET['end_date'] ?? null;
@@ -24,7 +24,10 @@ class ThongkeController extends Controller
             $thongke = $this->model->getthongke();
         }
 
-       
+        $monthlyRevenue = $this->model->getMonthlyRevenue();
+        $salesByCategory = $this->model->getSalesByCategory(); // Gọi hàm mới bạn đã tạo trong model
+
+      
         $totalRevenue = $this->model->getTotalRevenue();
         $totalProductsSold = $this->model->getTotalProductsSold();
         $totalSalesStaff = $this->model->getTotalSalesStaff();
@@ -37,6 +40,9 @@ class ThongkeController extends Controller
         $this->data['sub_content']['totalProductsSold'] = $totalProductsSold;
         $this->data['sub_content']['totalSalesStaff'] = $totalSalesStaff;
         $this->data['sub_content']['totalCustomers'] = $totalCustomers;
+
+        $this->data['sub_content']['monthlyRevenue'] = $monthlyRevenue;
+        $this->data['sub_content']['salesByCategory'] = $salesByCategory;
 
         $this->render('layouts/admin_layout', $this->data);
     }
