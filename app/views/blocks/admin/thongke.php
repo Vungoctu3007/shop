@@ -321,7 +321,8 @@
             <thead>
                 <tr>
                     <th>Mã Hóa Đơn</th>
-                    <th>Mã Khách Hàng</th>
+                    <th>Mã Tài Khoản</th>
+                    <th>Mã Trạng Thái</th>
                     <th>Mã Nhân Viên</th>
                     <th>Tổng Cộng</th>
                     <th>Ngày Mua</th>
@@ -331,29 +332,41 @@
             </thead>
             <tbody>
                 <?php
+
                 if (!empty($datathongke)) {
                     foreach ($datathongke as $row) {
-                        echo "<tr>"; // Start of row
+                        echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['order_id'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['account_id'] ?? '') . "</td>";
+                        echo "<td>";
+                        switch ($row['status_order_id']) {
+                            case 1:
+                                echo 'Chờ Xử Lý';
+                                break;
+                            case 2:
+                                echo 'Đã Xử Lý';
+                                break;
+                            case 3:
+                                echo 'Đã Hủy';
+                                break;
+                            default:
+                                echo 'Không xác định'; // Đối với trạng thái không xác định
+                        }
                         echo "<td>" . htmlspecialchars($row['employee_id'] ?? '') . "</td>";
-                        echo "<td>" . htmlspecialchars($row['total'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars(number_format($row['total'] ?? 0)) . " VND</td>";
                         echo "<td>" . htmlspecialchars($row['date_buy'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['product_name'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['quantity'] ?? '') . "</td>";
-                        echo "</tr>"; // End of row
-
-
+                        echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7'>Không có dữ liệu</td></tr>";
+                    echo "<tr><td colspan='8'>Không có dữ liệu</td></tr>";
                 }
                 ?>
-
-
-
             </tbody>
         </table>
+
+
         <div class="pagination">
             <?php if ($currentPage > 1) : ?>
                 <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage - 1 ?>">« Trang Trước</a>
@@ -369,6 +382,17 @@
         </div>
 
     </div>
+    <!-- Thêm giao diện chọn năm -->
+    <div class="controls-container">
+        <label for="year">Chọn năm:</label>
+        <select id="year" name="year">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+        </select>
+        <button onclick="fetchRevenueData()">Xem doanh thu</button>
+    </div>
+
     <!-- biểu đồ cột -->
     <div id="revenueChartContainer">
         <canvas id="revenueChart"></canvas>
@@ -472,6 +496,55 @@
             }
         });
     </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lấy danh sách các năm từ máy chủ
+            fetch('/thongke/availableYears')
+                .then((response) => response.json())
+                .then((years) => {
+                    var yearSelect = document.getElementById("year");
+                    yearSelect.innerHTML = ''; // Xóa tất cả tùy chọn cũ
+
+                    // Thêm tùy chọn cho mỗi năm
+                    years.forEach((year) => {
+                        var option = document.createElement("option");
+                        option.value = year;
+                        option.textContent = year;
+                        yearSelect.appendChild(option);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error fetching available years:', error);
+                });
+        });
+
+        function fetchRevenueData() {
+            // Lấy năm được chọn từ dropdown
+            var year = document.getElementById("year").value;
+
+            // Gửi yêu cầu đến máy chủ để lấy dữ liệu doanh thu theo năm
+            fetch(`/thongke/revenue?year=${year}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    updateChart(data);
+                })
+                .catch((error) => {
+                    console.error("Error fetching revenue data:", error);
+                });
+        }
+
+        function updateChart(data) {
+            // Cập nhật dữ liệu biểu đồ
+            revenueChart.data.datasets[0].data = data;
+            revenueChart.update();
+        }
+    </script>
+
+
+
+
     <style>
         .pagination {
             text-align: center;

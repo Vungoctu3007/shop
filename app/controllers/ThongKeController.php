@@ -19,16 +19,27 @@ class ThongkeController extends Controller
         // Lấy giá trị sắp xếp
         $sort = $_GET['sort'] ?? null;
 
-        // Lựa chọn truy vấn dữ liệu theo giá trị sắp xếp
-        if ($sort === 'asc') {
-            // Sắp xếp tăng dần
-            $datathongke = $this->model->getThongKeAscPaginated($offset, $limit);
-        } elseif ($sort === 'desc') {
-            // Sắp xếp giảm dần
-            $datathongke = $this->model->getThongKeDescPaginated($offset, $limit);
+        // Kiểm tra xem có bộ lọc ngày bắt đầu và kết thúc không
+        $start_date = $_GET['start_date'] ?? null;
+        $end_date = $_GET['end_date'] ?? null;
+
+        $datathongke = $this->model->getthongke($offset, $limit);
+
+        if ($start_date && $end_date) {
+            // Gọi hàm lọc với ngày bắt đầu và kết thúc
+            $datathongke = $this->model->timthongke($start_date, $end_date, $offset, $limit);
         } else {
-            // Mặc định hiển thị theo thứ tự trong cơ sở dữ liệu
-            $datathongke = $this->model->getthongkePaginated($offset, $limit);
+            // Lựa chọn truy vấn dữ liệu theo giá trị sắp xếp
+            if ($sort === 'asc') {
+                // Sắp xếp tăng dần
+                $datathongke = $this->model->getThongKeAscPaginated($offset, $limit);
+            } elseif ($sort === 'desc') {
+                // Sắp xếp giảm dần
+                $datathongke = $this->model->getThongKeDescPaginated($offset, $limit);
+            } else {
+                // Mặc định hiển thị theo thứ tự trong cơ sở dữ liệu
+                $datathongke = $this->model->getthongke($offset, $limit);
+            }
         }
 
         // Tổng số bản ghi
@@ -57,5 +68,25 @@ class ThongkeController extends Controller
         $this->data['sub_content']['currentPage'] = $currentPage;
 
         $this->render('layouts/admin_layout', $this->data);
+    }
+
+    // Trong ThongkeController
+    public function availableYears()
+    {
+        $years = $this->model->getAvailableYears();
+        echo json_encode($years);
+    }
+
+    // Trong ThongkeController
+    public function revenue()
+    {
+        // Lấy năm từ request
+        $year = $_GET['year'] ?? date("Y");
+
+        // Lấy dữ liệu doanh thu theo năm
+        $monthlyRevenue = $this->model->getMonthlyRevenueByYear($year);
+
+        // Trả dữ liệu về dạng JSON
+        echo json_encode($monthlyRevenue);
     }
 }
