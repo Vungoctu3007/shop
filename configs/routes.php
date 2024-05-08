@@ -30,3 +30,4 @@ $routes['get-order-products/([0-9]+)'] = 'OrderController/getOrderProductDetails
 
 $routes['thongke'] = 'ThongKeController/index';
 
+?>

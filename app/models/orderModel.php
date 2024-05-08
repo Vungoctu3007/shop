@@ -68,7 +68,7 @@ class orderModel
             $deleteDetailStmt->close();
         } else {
             error_log("SQL Error: " . $this->__conn->error);
-                    return false;
+            return false;
         }
 
 
@@ -235,5 +235,82 @@ class orderModel
 
         // Trả về mảng chứa chi tiết sản phẩm
         return $details;
+    }
+
+
+    // Lấy danh sách hóa đơn theo trang
+    public function getOrdersWithPagination($offset, $limit)
+    {
+        $sql = "SELECT * FROM orders LIMIT ?, ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('ii', $offset, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orders = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $orders;
+    }
+
+    // Đếm tổng số lượng hóa đơn
+    public function countAllOrders()
+    {
+        $sql = "SELECT COUNT(*) as total FROM orders";
+        $result = $this->__conn->query($sql);
+        $count = $result->fetch_assoc();
+        return $count['total'];
+    }
+
+    // Tương tự, lấy danh sách theo ngày với phân trang
+    public function getOrdersByDateRangeWithPagination($start_date, $end_date, $offset, $limit)
+    {
+        $sql = "SELECT * FROM orders WHERE date_buy BETWEEN ? AND ? LIMIT ?, ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('ssii', $start_date, $end_date, $offset, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orders = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $orders;
+    }
+
+    // Đếm số lượng hóa đơn theo ngày
+    public function countOrdersByDateRange($start_date, $end_date)
+    {
+        $sql = "SELECT COUNT(*) as total FROM orders WHERE date_buy BETWEEN ? AND ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('ss', $start_date, $end_date);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $count = $result->fetch_assoc();
+        $stmt->close();
+        return $count['total'];
+    }
+
+    // Lấy tên khách hàng theo mã
+    public function getCustomerNameById($customerId)
+    {
+        $sql = "SELECT customer_name FROM customers WHERE customer_id = ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("s", $customerId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row['customer_name'] ?? 'Không xác định';
+    }
+
+    // Lấy tên nhân viên theo mã
+    public function getEmployeeNameById($employeeId)
+    {
+        $sql = "SELECT employee_name FROM employees WHERE employee_id = ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("s", $employeeId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row['employee_name'] ?? 'Không xác định';
     }
 }

@@ -15,7 +15,7 @@ class thongkeModel
     {
         $sql = "SELECT 
                 orders.order_id, 
-                orders.customer_id,
+                orders.account_id,
                 orders.employee_id, 
                 orders.total, 
                 orders.date_buy, 
@@ -65,11 +65,11 @@ class thongkeModel
         return $result ? $result->fetch_assoc()['totalSalesStaff'] : 0;
     }
 
-    public function getTotalCustomers()
+    public function getTotalAccounts()
     {
-        $sql = "SELECT COUNT(DISTINCT customer_id) AS totalCustomers FROM orders";
+        $sql = "SELECT COUNT(DISTINCT account_id) AS totalAccounts FROM orders";
         $result = $this->__conn->query($sql);
-        return $result ? $result->fetch_assoc()['totalCustomers'] : 0;
+        return $result ? $result->fetch_assoc()['totalAccounts'] : 0;
     }
 
     //loc thong ke
@@ -77,7 +77,7 @@ class thongkeModel
     {
         $sql = "SELECT 
             orders.order_id, 
-            orders.customer_id,
+            orders.account_id,
             orders.employee_id, 
             orders.total, 
             orders.date_buy, 
@@ -127,7 +127,8 @@ class thongkeModel
     }
 
     // biểu đồ tròn
-    public function getSalesByCategory() {
+    public function getSalesByCategory()
+    {
         $sql = "SELECT c.category_name, COUNT(*) AS total_sales
                 FROM orders o
                 JOIN detail_order do ON o.order_id = do.order_id
@@ -135,10 +136,10 @@ class thongkeModel
                 JOIN product p ON ps.product_id = p.product_id
                 JOIN categories c ON p.category_id = c.category_id
                 GROUP BY c.category_name";
-    
+
         $result = $this->__conn->query($sql);
         $salesByCategory = [];
-    
+
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $salesByCategory[] = array(
@@ -151,5 +152,187 @@ class thongkeModel
         }
         return $salesByCategory;
     }
-    
+
+
+    //sap xep
+    // Hàm sắp xếp tăng dần
+    public function getThongKeAsc()
+    {
+        $sql = "SELECT 
+               orders.order_id, 
+               orders.account_id,
+               orders.employee_id, 
+               orders.total, 
+               orders.date_buy, 
+               product.product_name, 
+               product.quantity
+           FROM orders
+           JOIN detail_order ON orders.order_id = detail_order.order_id
+           JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+           JOIN product ON product_seri.product_id = product.product_id
+           ORDER BY orders.total ASC;";
+
+        $result = $this->__conn->query($sql);
+        $thongke = array();
+
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $thongke[] = $row;
+            }
+        } else {
+            error_log("SQL Error: " . $this->__conn->error);  // Ghi log lỗi SQL
+        }
+        return $thongke;
+    }
+
+    // Hàm sắp xếp giảm dần
+    public function getThongKeDesc()
+    {
+        $sql = "SELECT 
+               orders.order_id, 
+               orders.account_id,
+               orders.employee_id, 
+               orders.total, 
+               orders.date_buy, 
+               product.product_name, 
+               product.quantity
+           FROM orders
+           JOIN detail_order ON orders.order_id = detail_order.order_id
+           JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+           JOIN product ON product_seri.product_id = product.product_id
+           ORDER BY orders.total DESC;";
+
+        $result = $this->__conn->query($sql);
+        $thongke = array();
+
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $thongke[] = $row;
+            }
+        } else {
+            error_log("SQL Error: " . $this->__conn->error);  // Ghi log lỗi SQL
+        }
+        return $thongke;
+    }
+
+
+    // Lấy dữ liệu thống kê có phân trang
+    public function getthongkePaginated($offset, $limit)
+    {
+        $sql = "SELECT 
+            orders.order_id, 
+            orders.account_id,
+            orders.employee_id, 
+            orders.total, 
+            orders.date_buy, 
+            product.product_name, 
+            product.quantity
+        FROM orders
+        JOIN detail_order ON orders.order_id = detail_order.order_id
+        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+        JOIN product ON product_seri.product_id = product.product_id
+        LIMIT ?, ?";
+
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("ii", $offset, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $thongke = [];
+
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $thongke[] = $row;
+            }
+        } else {
+            error_log("SQL Error: " . $this->__conn->error);  // Ghi log lỗi SQL
+        }
+
+        $stmt->close();
+        return $thongke;
+    }
+
+    // Hàm đếm tổng số bản ghi
+    public function countThongkeRecords()
+    {
+        $sql = "SELECT COUNT(*) AS totalRecords FROM orders";
+        $result = $this->__conn->query($sql);
+        return $result ? $result->fetch_assoc()['totalRecords'] : 0;
+    }
+
+
+
+
+
+
+    // Lấy thống kê tăng dần, có phân trang
+public function getThongKeAscPaginated($offset, $limit)
+{
+    $sql = "SELECT 
+            orders.order_id, 
+            orders.account_id,
+            orders.employee_id, 
+            orders.total, 
+            orders.date_buy, 
+            product.product_name, 
+            product.quantity
+        FROM orders
+        JOIN detail_order ON orders.order_id = detail_order.order_id
+        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+        JOIN product ON product_seri.product_id = product.product_id
+        ORDER BY orders.total ASC
+        LIMIT ?, ?";
+
+    $stmt = $this->__conn->prepare($sql);
+    $stmt->bind_param("ii", $offset, $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $thongke = [];
+
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $thongke[] = $row;
+        }
+    } else {
+        error_log("SQL Error: " . $this->__conn->error);  // Ghi log lỗi SQL
+    }
+
+    $stmt->close();
+    return $thongke;
+}
+
+// Lấy thống kê giảm dần, có phân trang
+public function getThongKeDescPaginated($offset, $limit)
+{
+    $sql = "SELECT 
+            orders.order_id, 
+            orders.account_id,
+            orders.employee_id, 
+            orders.total, 
+            orders.date_buy, 
+            product.product_name, 
+            product.quantity
+        FROM orders
+        JOIN detail_order ON orders.order_id = detail_order.order_id
+        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+        JOIN product ON product_seri.product_id = product.product_id
+        ORDER BY orders.total DESC
+        LIMIT ?, ?";
+
+    $stmt = $this->__conn->prepare($sql);
+    $stmt->bind_param("ii", $offset, $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $thongke = [];
+
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $thongke[] = $row;
+        }
+    } else {
+        error_log("SQL Error: " . $this->__conn->error);  // Ghi log lỗi SQL
+    }
+
+    $stmt->close();
+    return $thongke;
+}
 }

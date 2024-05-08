@@ -1,6 +1,6 @@
 <?php
 
-class CustomerModel {
+class AccountModel {
     protected $db;
 
     private $__conn;
@@ -12,8 +12,8 @@ class CustomerModel {
         $this->__conn = Connection::getInstance($db_config);
     }
 
-    public function getCustomers() {
-        $sql = "SELECT customer_id, customer_name FROM customer";
+    public function getAccounts() {
+        $sql = "SELECT account_id, username FROM account";
         $result = $this->__conn->query($sql);
         $customers = [];
         while ($row = $result->fetch_assoc()) {

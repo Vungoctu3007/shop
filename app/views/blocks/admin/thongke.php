@@ -181,6 +181,94 @@
             height: auto;
             /* Maintains aspect ratio */
         }
+
+        /* Container chứa cả sắp xếp và tìm kiếm */
+        .controls-container {
+            display: flex;
+            justify-content: space-between;
+            /* Đảm bảo khoảng cách đều giữa các phần tử */
+            align-items: center;
+            /* Căn giữa theo chiều dọc */
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sắp xếp */
+        .sort-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .btn-sort-dropdown {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-sort-dropdown:hover {
+            background-color: #0056b3;
+        }
+
+        .sort-options {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .sort-options a {
+            color: #333;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+
+        .sort-options a:hover {
+            background-color: #ddd;
+        }
+
+        .sort-container:hover .sort-options {
+            display: block;
+        }
+
+        /* Tìm kiếm */
+        .search-container input[type="text"],
+        .search-container input[type="date"] {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        .search-container input[type="submit"] {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+            background-color: #28a745;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-container input[type="submit"]:hover {
+            background-color: #218838;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -203,21 +291,29 @@
             <p><?= number_format($totalSalesStaff); ?> nhân viên </p>
         </div>
         <div class="statistic">
-            <h2>Tổng Khách Hàng</h2>
-            <p><?= number_format($totalCustomers); ?> khách hàng</p>
+            <h2>Tổng Tài khoản Mua Hàng</h2>
+            <p><?= number_format($totalAccounts); ?> Tài khoản</p>
         </div>
     </div>
 
+    <div class="controls-container">
+        <div class="sort-container">
+            <button class="btn-sort-dropdown">Sắp xếp</button>
+            <div class="sort-options">
+                <a href="<?= _WEB_ROOT; ?>/thongke?sort=asc" class="btn-sort">Sắp xếp tăng dần</a>
+                <a href="<?= _WEB_ROOT; ?>/thongke?sort=desc" class="btn-sort">Sắp xếp giảm dần</a>
+            </div>
+        </div>
 
-
-    <div class="search-container">
-        <form action="<?php echo _WEB_ROOT; ?>/thongke" method="get">
-            <label for="start_date">Ngày Bắt Đầu:</label>
-            <input type="date" id="start_date" name="start_date" required>
-            <label for="end_date">Ngày Kết Thúc:</label>
-            <input type="date" id="end_date" name="end_date" required>
-            <input type="submit" value="Tìm Kiếm">
-        </form>
+        <div class="search-container">
+            <form action="<?php echo _WEB_ROOT; ?>/thongke" method="get">
+                <label for="start_date">Ngày Bắt Đầu:</label>
+                <input type="date" id="start_date" name="start_date" required>
+                <label for="end_date">Ngày Kết Thúc:</label>
+                <input type="date" id="end_date" name="end_date" required>
+                <input type="submit" value="Tìm Kiếm">
+            </form>
+        </div>
     </div>
 
     <div class="table-container">
@@ -239,7 +335,7 @@
                     foreach ($datathongke as $row) {
                         echo "<tr>"; // Start of row
                         echo "<td>" . htmlspecialchars($row['order_id'] ?? '') . "</td>";
-                        echo "<td>" . htmlspecialchars($row['customer_id'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['account_id'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['employee_id'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['total'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['date_buy'] ?? '') . "</td>";
@@ -258,6 +354,20 @@
 
             </tbody>
         </table>
+        <div class="pagination">
+            <?php if ($currentPage > 1) : ?>
+                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage - 1 ?>">« Trang Trước</a>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $i ?>" <?= $i == $currentPage ? 'class="active"' : '' ?>><?= $i ?></a>
+            <?php endfor; ?>
+
+            <?php if ($currentPage < $totalPages) : ?>
+                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage + 1 ?>">Trang Sau »</a>
+            <?php endif; ?>
+        </div>
+
     </div>
     <!-- biểu đồ cột -->
     <div id="revenueChartContainer">
@@ -362,6 +472,33 @@
             }
         });
     </script>
+    <style>
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            margin: 2px;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            background-color: #f4f4f4;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+    </style>
 
 
 </body>

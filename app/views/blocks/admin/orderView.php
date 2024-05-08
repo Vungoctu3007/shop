@@ -17,80 +17,95 @@
             color: #0a0a23;
         }
 
+        /* Style cải thiện bảng với kích thước chữ to hơn */
         table {
             width: 100%;
+            /* Chiều rộng bảng chiếm 90% vùng hiển thị */
+            margin: 20px auto;
+            /* Canh giữa bảng với phần còn lại */
             border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            table-layout: fixed;
-            /* Add this to maintain column widths */
-            height: 500px;
-            /* Example default height */
-            overflow-y: auto;
-            /* Adds a vertical scrollbar to the table body */
-        }
-
-        tbody {
-            display: block;
-            max-height: 500px;
-            /* Set max-height to the desired value */
-            overflow-y: auto;
-            /* Enables scrolling */
-        }
-
-        thead,
-        tbody tr {
-            display: table;
-            width: 100%;
-            /* Table width is 100% */
-            table-layout: fixed;
-            /* Table layout is fixed */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            /* Nền trắng */
         }
 
         thead {
-            width: calc(100% - 1em)
-                /* Adjust table header width to account for scrollbar */
+            background-color: #f4f4f4;
+            /* Nền xám nhạt cho tiêu đề */
+            border-bottom: 2px solid #ddd;
         }
 
-        td {
-            padding-top: 12px;
-            /* Increases padding at the top of the cell */
-            padding-bottom: 12px;
-            /* Increases padding at the bottom of the cell */
-            /* Retain your existing left/right padding if any, or set new values as desired */
+        thead th {
+            padding: 14px;
+            /* Tăng padding để tăng khoảng cách giữa chữ và đường viền */
             text-align: left;
-            /* Ensures content is aligned to the left */
-            vertical-align: middle;
-            /* Centers content vertically in the cell */
+            font-size: 16px;
+            /* Tăng kích thước chữ cho tiêu đề */
+            font-weight: bold;
+            color: #333;
         }
 
-        /* Optional: Add a border or a different background color to alternate rows for better distinction */
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
+        tbody tr {
+            border-bottom: 1px solid #e2e2e2;
+            /* Đường viền giữa các hàng */
         }
 
-        tr:nth-child(odd) {
-            background-color: #ffffff;
+        tbody tr:hover {
+            background-color: #f9f9f9;
+            /* Đổi nền khi hover qua */
+        }
+
+        tbody td {
+            padding: 14px;
+            /* Tăng padding để tạo khoảng trống thoải mái */
+            text-align: left;
+            font-size: 15px;
+            /* Tăng kích thước chữ trong các hàng */
+            color: #555;
+        }
+
+        .action-column {
+            text-align: center;
         }
 
         .btn-edit,
-        .btn-delete {
-            padding: 5px 15px;
-            text-decoration: none;
+        .btn-delete,
+        .btn-view {
+            padding: 8px 12px;
+            border: none;
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 14px;
+            /* Tăng kích thước chữ cho các nút */
+            margin: 0 4px;
+            cursor: pointer;
+            color: #fff;
         }
 
         .btn-edit {
-            margin-right: 8px;
             background-color: #ffc107;
-            color: #fff;
+            /* Màu vàng */
         }
 
         .btn-delete {
-            margin-left: 8px;
             background-color: #dc3545;
-            color: #fff;
+            /* Màu đỏ */
+        }
+
+        .btn-view {
+            background-color: #28a745;
+            /* Màu xanh lá cây */
+        }
+
+        .btn-edit:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-view:hover {
+            background-color: #218838;
         }
 
         .search-container {
@@ -201,6 +216,64 @@
         #orderDetails button:hover {
             background-color: #c82333;
         }
+
+
+        /* CSS cho phân trang */
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            margin: 2px;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            background-color: #f4f4f4;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        /* Tạo thêm khoảng cách cho phần sidebar */
+        .sidebar {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-right: 2px solid #ddd;
+            min-height: 100vh;
+        }
+
+        .sidebar a {
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            color: #333;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -224,7 +297,7 @@
             <thead>
                 <tr>
                     <th>Mã Hóa Đơn</th>
-                    <th>Mã Khách Hàng</th>
+                    <th>Mã Tài Khoản</th>
                     <th>Mã Nhân Viên</th>
                     <th>Trạng Thái</th> <!-- Tiêu đề cột mới -->
                     <th>Tổng Cộng</th>
@@ -234,8 +307,14 @@
             </thead>
             <tbody>
                 <?php
+                $dataorders = $data['dataorders'] ?? [];
+                $totalPages = $data['totalPages'] ?? 1;
+                $currentPage = $data['currentPage'] ?? 1;
+                ?>
 
-              
+                <?php
+
+
                 // Đảm bảo rằng biến $order được truyền vào từ Controller đúng cách
                 if (!empty($dataorders)) {
                     foreach ($dataorders as $row) {
@@ -243,7 +322,7 @@
                         echo "<tr onclick='showDetails($jsonData)'>"; // Thêm sự kiện onclick vào đây
                         echo "<tr>";
                         echo "<td >" . htmlspecialchars($row['order_id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['customer_id']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['account_id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['employee_id']) . "</td>";
                         // Cột trạng thái
                         echo "<td>";
@@ -267,10 +346,8 @@
                         // Trong file view, thêm vào cột Hành động cho mỗi dòng hóa đơn
                         echo "<td >";
                         // Thêm nút sửa
-                        echo "<a href='" . _WEB_ROOT . "/sua-hoa-don/" . $row['order_id'] . "' class='btn-edit'>Sửa</a>";
-                        // echo "<a href='" . _WEB_ROOT . "/get-order-products/" . $row['order_id'] . "' class='btn-view'>Xem Sản Phẩm</a>";
-
-                        echo "<a href='" . _WEB_ROOT . "/xoa-hoa-don/" . $row['order_id'] . "' class='btn-delete' >Xóa</a>";
+                        echo "<a href='" . _WEB_ROOT . "/sua-hoa-don/" . $row['order_id'] . "' class='btn-edit'>Cập nhật</a>";
+                        echo "<a href='javascript:void(0);' class='btn-delete' onclick='confirmDeletion(" . $row['order_id'] . "," . $row['status_order_id'] . ")'>Xóa</a>";
                         echo "<a href='javascript:void(0);' class='btn-view' onclick='showDetails(" . json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ")'>Chi Tiết</a>";
                         echo "</td>";
 
@@ -286,6 +363,27 @@
 
             </tbody>
         </table>
+        <div class="pagination">
+            <?php
+            // Trang Trước
+            if ($currentPage > 1) {
+                $previousPage = $currentPage - 1;
+                echo "<a href='?page=$previousPage'>&laquo; Trang Trước</a>";
+            }
+
+            // Số trang với tên rõ ràng
+            for ($page = 1; $page <= $totalPages; $page++) {
+                $isActive = $page == $currentPage ? 'class="active"' : '';
+                echo "<a href='?page=$page' $isActive>Trang $page</a>";
+            }
+
+            // Trang Sau
+            if ($currentPage < $totalPages) {
+                $nextPage = $currentPage + 1;
+                echo "<a href='?page=$nextPage'>Trang Sau &raquo;</a>";
+            }
+            ?>
+        </div>
 
     </div>
 
@@ -296,6 +394,15 @@
         <!-- Trong file view, thêm vào cột Hành động cho mỗi dòng hóa đơn -->
     </div>
 
+    <!-- Dialog xác nhận xóa -->
+    <div id="deleteConfirmationDialog" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); z-index: 1000;">
+        <h3 style="margin: 0; padding: 0; text-align: center;">Xác Nhận Xóa</h3>
+        <p style="text-align: center;">Bạn có chắc chắn muốn xóa hóa đơn này không?</p>
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <button id="confirmDeleteButton" style="padding: 5px 15px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Yes</button>
+            <button onclick="closeDeleteDialog()" style="padding: 5px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">No</button>
+        </div>
+    </div>
 
 
 
@@ -314,7 +421,7 @@
     function showDetails(orderData) {
         var detailDiv = document.getElementById('orderDetails');
         var detailsHtml = '<div><strong>Mã Hóa Đơn:</strong> ' + orderData.order_id + '</div>' +
-            '<div><strong>Mã Khách Hàng:</strong> ' + orderData.customer_id + '</div>' +
+            '<div><strong>Mã Tài Khoản:</strong> ' + orderData.account_id + '</div>' +
             '<div><strong>Mã Nhân Viên:</strong> ' + orderData.employee_id + '</div>' +
             '<div><strong>Tổng Cộng:</strong> ' + orderData.total + '</div>' +
             '<div><strong>Ngày Mua:</strong> ' + orderData.date_buy + '</div>' +
@@ -356,8 +463,34 @@
         var detailDiv = document.getElementById('orderDetails');
         detailDiv.style.display = 'none';
 
-      
+
     }
+
+
+
+    function confirmDeletion(orderId, statusId) {
+        if (statusId === 3) { // Assuming 3 is the status ID for "Đã Hủy"
+            // Show the confirmation dialog for a canceled order
+            deleteUrl = _WEB_ROOT + '/xoa-hoa-don/' + orderId;
+            document.getElementById('deleteConfirmationDialog').style.display = 'block';
+        } else {
+            // Provide other conditions or warnings as necessary
+            alert("Chỉ có thể xóa các hóa đơn đã bị hủy.");
+        }
+    }
+
+    // JavaScript function to close the confirmation dialog
+    function closeDeleteDialog() {
+        // Hide the confirmation dialog
+        document.getElementById('deleteConfirmationDialog').style.display = 'none';
+    }
+
+    // JavaScript function to actually perform the deletion
+    document.getElementById('confirmDeleteButton').onclick = function() {
+        // Redirect to the deletion URL
+        window.location.href = deleteUrl;
+    };
 </script>
+
 
 </html>
