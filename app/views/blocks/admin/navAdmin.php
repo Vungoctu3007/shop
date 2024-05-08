@@ -41,7 +41,7 @@
           </a>
         </li>
         <li class="sidebar-item">
-          <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+          <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/admin/product" aria-expanded="false">
             <span>
               <i class="ti ti-login"></i>
             </span>
@@ -57,9 +57,9 @@
             <span class="hide-menu">Quản lý đơn hàng</span>
           </a>
         </li>
-      
+
         <li class="sidebar-item">
-          <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+          <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/admin/insurance" aria-expanded="false">
             <span>
               <i class="ti ti-login"></i>
             </span>
@@ -67,7 +67,7 @@
           </a>
         </li>
         <li class="sidebar-item">
-          <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+          <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/thongke" aria-expanded="false">
             <span>
               <i class="ti ti-login"></i>
             </span>
