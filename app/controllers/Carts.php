@@ -20,9 +20,26 @@ class Carts extends Controller {
         $cart = $this->model("cart");
         $cart_id = (isset($_POST['cart_id'])) ? $_POST['cart_id'] : 0;
         $quantity = (isset($_POST['quantity']))? $_POST['quantity'] : 0;
-        $cart->updateQuantityOfProductInTheCartByCartId($cart_id, $quantity);
-        $dataCart = $cart->getQuantityOfProductInTheCartByCartId($cart_id);
-        echo json_encode($dataCart);
+        $product_id = (isset($_POST['product_id']))? $_POST['product_id'] : 0;
+        $quantityInStock = $cart->checkQuantityProductById($product_id);
+        $response = Array();
+        if ($quantityInStock && $quantityInStock >= $quantity) {
+            $cart->updateQuantityOfProductInTheCartByCartId($cart_id, $quantity);
+            $dataCart = $cart->getQuantityOfProductInTheCartByCartId($cart_id);
+            $response = [
+                'success' => true, 
+                'data' => $dataCart
+            ];
+        } else {
+            $response = [
+                'success' => false, 
+                'data' => $quantityInStock
+            ];
+        }
+        
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        
     }
     
     public function deleteProductInTheCartById() {
@@ -33,18 +50,40 @@ class Carts extends Controller {
         $response->redirect('carts');
     }
 
-    public function placeOrder() {
-        $cart = $this->model("cart");
-        $orders = $this->model("orders");
+    public function addToCart() {
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            http_response_code(403);
+            exit('Access denied');
+        }
 
-        $user_id = $_SESSION['user_session']['user']['id'];
-        $total_amount = $cart->getTotalAmountByUserId($user_id);
-        $order_id = $orders->placeOrder($user_id, $total_amount);
-        $cart_items = $cart->getProductsInTheCartByUserId($user_id);
-        $orders->placeOrderWithItems($user_id, $order_id, $cart_items);
-        $cart->deleteAllProductsInTheCartByUserId($user_id);
-        
-        $response = new Response();
-        $response->redirect('carts');
+        $response = ['success' => false];  
+
+        if(!isset($_SESSION['user_session']['user']['account_id'])) {
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            return;
+        }
+
+        $account_id = isset($_SESSION['user_session']['user']['account_id']) ? $_SESSION['user_session']['user']['account_id'] : null;
+        $product_id = $_POST['product_id'];
+        $quantity = isset($_POST['quantity']) ? htmlspecialchars($_POST['quantity']) : 1;
+
+        $cart = $this->model("cart");
+
+        if($cart->checkProductExistInCart($account_id, $product_id)) {
+            $result = $cart->updateQuantityProduct($account_id, $product_id, $quantity);
+            if($result) {
+                $response['success'] = true;
+            }
+        } else {
+            $result = $cart->addToCart($account_id, $product_id, $quantity);
+            if($result) {
+                $response['success'] = true;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+
     }
 }

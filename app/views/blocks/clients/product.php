@@ -1,17 +1,15 @@
 
         <!-- Single Page Header start -->
-        <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Shop</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active text-white">Shop</li>
+        <div class="container-fluid">
+            <ol class="breadcrumb justify-content-center pr-5">
+                <li class="breadcrumb-item"><a href="<?php echo _WEB_ROOT; ?>/trang-chu">Home</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo _WEB_ROOT; ?>/dien-thoai">Sản phẩm</a></li>
             </ol>
         </div>
-        <!-- Single Page Header End -->
+        <!-- Single Page Header End -->	
 
 		<!-- SECTION -->
-		<div class="section">
+		<div class="section" style="margin-top: 50px;">
 			<!-- container -->
 			<div class="container">
 				<!-- row -->
@@ -19,15 +17,15 @@
 					<!-- ASIDE -->
 					<div id="aside" class="col-md-3">
 						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Danh mục</h3>
+						<div class="aside mb-4">
+							<h3 class="aside-title mb-4">Danh mục</h3>
 							<div class="checkbox-filter">
 							<?php
 								$i = 1;
 								foreach($dataCategories as $category) {
-									echo '<div class="input-checkbox">';
-									echo '<input class="category-checkbox" type="checkbox" value="'.$category['category_id'].'" id="category-'.$i.'">';
-									echo '<label for="category-'.$i.'">';
+									echo '<div class="form-check input-checkbox">';
+									echo '<input class="form-check-input category-checkbox" type="checkbox" value="'.$category['category_id'].'" id="category-'.$i.'">';
+									echo '<label class="form-check-label" for="category-'.$i.'">';
 									echo '<span></span>';
 									echo $category['category_name'];
 									echo '</label>';
@@ -41,50 +39,22 @@
 
 						<!-- aside Widget -->
 						
-						<div class="aside">
-							<h3 class="aside-title">Khoảng giá</h3>
-							<div class="range" style="display: flex;">
-								<input id="price-range-start" type="text" style="width: 100px;">
-								<i class="fa-solid fa-minus" style="padding: 7px 5px 0 5px;"></i>
-								<input id="price-range-end" type="text" style="width: 100px;">
+						<div class="aside mb-4">
+							<h3 class="aside-title mb-4">Khoảng giá</h3>
+							<div class="range d-flex align-items-center">
+								<input id="price-range-start" class="form-control p-1" type="text" style="width: 110px;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="70" height="15"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+								<input id="price-range-end" class="form-control p-1" type="text" style="width: 110px;">
 							</div>
 						</div>
 						<!-- /aside Widget -->
 
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Top selling</h3>
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product01.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
-							</div>
-
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product02.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
-							</div>
-
-							<div class="product-widget">
-								<div class="product-img">
-									<img src="./img/product03.png" alt="">
-								</div>
-								<div class="product-body">
-									<p class="product-category">Category</p>
-									<h3 class="product-name"><a href="#">product name goes here</a></h3>
-									<h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-								</div>
+						<div class="aside mb-4">
+							<h3 class="aside-title mb-4">Tìm kiếm</h3>
+							<div class="range d-flex align-items-center">
+								<!-- store top filter -->
+								<input type="text" class="form-control p-2 mb-5" id="name-search" placeholder="Nhập tên sản phẩm" style="width: 300px;">
+								<!-- /store top filter -->
 							</div>
 						</div>
 						<!-- /aside Widget -->
@@ -93,28 +63,18 @@
 
 					<!-- STORE -->
 					<div id="store" class="col-md-9">
-						<!-- store top filter -->
-						<input type="text" id="name-search" placeholder="Search by name" style="outline: none;">
-						<!-- /store top filter -->
 
-						<!-- store products -->
-						<div class="row" id="show-product">
-							<!-- product -->
 
-							<!-- /product -->
+						<div class="row g-4 justify-content-center" id="show-product">
 						</div>
 						<!-- /store products -->
+						<nav aria-label="..." >
+							<ul id="store-pagination" class="pagination pagination-lg d-flex justify-content-center mt-5">
 
-						<!-- store bottom filter -->
-						<div class="store-filter clearfix">
-							<ul class="store-pagination" id="store-pagination">
-								<!-- <li class="active">1</li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#"><i class="fa fa-angle-right"></i></a></li> -->
 							</ul>
-						</div>
+						</nav>
+						<!-- store bottom filter -->
+
 						<!-- /store bottom filter -->
 					</div>
 					<!-- /STORE -->
