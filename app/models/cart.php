@@ -108,7 +108,7 @@ class Cart
     }
 
     public function getJoinDataCartAndProducts() {
-        $sql = 'SELECT  cart.quantity,  cart.cart_id,  product.product_price,  product.product_image,  product.product_name
+        $sql = 'SELECT  cart.quantity,  cart.cart_id, product.product_id, product.product_price,  product.product_image,  product.product_name
                 FROM  cart JOIN  product ON  cart.product_id =  product.product_id
                 WHERE  cart.account_id = ?';
 
@@ -159,6 +159,65 @@ class Cart
         if($row = $result->fetch_assoc()) {
             $totalAmount = $row['total_amount'];
             return $totalAmount;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkProductExistInCart($account_id, $product_id) {
+        $sql = 'SELECT * FROM  cart WHERE account_id = ? AND product_id = ?';
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('si', $account_id, $product_id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        if($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function updateQuantityProduct($account_id, $product_id, $quantity) {
+        $sql = 'UPDATE cart SET quantity = quantity + ? WHERE account_id = ? AND product_id = ?';
+        $stmt = $this->__conn->prepare($sql);
+
+        if ($stmt === false) {
+            echo "Error preparing statement: " . $this->__conn->error;
+            return false;
+        }
+
+        $stmt->bind_param('iii',$quantity, $account_id, $product_id); 
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addToCart($account_id, $product_id, $quantity) {
+        $sql = 'INSERT INTO cart (account_id, product_id, quantity) VALUES (?,?,?)';
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('sii', $account_id, $product_id, $quantity);
+        if ($stmt->execute()) {
+            $stmt->close(); 
+            return true; 
+        }
+        return false;
+        $stmt->close();
+    }
+
+    public function checkQuantityProductById($product_id) {
+        $sql = 'select COUNT(*) FROM product_seri WHERE product_id = ?';
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('i', $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $quantity = 0;
+        if($row = $result->fetch_assoc()) {
+            $quantity = $row['COUNT(*)'];
+            return $quantity;
         } else {
             return false;
         }
