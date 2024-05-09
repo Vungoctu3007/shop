@@ -273,13 +273,10 @@ class thongkeModel
         $stmt->close();
         return $thongke;
     }
-
-    // Trong Model (thongkeModel)
+    // Hàm để lấy danh sách các năm
     public function getAvailableYears()
     {
-        $sql = "SELECT DISTINCT YEAR(date_buy) AS year
-            FROM orders
-            ORDER BY year";
+        $sql = "SELECT DISTINCT YEAR(date_buy) AS year FROM orders ORDER BY year";
         $result = $this->__conn->query($sql);
         $years = [];
 
@@ -288,7 +285,6 @@ class thongkeModel
                 $years[] = $row['year'];
             }
         }
-
         return $years;
     }
 

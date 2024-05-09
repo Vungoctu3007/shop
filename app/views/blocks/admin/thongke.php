@@ -382,21 +382,28 @@
         </div>
 
     </div>
-    <!-- Thêm giao diện chọn năm -->
-    <div class="controls-container">
-        <label for="year">Chọn năm:</label>
+
+    <div class="year-selection-container">
+        <!-- Hiển thị danh sách năm -->
+        <label for="year">Doanh thu theo năm</label>
         <select id="year" name="year">
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
+            <?php foreach ($years as $year) : ?>
+                <option value="<?= $year ?>"><?= $year ?></option>
+            <?php endforeach; ?>
         </select>
-        <button onclick="fetchRevenueData()">Xem doanh thu</button>
     </div>
 
-    <!-- biểu đồ cột -->
-    <div id="revenueChartContainer">
-        <canvas id="revenueChart"></canvas>
+
+    <!-- Div chứa biểu đồ cho từng năm -->
+    <div id="chartsContainer">
+        <?php foreach ($years as $year) : ?>
+            <div class="chart-container">
+                <h2>Doanh thu <?= htmlspecialchars($year); ?></h2>
+                <canvas id="chart_<?= htmlspecialchars($year); ?>"></canvas>
+            </div>
+        <?php endforeach; ?>
     </div>
+
 
     <!-- biểu đồ tròn -->
     <div id="categorySalesChartContainer">
@@ -405,56 +412,44 @@
 
 
     <script>
-        var ctx = document.getElementById('revenueChart').getContext('2d');
-        var revenueData = <?= json_encode($monthlyRevenue); ?>;
-        var revenueChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                datasets: [{
-                    label: 'Doanh thu 2024',
-                    data: revenueData,
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            fontColor: '#333', // Màu chữ
-                            fontSize: 16, // Kích cỡ font
-                            fontWeight: 'bold' // Độ đậm
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dữ liệu doanh thu theo năm được lấy từ PHP
+            var yearlyRevenue = <?= json_encode($yearlyRevenue); ?>;
+
+            // Lặp qua từng năm để tạo biểu đồ
+            for (var year in yearlyRevenue) {
+                var ctx = document.getElementById('chart_' + year).getContext('2d');
+                var revenueData = yearlyRevenue[year];
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        datasets: [{
+                            label: 'Doanh thu ' + year,
+                            data: revenueData,
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
                         }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontColor: '#333', // Màu chữ
-                            fontSize: 16, // Kích cỡ font
-                            fontWeight: 'bold' // Độ đậm
-                        }
-                    }]
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                    bodyFontColor: '#000',
-                    bodyFontStyle: 'bold',
-                    bodyFontSize: 14,
-                    titleFontColor: '#000',
-                    titleFontSize: 14,
-                    titleFontStyle: 'bold',
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    borderColor: 'rgba(0, 0, 0, 0.1)',
-                    borderWidth: 1
-                }
+                    }
+                });
             }
         });
     </script>
 
+
+    <!-- bieu do tron -->
     <script>
         var ctx = document.getElementById('categorySalesChart').getContext('2d');
         var salesData = <?= json_encode($data['salesByCategory']); ?>;
@@ -498,51 +493,6 @@
     </script>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lấy danh sách các năm từ máy chủ
-            fetch('/thongke/availableYears')
-                .then((response) => response.json())
-                .then((years) => {
-                    var yearSelect = document.getElementById("year");
-                    yearSelect.innerHTML = ''; // Xóa tất cả tùy chọn cũ
-
-                    // Thêm tùy chọn cho mỗi năm
-                    years.forEach((year) => {
-                        var option = document.createElement("option");
-                        option.value = year;
-                        option.textContent = year;
-                        yearSelect.appendChild(option);
-                    });
-                })
-                .catch((error) => {
-                    console.error('Error fetching available years:', error);
-                });
-        });
-
-        function fetchRevenueData() {
-            // Lấy năm được chọn từ dropdown
-            var year = document.getElementById("year").value;
-
-            // Gửi yêu cầu đến máy chủ để lấy dữ liệu doanh thu theo năm
-            fetch(`/thongke/revenue?year=${year}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    updateChart(data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching revenue data:", error);
-                });
-        }
-
-        function updateChart(data) {
-            // Cập nhật dữ liệu biểu đồ
-            revenueChart.data.datasets[0].data = data;
-            revenueChart.update();
-        }
-    </script>
-
-
 
 
     <style>
@@ -570,6 +520,51 @@
         .pagination a:hover {
             background-color: #0056b3;
             color: #fff;
+        }
+
+        .year-selection-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        .year-selection-container label {
+            font-weight: bold;
+            color: #28527a;
+            /* Màu xanh đậm */
+            margin-right: 10px;
+        }
+
+        .year-selection-container select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background: #f1f1f1;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .year-selection-container select:focus {
+            outline: none;
+            background: #e0e0e0;
+        }
+
+        .year-selection-container button {
+            padding: 8px 16px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .year-selection-container button:hover {
+            background-color: #218838;
         }
     </style>
 

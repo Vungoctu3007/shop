@@ -42,6 +42,15 @@ class ThongkeController extends Controller
             }
         }
 
+        // Lấy danh sách các năm từ model
+        $years = $this->model->getAvailableYears();
+        // Lấy doanh thu hàng tháng cho mỗi năm
+        $yearlyRevenue = [];
+        foreach ($years as $year) {
+            $yearlyRevenue[$year] = $this->model->getMonthlyRevenueByYear($year);
+        }
+
+
         // Tổng số bản ghi
         $totalRecords = $this->model->countThongkeRecords();
         $totalPages = ceil($totalRecords / $limit);
@@ -67,26 +76,9 @@ class ThongkeController extends Controller
         $this->data['sub_content']['totalPages'] = $totalPages;
         $this->data['sub_content']['currentPage'] = $currentPage;
 
+        $this->data['sub_content']['years'] = $years;
+        $this->data['sub_content']['yearlyRevenue'] = $yearlyRevenue;
+
         $this->render('layouts/admin_layout', $this->data);
-    }
-
-    // Trong ThongkeController
-    public function availableYears()
-    {
-        $years = $this->model->getAvailableYears();
-        echo json_encode($years);
-    }
-
-    // Trong ThongkeController
-    public function revenue()
-    {
-        // Lấy năm từ request
-        $year = $_GET['year'] ?? date("Y");
-
-        // Lấy dữ liệu doanh thu theo năm
-        $monthlyRevenue = $this->model->getMonthlyRevenueByYear($year);
-
-        // Trả dữ liệu về dạng JSON
-        echo json_encode($monthlyRevenue);
     }
 }
