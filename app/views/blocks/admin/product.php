@@ -57,7 +57,7 @@
     <nav aria-label="Page navigation example ">
         <ul class="pagination d-flex justify-content-center ">
             <li class="page-item">
-                <a onclick="load_prev_page()" class="page-link  text-dark fs-3" href="#" aria-label="Previous">
+                <a onclick="load_prev_page()" class="page-link  text-dark fs-3" aria-label="Previous" style="cursor: pointer;">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -66,7 +66,7 @@
                         class="text-primary"></span>/<span id="total_pages"></span></span>
             </li>
             <li class="page-item">
-                <a onclick="load_next_page()" class="page-link  text-dark fs-3" href="#" aria-label="Next">
+                <a onclick="load_next_page()" class="page-link  text-dark fs-3" aria-label="Next" style="cursor: pointer;">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
