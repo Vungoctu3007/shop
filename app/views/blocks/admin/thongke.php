@@ -321,7 +321,8 @@
             <thead>
                 <tr>
                     <th>Mã Hóa Đơn</th>
-                    <th>Mã Khách Hàng</th>
+                    <th>Mã Tài Khoản</th>
+                    <th>Mã Trạng Thái</th>
                     <th>Mã Nhân Viên</th>
                     <th>Tổng Cộng</th>
                     <th>Ngày Mua</th>
@@ -331,29 +332,41 @@
             </thead>
             <tbody>
                 <?php
+
                 if (!empty($datathongke)) {
                     foreach ($datathongke as $row) {
-                        echo "<tr>"; // Start of row
+                        echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['order_id'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['account_id'] ?? '') . "</td>";
+                        echo "<td>";
+                        switch ($row['status_order_id']) {
+                            case 1:
+                                echo 'Chờ Xử Lý';
+                                break;
+                            case 2:
+                                echo 'Đã Xử Lý';
+                                break;
+                            case 3:
+                                echo 'Đã Hủy';
+                                break;
+                            default:
+                                echo 'Không xác định'; // Đối với trạng thái không xác định
+                        }
                         echo "<td>" . htmlspecialchars($row['employee_id'] ?? '') . "</td>";
-                        echo "<td>" . htmlspecialchars($row['total'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars(number_format($row['total'] ?? 0)) . " VND</td>";
                         echo "<td>" . htmlspecialchars($row['date_buy'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['product_name'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['quantity'] ?? '') . "</td>";
-                        echo "</tr>"; // End of row
-
-
+                        echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7'>Không có dữ liệu</td></tr>";
+                    echo "<tr><td colspan='8'>Không có dữ liệu</td></tr>";
                 }
                 ?>
-
-
-
             </tbody>
         </table>
+
+
         <div class="pagination">
             <?php if ($currentPage > 1) : ?>
                 <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage - 1 ?>">« Trang Trước</a>
@@ -369,10 +382,28 @@
         </div>
 
     </div>
-    <!-- biểu đồ cột -->
-    <div id="revenueChartContainer">
-        <canvas id="revenueChart"></canvas>
+
+    <div class="year-selection-container">
+        <!-- Hiển thị danh sách năm -->
+        <label for="year">Doanh thu theo năm</label>
+        <select id="year" name="year">
+            <?php foreach ($years as $year) : ?>
+                <option value="<?= $year ?>"><?= $year ?></option>
+            <?php endforeach; ?>
+        </select>
     </div>
+
+
+    <!-- Div chứa biểu đồ cho từng năm -->
+    <div id="chartsContainer">
+        <?php foreach ($years as $year) : ?>
+            <div class="chart-container">
+                <h2>Doanh thu <?= htmlspecialchars($year); ?></h2>
+                <canvas id="chart_<?= htmlspecialchars($year); ?>"></canvas>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
 
     <!-- biểu đồ tròn -->
     <div id="categorySalesChartContainer">
@@ -381,56 +412,44 @@
 
 
     <script>
-        var ctx = document.getElementById('revenueChart').getContext('2d');
-        var revenueData = <?= json_encode($monthlyRevenue); ?>;
-        var revenueChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                datasets: [{
-                    label: 'Doanh thu 2024',
-                    data: revenueData,
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            fontColor: '#333', // Màu chữ
-                            fontSize: 16, // Kích cỡ font
-                            fontWeight: 'bold' // Độ đậm
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dữ liệu doanh thu theo năm được lấy từ PHP
+            var yearlyRevenue = <?= json_encode($yearlyRevenue); ?>;
+
+            // Lặp qua từng năm để tạo biểu đồ
+            for (var year in yearlyRevenue) {
+                var ctx = document.getElementById('chart_' + year).getContext('2d');
+                var revenueData = yearlyRevenue[year];
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        datasets: [{
+                            label: 'Doanh thu ' + year,
+                            data: revenueData,
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
                         }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontColor: '#333', // Màu chữ
-                            fontSize: 16, // Kích cỡ font
-                            fontWeight: 'bold' // Độ đậm
-                        }
-                    }]
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                    bodyFontColor: '#000',
-                    bodyFontStyle: 'bold',
-                    bodyFontSize: 14,
-                    titleFontColor: '#000',
-                    titleFontSize: 14,
-                    titleFontStyle: 'bold',
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    borderColor: 'rgba(0, 0, 0, 0.1)',
-                    borderWidth: 1
-                }
+                    }
+                });
             }
         });
     </script>
 
+
+    <!-- bieu do tron -->
     <script>
         var ctx = document.getElementById('categorySalesChart').getContext('2d');
         var salesData = <?= json_encode($data['salesByCategory']); ?>;
@@ -472,6 +491,10 @@
             }
         });
     </script>
+
+
+
+
     <style>
         .pagination {
             text-align: center;
@@ -497,6 +520,51 @@
         .pagination a:hover {
             background-color: #0056b3;
             color: #fff;
+        }
+
+        .year-selection-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        .year-selection-container label {
+            font-weight: bold;
+            color: #28527a;
+            /* Màu xanh đậm */
+            margin-right: 10px;
+        }
+
+        .year-selection-container select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background: #f1f1f1;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .year-selection-container select:focus {
+            outline: none;
+            background: #e0e0e0;
+        }
+
+        .year-selection-container button {
+            padding: 8px 16px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .year-selection-container button:hover {
+            background-color: #218838;
         }
     </style>
 
