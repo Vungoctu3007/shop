@@ -60,7 +60,11 @@ class ThongkeController extends Controller
         $salesByCategory = $this->model->getSalesByCategory();
 
         $totalRevenue = $this->model->getTotalRevenue();
+        $totalRevenue = is_numeric($totalRevenue) ? $totalRevenue : 0;
+
         $totalProductsSold = $this->model->getTotalProductsSold();
+        $totalProductsSold = is_numeric($totalProductsSold) ? $totalProductsSold : 0;
+        
         $totalSalesStaff = $this->model->getTotalSalesStaff();
         $totalAccounts = $this->model->getTotalAccounts();
 

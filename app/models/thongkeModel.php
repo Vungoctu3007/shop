@@ -139,21 +139,11 @@ class thongkeModel
     public function getMonthlyRevenue()
     {
         $sql = "SELECT MONTH(date_buy) AS month, SUM(total) AS totalRevenue
-                FROM orders
-                WHERE orders.status_order_id = 2
-                GROUP BY MONTH(date_buy)
-                ORDER BY MONTH(date_buy)";
-        $result = $this->__conn->query($sql);
-        $data = array_fill(0, 12, 0); // Tạo mảng với 12 tháng ban đầu
+        FROM orders
+        WHERE YEAR(date_buy) = ? AND status_order_id = 2
+        GROUP BY MONTH(date_buy)
+        ORDER BY MONTH(date_buy)";
 
-        if ($result) {
-            while ($row = $result->fetch_assoc()) {
-                $data[$row['month'] - 1] = $row['totalRevenue']; // Chỉ số mảng bắt đầu từ 0
-            }
-        } else {
-            error_log("SQL Error: " . $this->__conn->error);
-        }
-        return $data;
     }
 
 
@@ -288,14 +278,15 @@ class thongkeModel
         return $years;
     }
 
-    // Trong Model (thongkeModel)
+    // Trong Model (thongkeModel bieu do cot)
     public function getMonthlyRevenueByYear($year)
     {
-        $sql = "SELECT MONTH(date_buy) as month, SUM(total) as totalRevenue
+        $sql = "SELECT MONTH(date_buy) AS month, SUM(total) AS totalRevenue
             FROM orders
-            WHERE YEAR(date_buy) = ?
+            WHERE YEAR(date_buy) = ? AND status_order_id = 2
             GROUP BY MONTH(date_buy)
             ORDER BY MONTH(date_buy)";
+
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param("i", $year);
         $stmt->execute();

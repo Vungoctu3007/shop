@@ -13,7 +13,14 @@ class orderModel
     // load list hóa đơn
     public function getAllorder()
     {
-        $sql = "SELECT * FROM `orders`";
+        $sql = "SELECT 
+        order_id,
+        account_id,
+        COALESCE(employee_id, 'IDAuto') AS employee_id,  
+        total,
+        date_buy
+         FROM 
+        orders";
         $result = $this->__conn->query($sql);
         $order = array();
 
@@ -170,6 +177,7 @@ class orderModel
     }
 
 
+    
 
 
     //tìm kiếm
@@ -193,7 +201,7 @@ class orderModel
         }
     }
 
-    // chi tiết hóa đơn
+    // chi tiết sp hóa đơn
     public function getOrderDetails($orderId)
     {
         // Truy vấn SQL để lấy chi tiết sản phẩm của đơn hàng
@@ -203,6 +211,7 @@ class orderModel
                 JOIN product_seri ps ON d.product_seri = ps.product_seri
                 JOIN product p ON ps.product_id = p.product_id
                 WHERE d.order_id = ?";
+
 
         // Chuẩn bị câu truy vấn SQL
         $stmt = $this->__conn->prepare($sql);
@@ -286,31 +295,5 @@ class orderModel
         return $count['total'];
     }
 
-    // Lấy tên khách hàng theo mã
-    public function getCustomerNameById($customerId)
-    {
-        $sql = "SELECT customer_name FROM customers WHERE customer_id = ?";
-        $stmt = $this->__conn->prepare($sql);
-        $stmt->bind_param("s", $customerId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $stmt->close();
-
-        return $row['customer_name'] ?? 'Không xác định';
-    }
-
-    // Lấy tên nhân viên theo mã
-    public function getEmployeeNameById($employeeId)
-    {
-        $sql = "SELECT employee_name FROM employees WHERE employee_id = ?";
-        $stmt = $this->__conn->prepare($sql);
-        $stmt->bind_param("s", $employeeId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $stmt->close();
-
-        return $row['employee_name'] ?? 'Không xác định';
-    }
+   
 }
