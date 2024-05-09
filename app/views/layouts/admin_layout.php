@@ -29,7 +29,8 @@
             echo '<div class="body-wrapper">';
             $this->render('blocks/admin/headerAdmin');
             echo '<div class="container-fluid">';
-            $this->render('home/homeAdmin');
+           // $this->render('home/homeAdmin');
+             include('app/views/blocks/admin/thongke.php');
             $this->render('blocks/admin/footerAdmin');
             echo '</div>';
             echo '</div>';

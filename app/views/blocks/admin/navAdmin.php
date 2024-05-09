@@ -17,7 +17,7 @@
           <span class="hide-menu">Trang chủ</span>
         </li>
         <li class="sidebar-item">
-          <a class="sidebar-link" href="./index.html" aria-expanded="false">
+        <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/thongke"  aria-expanded="false">
             <span>
               <i class="ti ti-layout-dashboard"></i>
             </span>
