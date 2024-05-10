@@ -335,6 +335,8 @@
 
                 if (!empty($datathongke)) {
                     foreach ($datathongke as $row) {
+                        $employee_id = !empty($row['employee_id']) ? htmlspecialchars($row['employee_id'], ENT_QUOTES, 'UTF-8') : 'IDAuto';
+
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['order_id'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['account_id'] ?? '') . "</td>";
@@ -352,7 +354,7 @@
                             default:
                                 echo 'Không xác định'; // Đối với trạng thái không xác định
                         }
-                        echo "<td>" . htmlspecialchars($row['employee_id'] ?? '') . "</td>";
+                        echo "<td>" . $employee_id . "</td>";  // "Auto" nếu mã nhân viên trống
                         echo "<td>" . htmlspecialchars(number_format($row['total'] ?? 0)) . " VND</td>";
                         echo "<td>" . htmlspecialchars($row['date_buy'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['product_name'] ?? '') . "</td>";
