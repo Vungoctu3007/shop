@@ -13,7 +13,14 @@ class orderModel
     // load list hóa đơn
     public function getAllorder()
     {
-        $sql = "SELECT * FROM `orders`";
+        $sql = "SELECT 
+        order_id,
+        account_id,
+        COALESCE(employee_id, 'IDAuto') AS employee_id,  
+        total,
+        date_buy
+         FROM 
+        orders";
         $result = $this->__conn->query($sql);
         $order = array();
 
@@ -68,7 +75,7 @@ class orderModel
             $deleteDetailStmt->close();
         } else {
             error_log("SQL Error: " . $this->__conn->error);
-                    return false;
+            return false;
         }
 
 
@@ -170,6 +177,7 @@ class orderModel
     }
 
 
+    
 
 
     //tìm kiếm
@@ -193,7 +201,7 @@ class orderModel
         }
     }
 
-    // chi tiết hóa đơn
+    // chi tiết sp hóa đơn
     public function getOrderDetails($orderId)
     {
         // Truy vấn SQL để lấy chi tiết sản phẩm của đơn hàng
@@ -203,6 +211,7 @@ class orderModel
                 JOIN product_seri ps ON d.product_seri = ps.product_seri
                 JOIN product p ON ps.product_id = p.product_id
                 WHERE d.order_id = ?";
+
 
         // Chuẩn bị câu truy vấn SQL
         $stmt = $this->__conn->prepare($sql);
@@ -236,4 +245,55 @@ class orderModel
         // Trả về mảng chứa chi tiết sản phẩm
         return $details;
     }
+
+
+    // Lấy danh sách hóa đơn theo trang
+    public function getOrdersWithPagination($offset, $limit)
+    {
+        $sql = "SELECT * FROM orders LIMIT ?, ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('ii', $offset, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orders = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $orders;
+    }
+
+    // Đếm tổng số lượng hóa đơn
+    public function countAllOrders()
+    {
+        $sql = "SELECT COUNT(*) as total FROM orders";
+        $result = $this->__conn->query($sql);
+        $count = $result->fetch_assoc();
+        return $count['total'];
+    }
+
+    // Tương tự, lấy danh sách theo ngày với phân trang
+    public function getOrdersByDateRangeWithPagination($start_date, $end_date, $offset, $limit)
+    {
+        $sql = "SELECT * FROM orders WHERE date_buy BETWEEN ? AND ? LIMIT ?, ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('ssii', $start_date, $end_date, $offset, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orders = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $orders;
+    }
+
+    // Đếm số lượng hóa đơn theo ngày
+    public function countOrdersByDateRange($start_date, $end_date)
+    {
+        $sql = "SELECT COUNT(*) as total FROM orders WHERE date_buy BETWEEN ? AND ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('ss', $start_date, $end_date);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $count = $result->fetch_assoc();
+        $stmt->close();
+        return $count['total'];
+    }
+
+   
 }

@@ -22,7 +22,7 @@ class Products {
     }
 
     public function getProductByUrl($url) {
-        $sql = 'SELECT * FROM  product WHERE url = ?';
+        $sql = 'SELECT * FROM  product WHERE product_url = ?';
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('s', $url);
         $stmt->execute();
@@ -35,7 +35,7 @@ class Products {
     }
 
     public function getProductsByName($name) {
-        $sql = "SELECT * FROM  product WHERE name LIKE ?";
+        $sql = "SELECT * FROM  product WHERE product_name LIKE ?";
         $stmt = $this->conn->prepare($sql);
         $searchTerm = "%{$name}%";
         $stmt->bind_param('s', $searchTerm);

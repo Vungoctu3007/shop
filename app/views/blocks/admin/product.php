@@ -75,7 +75,24 @@
     </table>
 
     <!-- Pagination -->
-
+    <nav aria-label="Page navigation example ">
+        <ul class="pagination d-flex justify-content-center ">
+            <li class="page-item">
+                <a onclick="load_prev_page()" class="page-link  text-dark fs-3" aria-label="Previous" style="cursor: pointer;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <span class="page-link text-dark fw-semibold"> <span id="current_page"
+                        class="text-primary"></span>/<span id="total_pages"></span></span>
+            </li>
+            <li class="page-item">
+                <a onclick="load_next_page()" class="page-link  text-dark fs-3" aria-label="Next" style="cursor: pointer;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 

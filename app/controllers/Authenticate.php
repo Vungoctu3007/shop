@@ -60,10 +60,8 @@ class Authenticate extends Controller {
             }
             $user = $this->authenticate_user($username);
 
-            $customerModel = $this->model('CustomerModel');
-            
             if ($user && password_verify($password, $user['password'])) {
-                $customer = $customerModel->getCustomerById($user['username']);
+                $customer = $this->getCustomerById($user['username']);
                 $response += [
                     'login_success' => 'Đăng nhập thành công',
                     'success' => true
@@ -202,6 +200,12 @@ class Authenticate extends Controller {
         $user = $this->model('user');
         $dataUser = $user->getAccountByUsername($username);
         return $dataUser;
+    }
+
+    public function getCustomerById($username) {
+        $user = $this->model('user');
+        $customer = $user->getCustomerById($username);
+        return $customer;
     }
 
     public function isEmailExist($email) {

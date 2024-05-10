@@ -17,11 +17,11 @@
         if (isset($content) && !empty($sub_content)) {
             $this->render('blocks/admin/navAdmin');
             echo '<div class="body-wrapper">';
-            $this->render('blocks/admin/headerAdmin', $sub_content);
+           // $this->render('blocks/admin/headerAdmin', $sub_content);
             echo '<div class="container-fluid">';
             // include('app/views/blocks/admin/orderView.php');
             $this->render($content, $sub_content);
-            $this->render('blocks/admin/footerAdmin');
+           // $this->render('blocks/admin/footerAdmin');
             echo '</div>';
             echo '</div>';
         } else {
@@ -29,7 +29,8 @@
             echo '<div class="body-wrapper">';
             $this->render('blocks/admin/headerAdmin');
             echo '<div class="container-fluid">';
-            $this->render('home/homeAdmin');
+           // $this->render('home/homeAdmin');
+             include('app/views/blocks/admin/thongke.php');
             $this->render('blocks/admin/footerAdmin');
             echo '</div>';
             echo '</div>';
