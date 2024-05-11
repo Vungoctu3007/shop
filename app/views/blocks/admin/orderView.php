@@ -303,6 +303,7 @@
                     <th>Tổng Cộng</th>
                     <th>Ngày Mua</th>
                     <th class="action-column">Hành động</th>
+                
                 </tr>
             </thead>
             <tbody>
@@ -317,13 +318,15 @@
 
                 // Đảm bảo rằng biến $order được truyền vào từ Controller đúng cách
                 if (!empty($dataorders)) {
+                   
                     foreach ($dataorders as $row) {
+                        $employee_id = !empty($row['employee_id']) ? htmlspecialchars($row['employee_id'], ENT_QUOTES, 'UTF-8') : 'IDAuto';
                         $jsonData = htmlspecialchars(json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
                         echo "<tr onclick='showDetails($jsonData)'>"; // Thêm sự kiện onclick vào đây
                         echo "<tr>";
                         echo "<td >" . htmlspecialchars($row['order_id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['account_id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['employee_id']) . "</td>";
+                        echo "<td>" . $employee_id . "</td>";  // "Auto" nếu mã nhân viên trống
                         // Cột trạng thái
                         echo "<td>";
                         switch ($row['status_order_id']) {
@@ -350,7 +353,7 @@
                         echo "<a href='javascript:void(0);' class='btn-delete' onclick='confirmDeletion(" . $row['order_id'] . "," . $row['status_order_id'] . ")'>Xóa</a>";
                         echo "<a href='javascript:void(0);' class='btn-view' onclick='showDetails(" . json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ")'>Chi Tiết</a>";
                         echo "</td>";
-
+                     
                         // Thêm nút sửa
 
                     }
@@ -391,6 +394,7 @@
     <div id="orderDetails" style="display: none; padding: 20px; background-color: white; border: 1px solid #ccc; margin-top: 20px;">
         <!-- Thông tin chi tiết sẽ được thêm vào đây bởi JavaScript -->
         <button onclick="closeDetails()" style="position: absolute; top: 5px; right: 10px; cursor: pointer;">Đóng</button>
+        <button onclick="printOrderDetails()" style="position: absolute; top: 5px; right: 10px; cursor: pointer;">In</button>
         <!-- Trong file view, thêm vào cột Hành động cho mỗi dòng hóa đơn -->
     </div>
 
@@ -433,12 +437,15 @@
         detailDiv.innerHTML = detailsHtml;
         detailDiv.style.display = 'block';
 
+
         // Đảm bảo nút đóng được thêm vào div chi tiết
         var closeButton = document.createElement('button');
         closeButton.textContent = 'Đóng';
         closeButton.onclick = closeDetails;
         closeButton.style = 'position: absolute; top: 5px; right: 10px; cursor: pointer;';
         detailDiv.appendChild(closeButton);
+
+
     }
 
 
@@ -466,7 +473,11 @@
 
     }
 
-
+    // Function to print the specific order
+    function printOrder(orderId) {
+        // Replace with your own logic to fetch the specific invoice
+        window.location.href = _WEB_ROOT + '/in-hoa-don/' + orderId;
+    }
 
     function confirmDeletion(orderId, statusId) {
         if (statusId === 3) { // Assuming 3 is the status ID for "Đã Hủy"

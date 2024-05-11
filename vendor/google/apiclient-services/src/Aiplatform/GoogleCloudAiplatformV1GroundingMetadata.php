@@ -20,45 +20,11 @@ namespace Google\Service\Aiplatform;
 class GoogleCloudAiplatformV1GroundingMetadata extends \Google\Collection
 {
   protected $collection_key = 'webSearchQueries';
-  protected $groundingAttributionsType = GoogleCloudAiplatformV1GroundingAttribution::class;
-  protected $groundingAttributionsDataType = 'array';
-  /**
-   * @var string[]
-   */
-  public $retrievalQueries;
   /**
    * @var string[]
    */
   public $webSearchQueries;
 
-  /**
-   * @param GoogleCloudAiplatformV1GroundingAttribution[]
-   */
-  public function setGroundingAttributions($groundingAttributions)
-  {
-    $this->groundingAttributions = $groundingAttributions;
-  }
-  /**
-   * @return GoogleCloudAiplatformV1GroundingAttribution[]
-   */
-  public function getGroundingAttributions()
-  {
-    return $this->groundingAttributions;
-  }
-  /**
-   * @param string[]
-   */
-  public function setRetrievalQueries($retrievalQueries)
-  {
-    $this->retrievalQueries = $retrievalQueries;
-  }
-  /**
-   * @return string[]
-   */
-  public function getRetrievalQueries()
-  {
-    return $this->retrievalQueries;
-  }
   /**
    * @param string[]
    */

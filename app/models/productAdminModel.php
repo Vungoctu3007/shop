@@ -51,9 +51,10 @@ class ProductAdminModel
         }
         return false;
     }
-    public function updateProduct($product_id, $product_name, $product_description, $product_ram, $product_rom, $product_battery, $product_screen, $product_made_in, $product_year_produce, $product_time_insurance, $product_price)
+    public function updateProduct($product_id, $product_name, $product_description, $product_ram, $product_rom, $product_battery, $product_screen, $product_made_in, $product_year_produce, $product_time_insurance, $product_price, $product_image)
     {
         $sql = "UPDATE product SET 
+        product_image = ?,
         product_name = ?,
         product_description = ?,
         product_ram = ?, 
@@ -66,7 +67,7 @@ class ProductAdminModel
         product_price = ? 
         WHERE product_id = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssiiidsiiii", $product_name, $product_description, $product_ram, $product_rom, $product_battery, $product_screen, $product_made_in, $product_year_produce, $product_time_insurance, $product_price, $product_id);
+        $stmt->bind_param("sssiiidsiiii", $product_image, $product_name, $product_description, $product_ram, $product_rom, $product_battery, $product_screen, $product_made_in, $product_year_produce, $product_time_insurance, $product_price, $product_id);
 
         if ($stmt->execute()) {
             return true;
@@ -172,9 +173,45 @@ class ProductAdminModel
 
         $result = $this->conn->query($sql);
 
-            $row = $result->fetch_assoc();
-            return $row['total_count'];
+        $row = $result->fetch_assoc();
+        return $row['total_count'];
     }
+
+    public function deleteProduct($product_id)
+    {
+        // Kiểm tra xem có tồn tại product_seri trong insurance hoặc detail_order không
+        $check_sql = "SELECT COUNT(*) AS count
+                  FROM product_seri s
+                  LEFT JOIN insurance i ON s.product_seri = i.product_seri
+                  LEFT JOIN detail_order d ON s.product_seri = d.product_seri
+                  WHERE s.product_id = ?";
+
+        $stmt_check = $this->conn->prepare($check_sql);
+        $stmt_check->bind_param("i", $product_id);
+        $stmt_check->execute();
+        $result_check = $stmt_check->get_result();
+        $row = $result_check->fetch_assoc();
+
+        // Nếu có sản phẩm_seri tương ứng trong insurance hoặc detail_order, không thể xóa
+        if ($row['count'] > 0) {
+            return false;
+        }
+
+        // Nếu không có sản phẩm_seri tương ứng trong insurance hoặc detail_order, thực hiện xóa sản phẩm
+        $sql = "DELETE FROM product WHERE product_id = ?";
+
+        $stmt_delete = $this->conn->prepare($sql);
+        $stmt_delete->bind_param("i", $product_id);
+        $stmt_delete->execute();
+
+        // Kiểm tra số hàng bị ảnh hưởng
+        if ($stmt_delete->affected_rows > 0) {
+            return true; // Xóa thành công
+        } else {
+            return false; // Không có gì bị xóa
+        }
+    }
+
 
 
 }

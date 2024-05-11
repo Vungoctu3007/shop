@@ -31,7 +31,7 @@ class TranslationWriter implements TranslationWriterInterface
     /**
      * Adds a dumper to the writer.
      */
-    public function addDumper(string $format, DumperInterface $dumper): void
+    public function addDumper(string $format, DumperInterface $dumper)
     {
         $this->dumpers[$format] = $dumper;
     }
@@ -52,7 +52,7 @@ class TranslationWriter implements TranslationWriterInterface
      *
      * @throws InvalidArgumentException
      */
-    public function write(MessageCatalogue $catalogue, string $format, array $options = []): void
+    public function write(MessageCatalogue $catalogue, string $format, array $options = [])
     {
         if (!isset($this->dumpers[$format])) {
             throw new InvalidArgumentException(sprintf('There is no dumper associated with format "%s".', $format));

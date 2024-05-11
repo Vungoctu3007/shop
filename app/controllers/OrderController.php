@@ -85,27 +85,32 @@ class OrderController extends Controller
     public function update($orderId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Lấy dữ liệu từ form
-            //$customer_id = $_POST['customer_id'];
-            //// $employee_id = $_POST['employee_id'];
-            // $total = $_POST['total'];
-            // $date_buy = $_POST['date_buy'];
-            $status_order_id = $_POST['status_order_id']; // Đảm bảo rằng form gửi lên có trường này
-
+            // Lấy trạng thái hiện tại của đơn hàng
+            $currentOrder = $this->model->getOrderById($orderId);
+            if (!$currentOrder) {
+                echo "Không tìm thấy đơn hàng.";
+                return;
+            }
+    
+            // Chỉ cho phép cập nhật nếu trạng thái hiện tại là "Chờ Xử Lý" (Pending) hoặc "Đã Hủy" (Cancelled)
+            if ($currentOrder['status_order_id'] != 1 && $currentOrder['status_order_id'] != 3) {
+                echo "Không thể cập nhật đơn hàng đã 'Đã Xử Lý'.";
+                return;
+            }
+    
+            // Lấy trạng thái mới từ form
+            $status_order_id = $_POST['status_order_id']; // Đảm bảo form có trường này
+    
             // Chuẩn bị dữ liệu để cập nhật
             $orderData = [
-                //   'customer_id' => $customer_id,
-                // 'employee_id' => $employee_id,
-                // 'total' => $total,
-                //  'date_buy' => $date_buy,
-                'status_order_id' => $status_order_id // Thêm trạng thái vào dữ liệu cập nhật
+                'status_order_id' => $status_order_id
             ];
-
+    
             // Thực hiện cập nhật thông qua model
             $result = $this->model->updateOrder($orderId, $orderData);
-
+    
             if ($result) {
-                // Chuyển hướng đến trang danh sách hóa đơn sau khi cập nhật thành công
+                // Chuyển hướng đến danh sách hóa đơn sau khi cập nhật thành công
                 header('Location: ' . _WEB_ROOT . '/bill');
                 exit;
             } else {
@@ -117,6 +122,7 @@ class OrderController extends Controller
             echo "Yêu cầu không hợp lệ.";
         }
     }
+    
 
 
     // chi tiết hóa đơn
@@ -139,5 +145,5 @@ class OrderController extends Controller
         // $this->render('layouts/admin_layout', $this->data); // đảm bảo bạn có layout này
     }
 
-    
+   
 }

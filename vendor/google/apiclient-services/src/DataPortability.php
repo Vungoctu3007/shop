@@ -37,9 +37,6 @@ use Google\Client;
  */
 class DataPortability extends \Google\Service
 {
-  /** Move a copy of the Google Alerts subscriptions you created.. */
-  const DATAPORTABILITY_ALERTS_SUBSCRIPTIONS =
-      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions";
   /** Move a copy of messages between you and the businesses you have conversations with across Google services.. */
   const DATAPORTABILITY_BUSINESSMESSAGING_CONVERSATIONS =
       "https://www.googleapis.com/auth/dataportability.businessmessaging.conversations";
@@ -94,9 +91,6 @@ class DataPortability extends \Google\Service
   /** Move a copy of the photos and videos you posted on Maps.. */
   const DATAPORTABILITY_MAPS_PHOTOS_VIDEOS =
       "https://www.googleapis.com/auth/dataportability.maps.photos_videos";
-  /** Move a copy of feedback you gave after completing trips using Maps directions.. */
-  const DATAPORTABILITY_MAPS_POST_TRIP_FEEDBACK =
-      "https://www.googleapis.com/auth/dataportability.maps.post_trip_feedback";
   /** Move a copy of the questions and answers you posted on Maps.. */
   const DATAPORTABILITY_MAPS_QUESTIONS_ANSWERS =
       "https://www.googleapis.com/auth/dataportability.maps.questions_answers";
@@ -236,6 +230,7 @@ class DataPortability extends \Google\Service
   public $archiveJobs;
   public $authorization;
   public $portabilityArchive;
+  public $rootUrlTemplate;
 
   /**
    * Constructs the internal representation of the DataPortability service.
@@ -248,6 +243,7 @@ class DataPortability extends \Google\Service
   {
     parent::__construct($clientOrConfig);
     $this->rootUrl = $rootUrl ?: 'https://dataportability.googleapis.com/';
+    $this->rootUrlTemplate = $rootUrl ?: 'https://dataportability.UNIVERSE_DOMAIN/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';

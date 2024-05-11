@@ -16,7 +16,7 @@ class Product_Admin extends Controller
         $this->data['sub_content']['dataProduct'] = $Products;
         $this->render('layouts/admin_layout', $this->data);
     }
-    public function loadData()
+    public function loadDataProduct()
     {
         $pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 4;
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -33,6 +33,28 @@ class Product_Admin extends Controller
         $product = $productModel->getProductById($product_id);
         header('Content-Type: application/json');
         echo json_encode(array("data" => $product));
+    }
+
+    public function deletProduct()
+    {
+        $product_id = $_POST['product_id'];
+        $productModel = $this->model("ProductAdminModel");
+        $product = $productModel->deleteProduct($product_id);
+        if ($product) {
+            echo json_encode(
+                array(
+                    "status" => "success",
+                    "message" => "Product updated successfully"
+                )
+            );
+        } else {
+            echo json_encode(
+                array(
+                    "status" => "error",
+                    "message" => "Failed to update product"
+                )
+            );
+        }
     }
     public function updateProductId()
     {
@@ -78,9 +100,10 @@ class Product_Admin extends Controller
 
     public function update()
     {
-        $productId = $_POST['product_id'] ?? null;
-        if ($productId != null) {
+        $product_id = $_POST['product_id'] ?? null;
+        if ($product_id != null) {
             // Lấy dữ liệu từ form gửi lên
+            $product_image = $_POST['product_image'];
             $product_name = $_POST['product_name'];
             $product_description = $_POST['product_description'];
             $product_ram = $_POST['product_ram'];
@@ -94,7 +117,7 @@ class Product_Admin extends Controller
 
             // Tiến hành cập nhật sản phẩm
             $productModel = $this->model("ProductAdminModel");
-            $result = $productModel->updateProduct($productId, $product_name, $product_description, $product_ram, $product_rom, $product_battery, $product_screen, $product_made_in, $product_year_produce, $product_time_insurance, $product_price);
+            $result = $productModel->updateProduct($product_id, $product_name, $product_description, $product_ram, $product_rom, $product_battery, $product_screen, $product_made_in, $product_year_produce, $product_time_insurance, $product_price,$product_image);
             $productModel->updateProductQuantity();
 
             // Kiểm tra kết quả và trả về JSON response
@@ -135,21 +158,24 @@ class Product_Admin extends Controller
             if ($products !== false) {
                 // Count total products
                 $totalProducts = $productModel->countProductBySearch($keyword); // Change to countProductBySearch
-
+            
                 // Calculate total pages
                 $totalPages = ceil($totalProducts / $sizePage);
-
+            
                 // Return JSON response
                 header('Content-Type: application/json');
                 echo json_encode(array("data" => $products, "current_page" => $page, "total_page" => $totalPages));
             } else {
                 // Return JSON response if no products found
                 header('Content-Type: application/json');
-                echo json_encode(array("error" => "No products found"));
+                echo json_encode("No products found");
             }
+            
         } else {
+            $productModel = $this->model("ProductAdminModel");
+            $Products = $productModel->getAllProducts($page, $sizePage);
             header('Content-Type: application/json');
-            echo json_encode(array("error" => "Missing parameters"));
+            echo json_encode($Products, $page);
         }
     }
 

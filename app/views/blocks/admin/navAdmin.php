@@ -11,13 +11,14 @@
     </div>
     <!-- Sidebar navigation-->
     <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+
       <ul id="sidebarnav">
         <li class="nav-small-cap">
           <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
           <span class="hide-menu">Trang chủ</span>
         </li>
         <li class="sidebar-item">
-          <a class="sidebar-link" href="./index.html" aria-expanded="false">
+        <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/thongke"  aria-expanded="false">
             <span>
               <i class="ti ti-layout-dashboard"></i>
             </span>
@@ -88,8 +89,9 @@
         </li>
       </ul>
 
+
     </nav>
     <!-- End Sidebar navigation -->
-  </div>
-  <!-- End Sidebar scroll-->
+    <!-- Sidebar scroll-->
+  
 </aside>

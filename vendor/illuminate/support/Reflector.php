@@ -141,28 +141,20 @@ class Reflector
     }
 
     /**
-     * Determine if the parameter's type is a Backed Enum with a string or int backing type.
+     * Determine if the parameter's type is a Backed Enum with a string backing type.
      *
      * @param  \ReflectionParameter  $parameter
      * @return bool
      */
-    public static function isParameterBackedEnumWithValidBackingType($parameter)
+    public static function isParameterBackedEnumWithStringBackingType($parameter)
     {
-        if (! $parameter->getType() instanceof ReflectionNamedType) {
-            return false;
-        }
+        $backedEnumClass = (string) $parameter->getType();
 
-        $backedEnumClass = $parameter->getType()?->getName();
-
-        if (is_null($backedEnumClass)) {
-            return false;
-        }
-
-        if (enum_exists($backedEnumClass)) {
+        if (function_exists('enum_exists') && enum_exists($backedEnumClass)) {
             $reflectionBackedEnum = new ReflectionEnum($backedEnumClass);
 
             return $reflectionBackedEnum->isBacked()
-                && in_array($reflectionBackedEnum->getBackingType()->getName(), ['int', 'string']);
+                && $reflectionBackedEnum->getBackingType()->getName() == 'string';
         }
 
         return false;
