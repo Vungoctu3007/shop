@@ -8,10 +8,18 @@ $routes['dang-nhap'] = 'signin/login';
 $routes['san-pham'] = 'product/index';
 $routes['bill'] =  'OrderController/index';
 
+//phan quyen
+//account
+$routes['admin/account'] = 'AccountController';
+
 // Route admin
 $routes['admin/dashboard'] = 'admin/index';
 
 $routes['admin/product'] = 'Product_Admin/index';
+
+//phan quyen
+$routes['admin/role'] =  'RoleController';
+
 //phần hóa đơn
 
 $routes['bill'] = 'OrderController/index';

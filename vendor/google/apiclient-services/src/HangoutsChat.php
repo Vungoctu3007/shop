@@ -88,6 +88,7 @@ class HangoutsChat extends \Google\Service
   public $spaces_messages_attachments;
   public $spaces_messages_reactions;
   public $spaces_spaceEvents;
+  public $rootUrlTemplate;
 
   /**
    * Constructs the internal representation of the HangoutsChat service.
@@ -100,6 +101,7 @@ class HangoutsChat extends \Google\Service
   {
     parent::__construct($clientOrConfig);
     $this->rootUrl = $rootUrl ?: 'https://chat.googleapis.com/';
+    $this->rootUrlTemplate = $rootUrl ?: 'https://chat.UNIVERSE_DOMAIN/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';
@@ -292,6 +294,20 @@ class HangoutsChat extends \Google\Service
                 'showInvited' => [
                   'location' => 'query',
                   'type' => 'boolean',
+                ],
+              ],
+            ],'patch' => [
+              'path' => 'v1/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => [
+                'name' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'updateMask' => [
+                  'location' => 'query',
+                  'type' => 'string',
                 ],
               ],
             ],
