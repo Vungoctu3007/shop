@@ -36,6 +36,7 @@ class Order extends Controller {
             $product_series = $orders->getProductSeriByProductId($cart_item['product_id'], $cart_item['quantity']);
             foreach ($product_series as $product_seri) {
                 $orders->placeOrderWithItems($order_id, $product_seri['product_seri']);
+                $orders->updateStatusProductSeries($product_seri['product_seri']);
             }
             
         }

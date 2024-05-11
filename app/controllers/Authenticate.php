@@ -76,7 +76,7 @@ class Authenticate extends Controller {
                 } else if($user['role_id'] == 3) { 
                     Session::data('customer', $customer);
                     $response += [
-                        'redirect_url' => 'http://localhost/shop'
+                        'redirect_url' => 'http://localhost/shop/dien-thoai'
                     ];
                 }
             } else {

@@ -31,7 +31,6 @@
                     </button>
                     <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                         <div class="navbar-nav mx-auto">
-                            <a href="<?php echo _WEB_ROOT; ?>/trang-chu" class="nav-item nav-link active">Home</a>
                             <a href="<?php echo _WEB_ROOT; ?>/dien-thoai" class="nav-item nav-link">Sản phẩm</a>
                             <a href="<?php echo _WEB_ROOT; ?>/gio-hang" class="nav-item nav-link">Giỏ hàng</a>
                             <a href="<?php echo _WEB_ROOT; ?>/don-hang" class="nav-item nav-link">Đơn hàng</a>
