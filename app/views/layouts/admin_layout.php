@@ -60,7 +60,7 @@
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/productAddmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/insuranceAdddmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/roleAdmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/role_Admin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/accountAdmin.js"></script>
 
 

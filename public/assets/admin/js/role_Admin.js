@@ -257,66 +257,66 @@ function loadNavigation() {
 }
 
 // Gọi hàm loadNavigation() để tải nội dung navigation và xử lý sự kiện click
-loadNavigation();
+// loadNavigation();
 
 
-// Hàm để load navigation dựa trên quyền của người dùng
-function loadNavigationBasedOnPermissions(userPermissions) {
-  // Danh sách các chức năng và quyền tương ứng
-  var navigationPermissions = {
-      "Dashboard": ["view_dashboard"],
-      "Quản lý tài khoản": ["manage_accounts"],
-      "Quản lý phân quyền": ["manage_roles"],
-      // Thêm các chức năng khác ở đây...
-      "Đăng xuất": ["logout"] // Ví dụ cho chức năng Đăng xuất
-  };
+// // Hàm để load navigation dựa trên quyền của người dùng
+// function loadNavigationBasedOnPermissions(userPermissions) {
+//   // Danh sách các chức năng và quyền tương ứng
+//   var navigationPermissions = {
+//       "Dashboard": ["view_dashboard"],
+//       "Quản lý tài khoản": ["manage_accounts"],
+//       "Quản lý phân quyền": ["manage_roles"],
+//       // Thêm các chức năng khác ở đây...
+//       "Đăng xuất": ["logout"] // Ví dụ cho chức năng Đăng xuất
+//   };
 
-  // Lấy thẻ nav
-  var sidebarNav = document.querySelector(".sidebar-nav");
+//   // Lấy thẻ nav
+//   var sidebarNav = document.querySelector(".sidebar-nav");
 
-  // Xóa nội dung navigation hiện tại
-  sidebarNav.innerHTML = '';
+//   // Xóa nội dung navigation hiện tại
+//   sidebarNav.innerHTML = '';
 
-  // Duyệt qua danh sách chức năng và quyền tương ứng để tạo navigation mới
-  for (var navItemText in navigationPermissions) {
-      if (navigationPermissions.hasOwnProperty(navItemText)) {
-          var requiredPermissions = navigationPermissions[navItemText];
-          // Kiểm tra xem người dùng có quyền thực hiện chức năng này không
-          if (requiredPermissions.some(permission => userPermissions.includes(permission))) {
-              // Nếu có quyền, thêm mục navigation tương ứng
-              var navItem = document.createElement('li');
-              navItem.classList.add('sidebar-item');
-              var navLink = document.createElement('a');
-              navLink.classList.add('sidebar-link');
-              navLink.href = getLinkByNavItemText(navItemText); // Bạn cần cung cấp hàm này để lấy đường link tương ứng với chức năng
-              navLink.setAttribute('aria-expanded', 'false');
-              navLink.innerHTML = `
-                  <span>
-                      <i class="ti ti-login"></i>
-                  </span>
-                  <span class="hide-menu">${navItemText}</span>
-              `;
-              navItem.appendChild(navLink);
-              sidebarNav.appendChild(navItem);
-          }
-      }
-  }
-}
+//   // Duyệt qua danh sách chức năng và quyền tương ứng để tạo navigation mới
+//   for (var navItemText in navigationPermissions) {
+//       if (navigationPermissions.hasOwnProperty(navItemText)) {
+//           var requiredPermissions = navigationPermissions[navItemText];
+//           // Kiểm tra xem người dùng có quyền thực hiện chức năng này không
+//           if (requiredPermissions.some(permission => userPermissions.includes(permission))) {
+//               // Nếu có quyền, thêm mục navigation tương ứng
+//               var navItem = document.createElement('li');
+//               navItem.classList.add('sidebar-item');
+//               var navLink = document.createElement('a');
+//               navLink.classList.add('sidebar-link');
+//               navLink.href = getLinkByNavItemText(navItemText); // Bạn cần cung cấp hàm này để lấy đường link tương ứng với chức năng
+//               navLink.setAttribute('aria-expanded', 'false');
+//               navLink.innerHTML = `
+//                   <span>
+//                       <i class="ti ti-login"></i>
+//                   </span>
+//                   <span class="hide-menu">${navItemText}</span>
+//               `;
+//               navItem.appendChild(navLink);
+//               sidebarNav.appendChild(navItem);
+//           }
+//       }
+//   }
+// }
 
-// Hàm giả định để lấy đường link tương ứng với chức năng
-function getLinkByNavItemText(navItemText) {
-  // Giả sử bạn có một bản đồ chức năng (function map) và từ đó bạn có thể lấy đường link
-  var functionMap = {
-      "Dashboard": "./index.html",
-      "Quản lý tài khoản": "http://localhost/shop/admin/account",
-      "Quản lý phân quyền": "http://localhost/shop/admin/role",
-      // Thêm các chức năng khác ở đây...
-      "Đăng xuất": "./authentication-login.html" // Ví dụ cho chức năng Đăng xuất
-  };
-  return functionMap[navItemText];
-}
+// // Hàm giả định để lấy đường link tương ứng với chức năng
+// function getLinkByNavItemText(navItemText) {
+//   // Giả sử bạn có một bản đồ chức năng (function map) và từ đó bạn có thể lấy đường link
+//   var functionMap = {
+//       "Dashboard": "./index.html",
+//       "Quản lý tài khoản": "http://localhost/shop/admin/account",
+//       "Quản lý phân quyền": "http://localhost/shop/admin/role",
+//       // Thêm các chức năng khác ở đây...
+//       "Đăng xuất": "./authentication-login.html" // Ví dụ cho chức năng Đăng xuất
+//   };
+//   return functionMap[navItemText];
+// }
 
-// Đây là ví dụ về cách bạn có thể sử dụng hàm loadNavigationBasedOnPermissions
-// Sau khi lấy thông tin quyền của người dùng, bạn có thể gọi hàm này để tải navigation tương ứng
-var userPermissions = ["view_dashboard", "manage_accounts"]; // Ví dụ danh sách quyền của người dùng
-// loadNavigationBasedOnPermissions(userPermissions);
+// // Đây là ví dụ về cách bạn có thể sử dụng hàm loadNavigationBasedOnPermissions
+// // Sau khi lấy thông tin quyền của người dùng, bạn có thể gọi hàm này để tải navigation tương ứng
+// var userPermissions = ["view_dashboard", "manage_accounts"]; // Ví dụ danh sách quyền của người dùng
+// // loadNavigationBasedOnPermissions(userPermissions);
