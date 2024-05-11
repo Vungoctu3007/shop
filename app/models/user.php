@@ -74,5 +74,21 @@ class User {
         }
     }
 
+    public function getCustomerById($customer_id) {
+        $sql = "SELECT * FROM customer WHERE customer_id = ?";
+        $stmt = $this->__conn->prepare($sql);
+        if(!$stmt) {
+            die('prepare failed: ' . $this->__conn->error);
+        }
+        $stmt->bind_param('s', $customer_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result->num_rows > 0) {
+            $customer = $result->fetch_assoc();
+            return $customer;
+        }
+        return false;
+    }
+    
     
 }

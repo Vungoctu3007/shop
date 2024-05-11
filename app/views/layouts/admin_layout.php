@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Modernize</title>
@@ -25,11 +23,12 @@
         if (isset($content) && !empty($sub_content)) {
             $this->render('blocks/admin/navAdmin');
             echo '<div class="body-wrapper">';
-            $this->render('blocks/admin/headerAdmin', $sub_content);
+           // $this->render('blocks/admin/headerAdmin', $sub_content);
             echo '<div class="container-fluid">';
             // include('app/views/blocks/admin/orderView.php');
             $this->render($content, $sub_content);
-            // $this->render('blocks/admin/footerAdmin');
+           // $this->render('blocks/admin/footerAdmin');
+
             echo '</div>';
             echo '</div>';
         } else {
@@ -37,11 +36,19 @@
             echo '<div class="body-wrapper">';
             $this->render('blocks/admin/headerAdmin');
             echo '<div class="container-fluid">';
-            $this->render('home/homeAdmin');
+           // $this->render('home/homeAdmin');
+             include('app/views/blocks/admin/thongke.php');
             $this->render('blocks/admin/footerAdmin');
             echo '</div>';
             echo '</div>';
         }
+        ?>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
+
+        
         ?>
     </div>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
@@ -50,11 +57,14 @@
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/app.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/simplebar/dist/simplebar.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/productAddmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/insuranceAdddmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/roleAdmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/accountAdmin.js"></script>
 
 
+    <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
 
 </body>
 
