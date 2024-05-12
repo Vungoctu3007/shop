@@ -13,25 +13,23 @@ class thongkeModel
     // load list hóa đơn
     public function getthongke($offset, $limit)
     {
-        $sql = "SELECT
-                orders.order_id, 
-                orders.account_id, 
-                orders.status_order_id, 
-                orders.employee_id, 
-                orders.total, 
-                orders.date_buy, 
-                product.product_name, 
-                product.quantity
-            FROM orders
-            JOIN detail_order ON orders.order_id = detail_order.order_id
+        $sql = "SELECT 
+            product.product_name,
+            categories.category_name,
+            SUM(product.quantity) AS quantity,
+            SUM(orders.total) AS total, 
+            MIN(orders.date_buy) AS date_buy, 
+            orders.status_order_id
+            FROM orders 
+            JOIN detail_order ON orders.order_id = detail_order.order_id 
             JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
-            JOIN product ON product_seri.product_id = product.product_id
+            JOIN product ON product_seri.product_id = product.product_id 
+            JOIN categories ON product.category_id = categories.category_id 
             JOIN status_order ON orders.status_order_id = status_order.status_order_id
             WHERE orders.status_order_id = 2
+            GROUP BY product.product_name, categories.category_name, orders.status_order_id
+            ORDER BY product.product_name
             LIMIT ?, ?";
-
-
-
 
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param("ii", $offset, $limit);
@@ -39,42 +37,109 @@ class thongkeModel
         $result = $stmt->get_result();
         $thongke = [];
 
-        // Lưu kết quả vào mảng
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $thongke[] = $row;
             }
         } else {
-            error_log("SQL Error: " . $this->__conn->error);  // Ghi log lỗi SQL
+            error_log("SQL Error: " . $this->__conn->error);
         }
 
-        // Đóng statement
         $stmt->close();
         return $thongke;
     }
-
-
-    public function getTotalRevenue()
+    //tong doanh thu mac dinh
+    public function TongDoanhThuKL()
     {
-        $sql = "SELECT SUM(orders.total) AS totalRevenue
-                FROM orders
-                JOIN detail_order ON orders.order_id = detail_order.order_id
-                WHERE orders.status_order_id = 2";
+        $sql = "SELECT SUM(total) AS totalRevenue FROM orders WHERE status_order_id = 2";
         $result = $this->__conn->query($sql);
-        return $result ? $result->fetch_assoc()['totalRevenue'] : 0;
+        if ($result) {
+            $row = $result->fetch_assoc();
+            return $row['totalRevenue'] ?? 0;
+        } else {
+            error_log("SQL Error: " . $this->__conn->error);
+            return 0;
+        }
+    }
+
+    public function TongSanPhamKL()
+    {
+        $sql = "SELECT SUM(product.quantity) AS totalProductsSold
+        FROM orders
+        JOIN detail_order ON orders.order_id = detail_order.order_id
+        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+        JOIN product ON product_seri.product_id = product.product_id
+        WHERE orders.status_order_id = 2";
+        $result = $this->__conn->query($sql);
+        return $result ? $result->fetch_assoc()['totalProductsSold'] : 0;
     }
 
 
-    public function getTotalProductsSold()
+    //tong doanh thu co loc
+    public function getTotalRevenue($start_date, $end_date, $category_name)
+    {
+        $sql = "SELECT SUM(orders.total) AS totalRevenue
+        FROM orders
+        JOIN detail_order ON orders.order_id = detail_order.order_id
+        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+        JOIN product ON product_seri.product_id = product.product_id
+        JOIN categories ON product.category_id = categories.category_id
+        WHERE orders.status_order_id = 2";
+
+        if ($start_date && $end_date) {
+            $sql .= " AND orders.date_buy >= ? AND orders.date_buy <= ?";
+        }
+        if ($category_name) {
+            $sql .= " AND categories.category_name = ?";
+        }
+
+        $stmt = $this->__conn->prepare($sql);
+        $params = [];
+        if ($start_date && $end_date) {
+            $params[] = $start_date;
+            $params[] = $end_date;
+        }
+        if ($category_name) {
+            $params[] = $category_name;
+        }
+        $stmt->bind_param(str_repeat("s", count($params)), ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        return $result['totalRevenue'] ?? 0;
+    }
+
+
+    //tong sp co loc
+    public function getTotalProductsSold($start_date, $end_date, $category_name)
     {
         $sql = "SELECT SUM(product.quantity) AS totalProductsSold
-                FROM orders
-                JOIN detail_order ON orders.order_id = detail_order.order_id
-                JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
-                JOIN product ON product_seri.product_id = product.product_id
-                WHERE orders.status_order_id = 2";
-        $result = $this->__conn->query($sql);
-        return $result ? $result->fetch_assoc()['totalProductsSold'] : 0;
+            FROM orders
+            JOIN detail_order ON orders.order_id = detail_order.order_id
+            JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+            JOIN product ON product_seri.product_id = product.product_id
+            JOIN categories ON product.category_id = categories.category_id
+            WHERE orders.status_order_id = 2";
+
+        if ($start_date && $end_date) {
+            $sql .= " AND orders.date_buy >= ? AND orders.date_buy <= ?";
+        }
+        if ($category_name) {
+            $sql .= " AND categories.category_name = ?";
+        }
+
+        $stmt = $this->__conn->prepare($sql);
+        $params = [];
+        if ($start_date && $end_date) {
+            $params[] = $start_date;
+            $params[] = $end_date;
+        }
+        if ($category_name) {
+            $params[] = $category_name;
+        }
+        $stmt->bind_param(str_repeat("s", count($params)), ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        return $result['totalProductsSold'] ?? 0;
     }
 
     public function getTotalSalesStaff()
@@ -96,38 +161,79 @@ class thongkeModel
         return $result ? $result->fetch_assoc()['totalAccounts'] : 0;
     }
 
+    // lay loai dth
+    public function getCategories()
+    {
+        $sql = "SELECT category_id, category_name FROM categories";
+        $result = $this->__conn->query($sql);
+        $categories = [];
+
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $categories[] = $row;
+            }
+        } else {
+            error_log("SQL Error: " . $this->__conn->error);
+        }
+
+        return $categories;
+    }
     //loc thong ke
-    public function timthongke($start_date, $end_date, $offset, $limit)
+    public function timthongke($start_date, $end_date, $category_name, $offset, $limit)
     {
         $sql = "SELECT 
-                orders.order_id, 
-                orders.account_id, 
-                orders.status_order_id, 
-                orders.employee_id, 
-                orders.total, 
-                orders.date_buy, 
-                product.product_name, 
-                product.quantity
+                product.product_name,
+                categories.category_name,
+                SUM(product.quantity) AS quantity,
+                SUM(orders.total) AS total, 
+                MIN(orders.date_buy) AS date_buy, 
+                orders.status_order_id
             FROM orders
             JOIN detail_order ON orders.order_id = detail_order.order_id
             JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
             JOIN product ON product_seri.product_id = product.product_id
-            WHERE orders.date_buy >= ? AND orders.date_buy <= ? 
-            AND orders.status_order_id = 2
-            LIMIT ?, ?";
+            JOIN categories ON product.category_id = categories.category_id
+            WHERE orders.status_order_id = 2";
 
+        // Thêm điều kiện cho ngày bắt đầu và kết thúc
+        if ($start_date && $end_date) {
+            $sql .= " AND orders.date_buy >= ? AND orders.date_buy <= ?";
+        }
+
+        // Thêm điều kiện cho loại sản phẩm
+        if ($category_name) {
+            $sql .= " AND categories.category_name = ?";
+        }
+
+        // Nhóm kết quả theo tên sản phẩm và loại sản phẩm
+        $sql .= " GROUP BY product.product_name, categories.category_name, orders.status_order_id";
+        $sql .= " ORDER BY product.product_name";
+        $sql .= " LIMIT ?, ?";
+
+        // Chuẩn bị câu truy vấn
         $stmt = $this->__conn->prepare($sql);
-        $stmt->bind_param("ssii", $start_date, $end_date, $offset, $limit);
+        // Bổ sung các tham số tùy thuộc vào dữ liệu nhập vào
+        $params = [];
+        if ($start_date && $end_date) {
+            $params[] = $start_date;
+            $params[] = $end_date;
+        }
+        if ($category_name) {
+            $params[] = $category_name;
+        }
+        $params[] = $offset;
+        $params[] = $limit;
+
+        $stmt->bind_param(str_repeat("s", count($params)), ...$params);
         $stmt->execute();
         $result = $stmt->get_result();
         $thongke = [];
-
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $thongke[] = $row;
             }
         } else {
-            error_log("SQL Error: " . $this->__conn->error);  // Ghi log lỗi SQL
+            error_log("SQL Error: " . $this->__conn->error);
         }
 
         $stmt->close();
@@ -143,7 +249,6 @@ class thongkeModel
         WHERE YEAR(date_buy) = ? AND status_order_id = 2
         GROUP BY MONTH(date_buy)
         ORDER BY MONTH(date_buy)";
-
     }
 
 
@@ -189,21 +294,21 @@ class thongkeModel
     public function getThongKeAscPaginated($offset, $limit)
     {
         $sql = "SELECT 
-        orders.order_id, 
-        orders.account_id, 
-        orders.status_order_id, 
-        orders.employee_id, 
-        orders.total, 
-        orders.date_buy, 
-        product.product_name, 
-        product.quantity
-    FROM orders
-    JOIN detail_order ON orders.order_id = detail_order.order_id
-    JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
-    JOIN product ON product_seri.product_id = product.product_id
-    WHERE orders.status_order_id = 2
-    ORDER BY orders.total ASC
-    LIMIT ?, ?";
+            product.product_name,
+            categories.category_name,
+            SUM(product.quantity) AS quantity, 
+            SUM(orders.total) AS total, 
+            MIN(orders.date_buy) AS date_buy, 
+            orders.status_order_id
+        FROM orders
+        JOIN detail_order ON orders.order_id = detail_order.order_id
+        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+        JOIN product ON product_seri.product_id = product.product_id
+        JOIN categories ON product.category_id = categories.category_id
+        WHERE orders.status_order_id = 2
+        GROUP BY product.product_name, categories.category_name, orders.status_order_id
+        ORDER BY SUM(orders.total) ASC
+        LIMIT ?, ?";
 
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param("ii", $offset, $limit);
@@ -222,29 +327,27 @@ class thongkeModel
         $stmt->close();
         return $thongke;
     }
-
 
 
     // Lấy thống kê giảm dần, có phân trang
     public function getThongKeDescPaginated($offset, $limit)
     {
         $sql = "SELECT 
-            orders.order_id, 
-            orders.account_id, 
-            orders.status_order_id, 
-            orders.employee_id, 
-            orders.total, 
-            orders.date_buy, 
-            product.product_name, 
-            product.quantity
-        FROM orders
-        JOIN detail_order ON orders.order_id = detail_order.order_id
-        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
-        JOIN product ON product_seri.product_id = product.product_id
-        WHERE orders.status_order_id = 2
-        ORDER BY orders.total DESC
-        LIMIT ?, ?";
-
+                product.product_name,
+                categories.category_name,
+                SUM(product.quantity) AS quantity, 
+                SUM(orders.total) AS total, 
+                MIN(orders.date_buy) AS date_buy, 
+                orders.status_order_id
+            FROM orders
+            JOIN detail_order ON orders.order_id = detail_order.order_id
+            JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+            JOIN product ON product_seri.product_id = product.product_id
+            JOIN categories ON product.category_id = categories.category_id
+            WHERE orders.status_order_id = 2
+            GROUP BY product.product_name, categories.category_name, orders.status_order_id
+            ORDER BY SUM(orders.total) DESC
+            LIMIT ?, ?";
 
         $stmt = $this->__conn->prepare($sql);
         $stmt->bind_param("ii", $offset, $limit);
@@ -263,6 +366,9 @@ class thongkeModel
         $stmt->close();
         return $thongke;
     }
+
+
+
     // Hàm để lấy danh sách các năm
     public function getAvailableYears()
     {
@@ -277,6 +383,53 @@ class thongkeModel
         }
         return $years;
     }
+
+
+
+
+    public function getThongKeNameAsc($offset, $limit) {
+        $sql = "SELECT product.product_name, categories.category_name, SUM(product.quantity) AS quantity, SUM(orders.total) AS total
+                FROM orders
+                JOIN detail_order ON orders.order_id = detail_order.order_id
+                JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+                JOIN product ON product_seri.product_id = product.product_id
+                JOIN categories ON product.category_id = categories.category_id 
+                WHERE orders.status_order_id = 2
+                GROUP BY product.product_name
+                ORDER BY product.product_name ASC
+                LIMIT ?, ?";
+        return $this->executeSqlWithPagination($sql, $offset, $limit);
+    }
+    
+    public function getThongKeNameDesc($offset, $limit) {
+        $sql = "SELECT product.product_name, categories.category_name, SUM(product.quantity) AS quantity, SUM(orders.total) AS total
+        FROM orders
+        JOIN detail_order ON orders.order_id = detail_order.order_id
+        JOIN product_seri ON detail_order.product_seri = product_seri.product_seri
+        JOIN product ON product_seri.product_id = product.product_id
+        JOIN categories ON product.category_id = categories.category_id 
+        WHERE orders.status_order_id = 2
+        GROUP BY product.product_name
+        ORDER BY product.product_name DESC
+                LIMIT ?, ?";
+        return $this->executeSqlWithPagination($sql, $offset, $limit);
+    }
+    
+    private function executeSqlWithPagination($sql, $offset, $limit) {
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("ii", $offset, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        $stmt->close();
+        return $data;
+    }
+    
+
+
 
     // Trong Model (thongkeModel bieu do cot)
     public function getMonthlyRevenueByYear($year)

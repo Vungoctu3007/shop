@@ -93,7 +93,7 @@
         <?php else: ?>
             <p>Không có thông tin chi tiết sản phẩm cho hóa đơn này.</p>
         <?php endif; ?>
-        <a href="<?= _WEB_ROOT ?>/bill" class="btn-close">Đóng</a>
+        <a href="<?= _WEB_ROOT ?>/admin/order" class="btn-close">Đóng</a>
     </div>
 </body>
 </html>

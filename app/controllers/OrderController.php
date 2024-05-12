@@ -50,7 +50,7 @@ class OrderController extends Controller
         $result = $this->model->deleteOrder($orderId);
         if ($result) {
             // Xóa thành công, bạn có thể chuyển hướng người dùng hoặc hiển thị thông báo
-            header('Location: ' . _WEB_ROOT . '/bill');
+            header('Location: ' . _WEB_ROOT . '/admin/order');
         } else {
             // Xử lý khi không thể xóa hóa đơn
             echo "Không thể xóa hóa đơn.";
@@ -63,22 +63,18 @@ class OrderController extends Controller
     public function edit($orderId)
     {
 
-        $this->data['content'] = 'editOrder';
-        // Lấy thông tin khách hàng và nhân viên để hiển thị danh sách lựa chọn
-        $accountModel = $this->model("AccountModel");
-        $employeeModel = $this->model("EmployeeModel");
-
-
+        // Lấy thông tin đơn hàng hiện tại
         $orderInfo = $this->model->getOrderById($orderId);
-        $accounts = $accountModel->getAccounts();
-        $employees = $employeeModel->getEmployees();
 
+        // Kiểm tra xem có tìm thấy đơn hàng không
+        if (!$orderInfo) {
+            echo "Không tìm thấy đơn hàng.";
+            return;
+        }
+
+        // Gán dữ liệu đơn hàng vào mảng data để truyền sang view
         $this->data['order_info'] = $orderInfo;
-        $this->data['accounts'] = $accounts;
-        $this->data['employees'] = $employees;
 
-
-        // Render view sử dụng layout của admin
         $this->render('blocks/admin/editOrder', $this->data);
     }
 
@@ -91,27 +87,27 @@ class OrderController extends Controller
                 echo "Không tìm thấy đơn hàng.";
                 return;
             }
-    
+
             // Chỉ cho phép cập nhật nếu trạng thái hiện tại là "Chờ Xử Lý" (Pending) hoặc "Đã Hủy" (Cancelled)
             if ($currentOrder['status_order_id'] != 1 && $currentOrder['status_order_id'] != 3) {
                 echo "Không thể cập nhật đơn hàng đã 'Đã Xử Lý'.";
                 return;
             }
-    
+
             // Lấy trạng thái mới từ form
             $status_order_id = $_POST['status_order_id']; // Đảm bảo form có trường này
-    
+
             // Chuẩn bị dữ liệu để cập nhật
             $orderData = [
                 'status_order_id' => $status_order_id
             ];
-    
+
             // Thực hiện cập nhật thông qua model
             $result = $this->model->updateOrder($orderId, $orderData);
-    
+
             if ($result) {
                 // Chuyển hướng đến danh sách hóa đơn sau khi cập nhật thành công
-                header('Location: ' . _WEB_ROOT . '/bill');
+                header('Location: ' . _WEB_ROOT . '/admin/order');
                 exit;
             } else {
                 // Hiển thị thông báo lỗi
@@ -122,7 +118,7 @@ class OrderController extends Controller
             echo "Yêu cầu không hợp lệ.";
         }
     }
-    
+
 
 
     // chi tiết hóa đơn
@@ -144,6 +140,4 @@ class OrderController extends Controller
         $this->render('blocks/admin/chitietsp', $this->data);
         // $this->render('layouts/admin_layout', $this->data); // đảm bảo bạn có layout này
     }
-
-   
 }
