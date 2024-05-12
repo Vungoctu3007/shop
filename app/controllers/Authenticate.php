@@ -58,9 +58,9 @@ class Authenticate extends Controller {
                     'error_message_password' => 'Vui lòng nhập vào trường này'
                 ];
             }
-            $user = $this->authenticate_user($username);
+            $user = $this->authenticate_user($username, $password);
 
-            if ($user && password_verify($password, $user['password'])) {
+            if ($user) {
                 $customer = $this->getCustomerById($user['username']);
                 $response += [
                     'login_success' => 'Đăng nhập thành công',
@@ -78,6 +78,10 @@ class Authenticate extends Controller {
                     $response += [
                         'redirect_url' => 'http://localhost/shop/dien-thoai'
                     ];
+                } else {
+                    $response += [
+                        'redirect_url' => 'http://localhost/shop/admin'
+                    ]; 
                 }
             } else {
                 $response += [
@@ -176,8 +180,7 @@ class Authenticate extends Controller {
         if(empty($response['error_messages'])) {
             try {
                 $account = $this->model('account');
-                $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-                $account->addAccount($username, $hashPassword, 3, 1);
+                $account->addAccount($username, $password, 3, 1);
                 $response['success'] = true;
                 $response['redirect_url'] = 'http://localhost/shop/authenticate/signin';
             } catch (Exception $e) {
@@ -196,9 +199,9 @@ class Authenticate extends Controller {
         $this->render('blocks/clients/nextStepSignup', $this->data);
     }
 
-    public function authenticate_user($username) {
+    public function authenticate_user($username, $password) {
         $user = $this->model('user');
-        $dataUser = $user->getAccountByUsername($username);
+        $dataUser = $user->getAccountByUsername($username, $password);
         return $dataUser;
     }
 

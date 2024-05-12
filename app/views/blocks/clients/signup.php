@@ -63,6 +63,7 @@
                 Đăng ký ngay
               </button>
               <p class="fw-lighter">Bạn đã có tài khoản? <a href="<?php echo _WEB_ROOT; ?>/authenticate/signin">Đăng nhập</a></p>
+              <p class="fw-lighter"><a href="<?php echo _WEB_ROOT; ?>/dien-thoai">Về trang chủ</a></p>
             </form>
           </div>
         </div>

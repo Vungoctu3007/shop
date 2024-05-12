@@ -8,19 +8,21 @@ class User {
         $this->__conn = Connection::getInstance($db_config);
     }
 
-    public function getAccountByUsername($username) {
-        $sql = "SELECT * FROM account WHERE username = ?";
+    public function getAccountByUsername($username, $password) {
+        $sql = "SELECT * FROM account WHERE username = ? AND password = ? AND status_account = 1";
         $stmt = $this->__conn->prepare($sql);
-        $stmt->bind_param('s', $username);
+        $stmt->bind_param('ss', $username, $password); // Sử dụng 'ss' vì cả hai tham số đều là chuỗi
         $stmt->execute();
         $result = $stmt->get_result();
-        if($result->num_rows > 0) { 
+        
+        if ($result->num_rows > 0) { 
             $user = $result->fetch_assoc();
             return $user;
         } else {
             return false;
         }
     }
+    
     
     public function checkEmailCustomerExist($email) {
         $sql = 'SELECT customer_id FROM customer WHERE customer_email =?';

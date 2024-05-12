@@ -29,6 +29,14 @@
         <!-- Template Stylesheet -->
         <link href="<?php echo _WEB_ROOT; ?>/public/assets/clients/css/style.css" rel="stylesheet">
     </head>
+    <style>
+        .alert-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+    </style>
 
 <body>
 
@@ -57,7 +65,7 @@
     <!-- Template Javascript -->
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/main.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/products.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/carts.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/cart.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/order.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/detail-product.js"></script>
     <script>
@@ -65,19 +73,7 @@
             var currentPage = 1;
             var itemsPerPage = 9; 
             var debounceTimer;
-            function fetchData(page) {
-                $.ajax({
-                    url: 'http://localhost/shop/product/getAllProducts',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        displayProducts(response);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            }
+            getFilteredData();
 
             $('.category-checkbox, #price-range-start, #price-range-end').on('change', function () {
                 getFilteredData(); 
@@ -144,9 +140,15 @@
                     productHtml += '<div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">News</div>';
                     productHtml += '<div class="p-4 border border-secondary border-top-0 rounded-bottom">';
                     productHtml += '<h4>'+ product.product_name +'</h4>';
-                    productHtml += '<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>';
+                    
+                    // Giới hạn số từ của mô tả sản phẩm
+                    var descriptionWords = product.product_description.split(' ');
+                    var maxWords = 17; 
+                    var truncatedDescription = descriptionWords.slice(0, maxWords).join(' ');
+                    productHtml += '<p>'+ truncatedDescription + (descriptionWords.length > maxWords ? '...' : '') +'</p>';
+                    
                     productHtml += '<div class="d-flex justify-content-around align-items-center">';
-                    productHtml += '<p class="text-dark fs-5 fw-bold mb-0">'+ product.product_price +'đ</p>';
+                    productHtml += '<p class="text-dark fs-5 fw-bold mb-0">'+ product.product_price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) +'</p>';
                     productHtml += '<a href="<?php echo _WEB_ROOT; ?>/carts/addToCart/'+product.product_id+'" class="add-to-cart btn border border-secondary rounded-pill px-3 text-primary" data-product-id="'+product.product_id+'"><i class="fa fa-shopping-bag me-2 text-primary"></i> Thêm </a>';
                     productHtml += '</div>';
                     productHtml += '</div>';
@@ -156,6 +158,7 @@
                     
                     $('#show-product').append(productHtml);
                 });
+
 
                 displayPagination(productLength);
             }
@@ -184,8 +187,6 @@
                 updatePagination(newPage); 
             });
 
-            fetchData(currentPage);
-
             // add to cart
 
             $(document).on('click', '.add-to-cart', function(e) {
@@ -194,17 +195,24 @@
                 $.ajax({
                     url: '<?php echo _WEB_ROOT; ?>/carts/addToCart',
                     type: 'POST',
-                    dataType: 'json',
+                    dataType: 'json',   
                     data: { product_id: product_id },
                     success: function(response) {
                         if (response.success) {
-                            toastr.success('Sản phẩm đã thêm vào giỏ hàng')
-                        } else {
-                            toastr.warning('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
+                            $('.alert-message').html();
+                            var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' + response.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.alert-message').append(alertDiv);
+                        }else if (response.message_warning) {
+                            $('.alert-message').html();
+                            var alertDiv = $('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + response.message_warning + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.alert-message').append(alertDiv);
+                        }else {
+                            $('.alert-message').html();
+                            var alertDiv = $('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + 'vui lòng đăng nhập để mua hàng' + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.alert-message').append(alertDiv);
                             setTimeout(() => {
                                 window.location.href = '<?php echo _WEB_ROOT; ?>/authenticate/signin';
                             }, 2000);
-                            
                         }
                     },
                     error: function(xhr, status, error) {
@@ -227,14 +235,23 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            toastr.success('Sản phẩm đã thêm vào giỏ hàng')
-                        } else {
-                            toastr.warning('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
+                            $('.alert-message').html();
+                            var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' + response.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.alert-message').append(alertDiv);
+                        }else if (response.message_warning) {
+                            $('.alert-message').html();
+                            var alertDiv = $('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + response.message_warning + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.alert-message').append(alertDiv);
+                        }else {
+                            $('.alert-message').html();
+                            var alertDiv = $('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + 'vui lòng đăng nhập để mua hàng' + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.alert-message').append(alertDiv);
                             setTimeout(() => {
                                 window.location.href = '<?php echo _WEB_ROOT; ?>/authenticate/signin';
                             }, 2000);
                         }
                     },
+
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
                     }
@@ -243,6 +260,19 @@
         });
 
     </script>
+
+<script>
+function confirmCancellation(event, orderId) {
+    event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
+    
+    if (confirm("Bạn có chắc chắn muốn huỷ đơn hàng này?")) {
+        // Nếu người dùng xác nhận, chuyển hướng đến URL huỷ đơn hàng
+        window.location.href = "<?php echo _WEB_ROOT; ?>/order/cancelOrder/" + orderId;
+    } else {
+        // Nếu người dùng không xác nhận, không làm gì cả
+    }
+}
+</script>
 
 </script>
 </body>

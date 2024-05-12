@@ -1,18 +1,12 @@
 
         <!-- Single Page Header start -->
-        <div class="container-fluid">
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="#">Sản phẩm</a></li>
-                <li class="breadcrumb-item"><a href="#">Chi tiết sản phẩm</a></li>
-            </ol>
-        </div>
-        <!-- Single Page Header End -->
 
+        <!-- Single Page Header End -->
+        <div class="alert-message"></div>
 
         <!-- Single Product Start -->
-        <div class="container-fluid py-5 mt-5">
-            <div class="container py-5">
+        <div class="container-fluid">
+            <div class="container">
                 <div class="row ">
                     <div class="col-lg-12 col-xl-12">
                         <div class="row g-4">
@@ -40,14 +34,14 @@
                                         </button>
                                     </div>
                                 </div>
-                                <a id="btn-add-to-cart" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary" data-product-id=<?php echo $dataProduct['product_id'];?>><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                <a id="btn-add-to-cart" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary" data-product-id=<?php echo $dataProduct['product_id'];?>><i class="fa fa-shopping-bag me-2 text-primary"></i>Thêm vào giỏ hàng</a>
                             </div>
                             <div class="col-lg-12">
                                 <nav>
                                     <div class="nav nav-tabs mb-3">
                                         <button class="nav-link active border-white border-bottom-0" type="button" role="tab"
                                             id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
-                                            aria-controls="nav-about" aria-selected="true">Description</button>
+                                            aria-controls="nav-about" aria-selected="true">Mô tả</button>
                                     </div>
                                 </nav>
                                 <div class="tab-content mb-5">

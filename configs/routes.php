@@ -1,9 +1,8 @@
 
 <?php
-$routes['default_controller'] = 'home';
+$routes['default_controller'] = 'product';
 
 // Route clients
-$routes['trang-chu'] = 'home/index';
 $routes['dang-nhap'] = 'signin/login';
 $routes['dien-thoai'] = 'product/index';
 $routes['gio-hang'] = 'carts/index';
