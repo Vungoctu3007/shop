@@ -431,21 +431,6 @@ class thongkeModel
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Trong Model (thongkeModel bieu do cot)
     public function getMonthlyRevenueByYear($year)
     {

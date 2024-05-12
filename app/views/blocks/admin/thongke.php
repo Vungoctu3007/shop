@@ -287,12 +287,10 @@
             <p><?= number_format($totalProductsSold); ?> sản phẩm</p>
         </div>
         <div class="statistic">
-        <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/bill" aria-expanded="false">
             <h2 >Tổng Nhân Viên Bán Hàng</h2>
             <p><?= number_format($totalSalesStaff); ?> nhân viên </p>
         </div>
         <div class="statistic">
-        <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/bill" aria-expanded="false">
             <h2>Tổng Tài khoản Mua Hàng</h2>
             <p><?= number_format($totalAccounts); ?> Tài khoản</p>
         </div>
@@ -303,16 +301,16 @@
         <div class="sort-container">
             <button class="btn-sort-dropdown">Sắp xếp theo tên</button>
             <div class="sort-options">
-                <a href="<?= _WEB_ROOT; ?>/thongke?sort=asc" class="btn-sort">Giá tăng dần</a>
-                <a href="<?= _WEB_ROOT; ?>/thongke?sort=desc" class="btn-sort">Giá giảm dần</a>
-                <a href="<?= _WEB_ROOT; ?>/thongke?sort=name_asc" class="btn-sort">Tên A-Z</a>
-                <a href="<?= _WEB_ROOT; ?>/thongke?sort=name_desc" class="btn-sort">Tên Z-A</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=asc" class="btn-sort">Giá tăng dần</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=desc" class="btn-sort">Giá giảm dần</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_asc" class="btn-sort">Tên A-Z</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_desc" class="btn-sort">Tên Z-A</a>
             </div>
         </div>
 
 
         <div class="search-container">
-            <form action="<?php echo _WEB_ROOT; ?>/thongke" method="get">
+            <form action="<?php echo _WEB_ROOT; ?>/admin/statistical" method="get">
                 <label for="start_date">Ngày Bắt Đầu:</label>
                 <input type="date" id="start_date" name="start_date" required>
                 <label for="end_date">Ngày Kết Thúc:</label>
@@ -367,15 +365,15 @@
 
         <div class="pagination">
             <?php if ($currentPage > 1) : ?>
-                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage - 1 ?>">« Trang Trước</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?page=<?= $currentPage - 1 ?>">« Trang Trước</a>
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $i ?>" <?= $i == $currentPage ? 'class="active"' : '' ?>><?= $i ?></a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?page=<?= $i ?>" <?= $i == $currentPage ? 'class="active"' : '' ?>><?= $i ?></a>
             <?php endfor; ?>
 
             <?php if ($currentPage < $totalPages) : ?>
-                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage + 1 ?>">Trang Sau »</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?page=<?= $currentPage + 1 ?>">Trang Sau »</a>
             <?php endif; ?>
         </div>
 

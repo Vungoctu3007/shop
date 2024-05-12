@@ -29,7 +29,7 @@ $routes['admin/import'] = 'ImportController';
 
 $routes['admin/order'] = 'OrderController/index';
 $routes['xoa-hoa-don/([0-9]+)'] = 'OrderController/delete/$1';
-$routes['them-hoa-don'] = 'OrderController/showAddForm';
+//$routes['them-hoa-don'] = 'OrderController/showAddForm';
 $routes['xu-ly-them-hoa-don'] = 'OrderController/add'; 
 $routes['sua-hoa-don/([0-9]+)'] = 'OrderController/edit/$1';
 $routes['cap-nhat-hoa-don/([0-9]+)'] = 'OrderController/update/$1';

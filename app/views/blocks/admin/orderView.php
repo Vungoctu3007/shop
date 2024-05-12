@@ -282,7 +282,7 @@
     <!-- Trong orderView.php -->
 
     <div class="search-container">
-        <form action="<?php echo _WEB_ROOT; ?>/bill" method="get">
+        <form action="<?php echo _WEB_ROOT; ?>/admin/order" method="get">
             <label for="start_date">Ngày Bắt Đầu:</label>
             <input type="date" id="start_date" name="start_date" required>
             <label for="end_date">Ngày Kết Thúc:</label>
@@ -473,11 +473,7 @@
 
     }
 
-    // Function to print the specific order
-    function printOrder(orderId) {
-        // Replace with your own logic to fetch the specific invoice
-        window.location.href = _WEB_ROOT + '/in-hoa-don/' + orderId;
-    }
+    
 
     function confirmDeletion(orderId, statusId) {
         if (statusId === 3) { // Assuming 3 is the status ID for "Đã Hủy"
