@@ -27,7 +27,7 @@ $routes['admin/insurance'] = 'Insurance_Admin/index';
 $routes['admin/import'] = 'ImportController';
 //phần hóa đơn
 
-$routes['admin/bill'] = 'OrderController/index';
+$routes['admin/order'] = 'OrderController/index';
 $routes['xoa-hoa-don/([0-9]+)'] = 'OrderController/delete/$1';
 $routes['them-hoa-don'] = 'OrderController/showAddForm';
 $routes['xu-ly-them-hoa-don'] = 'OrderController/add'; 
@@ -39,7 +39,7 @@ $routes['get-order-products/([0-9]+)'] = 'OrderController/getOrderProductDetails
 
 //thống kê
 
-$routes['admin/thongke'] = 'ThongKeController/index';
+$routes['admin/statistical'] = 'ThongKeController/index';
 
 
 

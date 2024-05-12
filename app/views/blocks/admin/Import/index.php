@@ -1,6 +1,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
+
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-2 ">
@@ -21,6 +24,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Xuất Excel</a></li>
                             <li><a class="dropdown-item" href="#">Xuất DPF</a></li>
+
                         </ul>
                     </div>
 
@@ -37,7 +41,8 @@
                 <label for="start">Từ:</label>
                 <input onchange="searchByDate()" class="w-100 border-0" type="date" id="startDate" name="trip-start" value="2024-04-20" min="2018-01-01" max="2030-12-31" />
             </div>
-            <div class="ms-4"><label for="start">Đến:</label>
+            <div class="ms-4">
+                <label for="start">Đến:</label>
                 <input onchange="searchByDate()" class="w-100 border-0" type="date" id="endDate" name="trip-start" value="2024-04-20" min="2018-01-01" max="2030-12-31" />
             </div>
         </div>
@@ -69,7 +74,6 @@
             <table id="load_data" class="table table-striped">
                 <thead>
                     <tr>
-                        <th> <input type="checkbox" id="huey" name="drone" value="huey" checked /></th>
                         <th>Mã Nhập Hàng</th>
                         <th>Ngày Nhập</th>
                         <th>Nhà Cung Cấp</th>
@@ -105,7 +109,7 @@
                         <span>Ngày nhập:</span>
                     </div>
                     <div class="col-4">
-                        <input type="" step="" max="10" value="" id="detail_good_date " name="detail_good_date" disabled class=" border-0 border-bottom border-dark text-center w-50">
+                        <input type="text" step="" value="" id="detail_good_date " name="detail_good_date" disabled class=" border-0 border-bottom border-dark text-center w-50">
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -113,7 +117,7 @@
                         <span>Người tạo:</span>
                     </div>
                     <div class="col-2">
-                        <input type="" step="" max="10" value="" id="detail_person" name="detail_person" disabled class=" border-0 border-bottom border-dark text-center w-100">
+                        <input type="text" step="" value="" id="detail_person" name="detail_person" disabled class=" border-0 border-bottom border-dark text-center w-100">
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -132,7 +136,24 @@
 
                             </thead>
                             <tbody style="overflow: auto;">
-
+                                <!-- 
+                                     <tr>
+               
+                <td>${item.good_receipt_id}</td>
+                <td>${item.date_good_receipt}</td>
+                <td>${item.supplier_id}</td>
+                <td>${item.total}</td>
+              
+                <td>
+                    <button onclick="detail('${item.good_receipt_id}')" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                        </svg>
+                    </button>
+                </td>
+              </tr>
+                                 -->
                             </tbody>
                         </table>
                     </div>
@@ -150,7 +171,7 @@
                         </div>
                         <div class="row">
                             <div class="col-5">
-                                <span >Tổng mặt hàng:</span>
+                                <span>Tổng mặt hàng:</span>
                             </div>
                             <div class="col-5">
                                 <span id="total_product"></span>
@@ -169,13 +190,16 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" onclick="" class="btn btn-primary">Xuất file</button>
+                <button type="button" onclick="exportToPDF()" class="btn btn-primary">Xuất file pdf</button>
             </div>
         </div>
     </div>
 </div>
+
+
 <script>
     $(document).ready(function() {
+
         load_data();
     });
 </script>
@@ -302,9 +326,7 @@
                 // total_quantity
                 //         total_good
                 //         total_product
-                console.log(data.data_good.mathang)
-                console.log(data.data_good.total)
-                console.log(data.data_good.quantity_sum)
+
                 document.querySelector('input[name="detail_good_id"]').value = data.data_good.good_receipt_id
                 document.querySelector('input[name="detail_good_date"]').value = data.data_good.date_good_receipt
                 document.querySelector('input[name="detail_person"]').value = data.data_good.employee_name
@@ -331,5 +353,95 @@
                 })
             }
         })
+    }
+
+    function getInvoiceData() {
+        const goodId = document.querySelector('input[name="detail_good_id"]').value.trim();
+        const goodDate = document.querySelector('input[name="detail_good_date"]').value.trim();
+        const person = document.querySelector('input[name="detail_person"]').value.trim();
+        console.log(typeof goodDate)
+        console.log(typeof goodId)
+        console.log(typeof person)
+
+
+        // Lặp qua các dòng trong bảng để lấy thông tin sản phẩm
+        const products = [];
+        const tableBody = document.getElementById('load_data_detail_good').getElementsByTagName('tbody')[0];
+        const rows = tableBody.getElementsByTagName('tr');
+        for (let i = 0; i < rows.length; i++) {
+            const product = {
+                productId: rows[i].cells[0].textContent,
+                productName: rows[i].cells[1].textContent,
+                quantity: rows[i].cells[2].textContent,
+                price: rows[i].cells[3].textContent,
+                total: rows[i].cells[4].textContent,
+            };
+            products.push(product);
+        }
+
+        // Tạo object chứa dữ liệu hóa đơn
+        const invoiceData = {
+            goodId,
+            goodDate,
+            person,
+            products,
+            totalQuantity: document.getElementById('total_quantity').textContent,
+            totalPrice: document.getElementById('total_good').textContent,
+            total_product: document.getElementById('total_product').textContent,
+        };
+        return invoiceData;
+
+    }
+
+    function exportToPDF() {
+        // Lấy dữ liệu hóa đơn
+        const invoiceData = getInvoiceData();
+
+        // Tạo một đối tượng jsPDF
+        const doc = new jsPDF();
+        
+        // Định dạng tiêu đề
+        doc.setFontSize(18);
+        doc.text('Hóa đơn', 105, 15, null, null, 'center');
+
+        // Định dạng nội dung hóa đơn
+        let startY = 30;
+        let currentY = startY; // Biến lưu trữ vị trí y hiện tại của văn bản
+        const lineHeight = 10; // Độ cao của mỗi dòng văn bản
+
+        doc.setFontSize(12);
+       
+        doc.text(`Mã Hóa Đơn : ${invoiceData.goodId}`, 15, currentY);
+        currentY += lineHeight; // Cập nhật vị trí y
+        doc.text(`Người Nhập Hàng: ${invoiceData.person}`, 15, currentY);
+        currentY += lineHeight; // Cập nhật vị trí y
+        doc.text(`Ngày Nhập: ${invoiceData.goodDate}`, 15, currentY);
+        currentY += lineHeight * 2; // Cập nhật vị trí y và tăng khoảng cách giữa các dòng
+
+        // Tạo bảng sản phẩm
+        const tableColumn = ["Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Giá", "Thành tiền"];
+        const tableRows = [];
+        invoiceData.products.forEach(product => {
+            const productData = [product.productId, product.productName, product.quantity, product.price, product.total];
+            tableRows.push(productData);
+        });
+
+        // Thêm bảng vào tài liệu PDF
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: currentY // Sử dụng vị trí y hiện tại của văn bản làm vị trí bắt đầu của bảng
+        });
+        currentY = doc.autoTable.previous.finalY + lineHeight; // Cập nhật vị trí y
+
+        // Hiển thị tổng kết
+        doc.text(`Tổng số sản phẩm: ${invoiceData.total_product}`, 15, currentY);
+        currentY += lineHeight; // Cập nhật vị trí y
+        doc.text(`Tổng số lượng: ${invoiceData.totalQuantity}`, 15, currentY);
+        currentY += lineHeight; // Cập nhật vị trí y
+        doc.text(`Tổng giá: ${invoiceData.totalPrice}`, 15, currentY);
+
+        // Xuất file PDF
+        doc.save('hoa_don.pdf');
     }
 </script>
