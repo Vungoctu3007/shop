@@ -40,7 +40,7 @@ function deleteProduct(accountId) {
       success: function (response) {
         var data = JSON.parse(response);
         if (data.status === "success") {
-          alert("Sản phẩm đã được xóa thành công");
+          alert("Tài khoản đã được xóa thành công");
           location.reload();
         } else {
           alert(data.message);
@@ -52,6 +52,8 @@ function deleteProduct(accountId) {
     });
   }
 }
+
+
 function updateAccount() {
   var accountId = $("#accountId").val();
   var username = $("#userSelectUpdate").val();
@@ -90,6 +92,7 @@ function updateAccount() {
   });
 }
 
+
 function addAccountNew() {
   // Retrieve values from the input fields
   var username = $("#userSelectAdd").val();
@@ -113,8 +116,6 @@ function addAccountNew() {
     return;
   }
 
-  // Mã hóa mật khẩu bằng thuật toán SHA-256
-  // var hashedPassword = sha256(password);
 
   // Perform AJAX request to add account
   $.ajax({
@@ -122,7 +123,7 @@ function addAccountNew() {
     url: "http://localhost/shop/admin/account/add", // URL to add account
     data: {
       username: username,
-      password: password, // Gửi mật khẩu đã được mã hóa
+      password: roleId, // Gửi mật khẩu đã được mã hóa
       role_id: roleId,
     },
     success: function (response) {
@@ -143,7 +144,6 @@ function addAccountNew() {
     },
   });
 }
-
 
 function searchAccount() {
   var keyword = $("#search-account-input").val().trim(); // Lấy từ khóa tìm kiếm và loại bỏ khoảng trắng đầu cuối

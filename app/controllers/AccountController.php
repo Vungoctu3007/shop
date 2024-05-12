@@ -38,7 +38,8 @@ class AccountController extends Controller
     
             // Add the account to the database
             $accountModel = $this->model("accountModel");
-            $result = $accountModel->addAccount($username, $password, $roleId);
+            $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+            $result = $accountModel->addAccount($username, $hashPassword, $roleId);
     
             if ($result) {
                 echo json_encode(array("status" => "success", "message" => "Account added successfully"));
@@ -60,14 +61,16 @@ class AccountController extends Controller
             $roleId = $_POST['role_id'];
 
             // Validate the received data (You can add more validation as needed)
-            if (empty($accountId) || empty($username) || empty($password) || empty($roleId)) {
-                echo json_encode(array("status" => "error", "message" => "Please provide all necessary data for account update"));
-                return;
-            }
+            // if (empty($accountId) || empty($username) || empty($password) || empty($roleId)) {
+            //     echo json_encode(array("status" => "error", "message" => "Please provide all necessary data for account update"));
+            //     return;
+            // }
 
             // Update the account in the database
             $accountModel = $this->model("accountModel");
-            $result = $accountModel->updateAccount($accountId, $username, $password, $roleId);
+            $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            $result = $accountModel->updateAccount($accountId, $username, $hashPassword, $roleId);
 
             if ($result) {
                 echo json_encode(array("status" => "success", "message" => "Account updated successfully"));

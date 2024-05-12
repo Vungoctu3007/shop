@@ -117,18 +117,8 @@ generatePagination($totalRows, $rowsPerPage, $currentPage);
                 <div id="accountUpdate" class="text-center">
 
                     <label for="username">Username</label>
-                    <select class="form-select" id="userSelectUpdate" name="userSelect">
-                        <?php
-                        $dataCustomer = $customer->getAllEmployee();
-                        if ($dataCustomer) {
-                            foreach ($dataCustomer as $employee) {
-                                echo '<option value="' . $employee['employee_id'] . '">' . $employee['employee_id'] . '</option>';
-                            }
-                        }
-                        ?>
-                        echo '<option value="admin">admin</option>';
-                        ?>
-                    </select>
+                    <input type="text" class="form-control" id="userSelectUpdate" name="userSelectUpdate" readonly>
+
 
                     <label for="newInput">Password</label>
                     <input type="password" class="form-control" id="password" name="passwordName">
