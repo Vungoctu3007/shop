@@ -1,11 +1,5 @@
 
-        <!-- Single Page Header start -->
-        <div class="container-fluid">
-            <ol class="breadcrumb justify-content-center pr-5">
-                <li class="breadcrumb-item"><a href="<?php echo _WEB_ROOT; ?>/trang-chu">Home</a></li>
-                <li class="breadcrumb-item"><a href="<?php echo _WEB_ROOT; ?>/dien-thoai">Sản phẩm</a></li>
-            </ol>
-        </div>
+
         <!-- Single Page Header End -->	
 
 		<!-- SECTION -->

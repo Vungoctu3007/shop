@@ -98,4 +98,16 @@ class Orders {
         $stmt->close();
         return $data;
     }
+
+    public function updateStatusProductSeries($product_seri) {
+        $sql = 'UPDATE product_seri SET status = 0 WHERE product_seri = ?';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('s', $product_seri);
+
+        if (!$stmt->execute()) {
+            echo "Lỗi khi thêm sản phẩm vào đơn hàng: " . $stmt->error;
+            return false;
+        }
+        return true;
+    }
 }

@@ -12,7 +12,7 @@ class ImportModel extends Connection
     public function getAllGoodReceipt($page, $pageSize)
     {
         $start = ($page - 1) * $pageSize;
-        $sql = "SELECT * FROM good_receipt LIMIT $start, $pageSize";
+        $sql = "SELECT * FROM good_receipt g ORDER BY  g.date_good_receipt DESC LIMIT $start, $pageSize";
         $result = $this->connection->query($sql);
         if ($result) {
             $data = array();
@@ -285,4 +285,23 @@ class ImportModel extends Connection
         $row = $result->fetch_assoc();
         return $row;
     }
+    public function isProductIdExists($productId)
+    {
+        $sql = "SELECT COUNT(*) AS total FROM product WHERE product_id = ?";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bind_param("i", $productId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if (!$result) {
+            // Xử lý lỗi, có thể là log lỗi hoặc trả về false
+            return false;
+        }
+        
+        $row = $result->fetch_assoc();
+        $total = $row['total'];
+        
+        return $total > 0; 
+    }
+    
 }
