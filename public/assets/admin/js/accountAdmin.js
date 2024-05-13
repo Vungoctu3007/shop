@@ -139,7 +139,7 @@ function addAccountNew() {
     url: "http://localhost/shop/admin/account/add", // URL to add account
     data: {
       username: username,
-      password: roleId, // Gửi mật khẩu đã được mã hóa
+      password: password, // Gửi mật khẩu đã được mã hóa
       role_id: roleId,
     },
     success: function (response) {
