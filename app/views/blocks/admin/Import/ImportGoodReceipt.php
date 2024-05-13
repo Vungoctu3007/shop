@@ -552,6 +552,7 @@
 
             //  end ajax
         });
+        console.log(typeof product_details);
         $.ajax({
             url: "http://localhost/php/shop/ImportController/insertGoodReceipt",
             method: 'POST',
