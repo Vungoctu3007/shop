@@ -78,6 +78,7 @@
                         <th>Ngày Nhập</th>
                         <th>Nhà Cung Cấp</th>
                         <th>Tổng Tiền</th>
+                        <!-- <th></th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -234,7 +235,7 @@
 
     function load_data() {
         $.ajax({
-            url: `http://localhost/php/shop/ImportController/getAll?page=${currentPage}`,
+            url: `http://localhost/php/shop_2/ImportController/getAll?page=${currentPage}`,
             method: "GET",
             page: {
                 currentPage
@@ -243,6 +244,7 @@
                 create_table(data.data)
                 total_page = data.total_page
                 updatePagination();
+                console.log(data)
             }
         });
     }
