@@ -92,6 +92,7 @@ function updateAccount() {
       var data = JSON.parse(response);
       if (data.status === "success") {
         alert("Account information updated successfully!");
+        location.reload()
         // Nếu cần, thực hiện các hành động phản hồi khác sau khi cập nhật thành công
       } else {
         alert(data.message);
