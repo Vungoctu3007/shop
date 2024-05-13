@@ -1,4 +1,4 @@
-<?php 
+<?php
 class EmployeeAdminModel
 {
     private $conn;
@@ -8,52 +8,33 @@ class EmployeeAdminModel
         $this->conn = Connection::getInstance($db_config);
     }
 
-public function getAllEmployees($page, $pageSize)
-{
-    $page = (int) $page;
-    $pageSize = (int) $pageSize;
+    public function getAllEmployees($page, $pageSize)
+    {
+        $page = (int) $page;
+        $pageSize = (int) $pageSize;
 
-    // Calculate the starting row
-    $start = ($page - 1) * $pageSize;
-    if ($start < 0) {
-        $start = 0;
-    }
+        // Calculate the starting row
+        $start = ($page - 1) * $pageSize;
+        if ($start < 0) {
+            $start = 0;
+        }
 
-    // Prepare the SQL query with LIMIT clause
-    $sql = "SELECT * FROM employee LIMIT ?, ?";
-    $stmt = $this->conn->prepare($sql);
-
-    if ($stmt) {
-        // Bind parameters and execute
-        $stmt->bind_param("ii", $start, $pageSize);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
+        $sql = "SELECT COUNT(*) as total_records FROM employee";
+        $result = $this->conn->query($sql);
+        $total_records = $result->fetch_assoc()['total_records'];
+        $total_page = ceil($total_records / $pageSize);
+        $sql = "SELECT * FROM employee LIMIT $start, $pageSize";
+        $result = $this->conn->query($sql);
         if ($result) {
             $data = array();
             while ($row = $result->fetch_assoc()) {
                 $data[] = $row;
             }
-            $stmt->close();
-
-            // Get total records count
-            $sql_count = "SELECT COUNT(*) as total_records FROM employee";
-            $result_count = $this->conn->query($sql_count);
-            $total_records = $result_count->fetch_assoc()['total_records'];
-
-            // Calculate total pages
-            $total_pages = ceil($total_records / $pageSize);
-
-            return array("data" => $data, "total_page" => $total_pages);
-        } else {
-            $stmt->close();
-            return false;
+            return array("data" => $data, "total_page" => $total_page);
         }
-    } else {
-        // Handle SQL statement preparation error
         return false;
+
     }
-}
 
     public function getEmployeeById($employee_id)
     {
@@ -74,12 +55,11 @@ public function getAllEmployees($page, $pageSize)
         $sql = "INSERT INTO employee(employee_name, employee_phone, employee_address, employee_email) VALUES(?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ssss", $employee_name, $employee_phone, $employee_address, $employee_email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
     public function updateEmployee($employee_id, $employee_name, $employee_phone, $employee_address, $employee_email)
     {
@@ -120,6 +100,17 @@ public function getAllEmployees($page, $pageSize)
             return false;
         }
 
+    }
+    public function countEmployeeBySearch($keyword)
+    {
+        $sql = "SELECT COUNT(*) as total_count FROM employee WHERE employee.employee_id LIKE N'%$keyword%'
+    OR employee.employee_phone LIKE N'%$keyword%'
+    OR employee.employee_address LIKE N'%$keyword% '
+    OR employee.employee_email LIKE N'%$keyword%'
+    ";
+        $result = $this->conn->query($sql);
+        $row = $result->fetch_assoc();
+        return $row['total_count'];
     }
 }
 ?>

@@ -1,7 +1,9 @@
-<div class="d-flex mb-3 justify-content-center">
+<div class="d-flex mb-3 justify-content-around">
     <input style="width: 300px;" type="text" class="form-control" placeholder="Search Employee"
         aria-label="Search Employee" aria-describedby="search-employee-icon" id="search-employee-input"
         onkeyup="searchEmployee()">
+    
+    <button class="btn btn-secondary ml-5" type="button" data-bs-toggle='modal' data-bs-target='#formInsertEmployee' onclick="openInsertEmployeeModal()">Insert Employee</button>
 </div>
 <div class="container" id="allEmployee">
     <nav>
@@ -50,8 +52,7 @@
                 <div id="employeeDetail" class="text-center"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    loadProductTable()>Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -71,6 +72,25 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-secondary" onclick="updateEmployee()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Insert Modal -->
+<div class="modal" id="formInsertEmployee" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="insertModalLabel">Employee's Insert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="employeeInsert" class="text-center"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="insertEmployee()">Insert</button>
             </div>
         </div>
     </div>

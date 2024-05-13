@@ -5,12 +5,18 @@ $(function () {
     load_dataEmployee(currentPageEmployee);
 });
 
+
+
 function load_next_pageEmployee() {
     currentPageEmployee++;
     if (currentPageEmployee > total_pageEmployee) {
-        currcurrentPageEmployeeentPage = total_pageEmployee;
+        currentPageEmployee = total_pageEmployee;
     }
-    load_dataEmployee(currentPageEmployee);
+    if ($('#search-employee-input').val() !== '') {
+        loadEmployeeSearch(currentPageEmployee); // Truyền trang cho tìm kiếm
+    } else {
+        load_dataEmployee(currentPageEmployee);
+    }
 }
 
 function load_prev_pageEmployee() {
@@ -18,13 +24,19 @@ function load_prev_pageEmployee() {
     if (currentPageEmployee < 1) {
         currentPageEmployee = 1;
     }
-    load_dataEmployee(currentPageEmployee);
+    if ($('#search-employee-input').val() !== '') {
+        loadEmployeeSearch(currentPageEmployee); // Truyền trang cho tìm kiếm
+    } else {
+        load_dataEmployee(currentPageEmployee);
+    }
 }
+
+
 function create_tableEmployee(data) {
     $('#dataEmployee').empty();
 
-        data.data.forEach(item => {
-
+    if (Array.isArray(data)) {
+        data.forEach(item => {
             $('#dataEmployee').append(`
                 <tr>
                     <td>${item.employee_id}</id>
@@ -43,6 +55,7 @@ function create_tableEmployee(data) {
             
             `)
         })
+    }
 }
 function load_dataEmployee(page) {
     $.ajax({
@@ -50,7 +63,7 @@ function load_dataEmployee(page) {
         method: "GET",
         success: function (data) {
             console.log(data);
-            create_tableEmployee(data);
+            create_tableEmployee(data.data);
             total_pageEmployee = data.total_page;
             console.log(total_pageEmployee);
             updatePanigationEmployee();
@@ -67,8 +80,7 @@ function updatePanigationEmployee() {
     }
 }
 
-function openDetailEmployeeModal(employee_Id)
-{
+function openDetailEmployeeModal(employee_Id) {
     $.ajax({
         type: "GET",
         url: `http://localhost/shop/Employee_Admin/detailEmployeeId?employee_id=${employee_Id}`,
@@ -115,8 +127,7 @@ function openDetailEmployeeModal(employee_Id)
     });
 }
 
-function openUpdateEmployeeModal(employee_Id)
-{
+function openUpdateEmployeeModal(employee_Id) {
     $.ajax({
         type: "GET",
         url: `http://localhost/shop/Employee_Admin/detailEmployeeId?employee_id=${employee_Id}`,
@@ -158,17 +169,33 @@ function openUpdateEmployeeModal(employee_Id)
     });
 }
 
-function updateEmployee()
-{
+function updateEmployee() {
     var employee_id = $('#employee_idUpdate').val();
     var employee_name = $('#employee_nameUpdate').val();
     var employee_phone = $('#employee_phoneUpdate').val();
     var employee_address = $('#employee_addressUpdate').val();
-    var employee_email= $('#employee_emailUpdate').val();
+    var employee_email = $('#employee_emailUpdate').val();
+
+    if (!employee_name) {
+        alert("Tên không được để trống");
+        return;
+    } else if (!employee_address) {
+        alert("Địa chỉ không được để trống");
+        return;
+    } else if (!phone_regex.test(employee_phone)) {
+        alert("Số điện thoại phải 10 số và bắt đầu bằng số 0");
+        return;
+    } else if (!employee_email) {
+        alert("Địa chỉ Email không được để trống");
+        return;
+    } else if (!email_regex.test(employee_email)) {
+        alert("Địa chỉ Email không hợp lệ");
+        return;
+    }
 
     $.ajax({
         type: "POST",
-        url:`http://localhost/shop/Employee_Admin/updateEmployee`,
+        url: `http://localhost/shop/Employee_Admin/updateEmployee`,
         data: {
             employee_id: employee_id,
             employee_name: employee_name,
@@ -176,37 +203,57 @@ function updateEmployee()
             employee_address: employee_address,
             employee_email: employee_email
         },
-        success: function(response)
-        {
+        success: function (response) {
             var data = JSON.parse(response);
-            if(data.status === 'success')
-                {
-                    alert("Update Employee Successfully");
-                    location.reload();
-                }
-                else
-                {
-                    alert(data.message);
-                }
+            if (data.status === 'success') {
+                alert("Update Employee Successfully");
+                location.reload();
+            }
+            else {
+                alert(data.message);
+            }
         }
     })
+}
+
+function searchEmployee() {
+    var key = document.getElementById('search-employee-input').value;
+    if (key.trim() === '') {
+        load_dataEmployee(currentPageEmployee); // Load lại dữ liệu khi input search trống
+        updatePanigationEmployee();
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost/shop/Employee_Admin/searchEmployee',
+            data: { keyword: key, page: currentPageEmployee },
+            success: function (response) {
+                create_tableEmployee(response.data);
+                currentPageEmployee = response.currentPageEmployee;
+                total_pageEmployee = response.total_pageEmployee;
+                updatePaginationEmployeeSearch(response.currentPageEmployee, response.total_pageEmployee);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
 }
 
 function loadEmployeeSearch(page) {
     var key = document.getElementById('search-employee-input').value.trim(); // Sử dụng trim để loại bỏ khoảng trắng thừa
 
     if (key === "") {
-        load_dataProduct(currentPageProduct); // Load lại dữ liệu khi input search trống
+        load_dataEmployee(currentPageEmployee); // Load lại dữ liệu khi input search trống
         updatePagination();
     } else {
         $.ajax({
-            url: `http://localhost/shop/Product_Admin/search`,
+            url: `http://localhost/shop/Employee_Admin/searchEmployee`,
             method: "POST",
             data: { keyword: key, page: currentPageEmployee },
             success: function (data) {
-                if (data != "No products found") {
-                    create_table(data.data);
-                    updatePaginationSearch(data.currentPageProduct, data.total_pageProduct); // Truyền số trang cần cập nhật
+                if (data != "No Employee found") {
+                    create_tableEmployee(data.data);
+                    updatePaginationEmployeeSearch(data.currentPageEmployee, data.total_pageEmployee); // Truyền số trang cần cập nhật
                 } else {
                 }
             },
@@ -218,17 +265,93 @@ function loadEmployeeSearch(page) {
 }
 
 function updatePaginationEmployeeSearch(currentPageEmployee, total_pageEmployee) {
-    $('#current_page').text(currentPageEmployee);
-    $('#total_pages').text(total_pageEmployee);
+    $('#current_pageEmployee').text(currentPageEmployee);
+    $('#total_pagesEmployee').text(total_pageEmployee);
     $('#pagination').empty();
 
-    if (total_pageProduct > 1) {
-        for (let i = 1; i <= total_pageProduct; i++) {
-            $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="loadDataSearch(${i})">${i}</a></li>`);
+    if (total_pageEmployee > 1) {
+        for (let i = 1; i <= total_pageEmployee; i++) {
+            $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="loadEmployeeSearch(${i})">${i}</a></li>`);
         }
     } else {
-        $('#pagination').append(`<li class="page-item active"><a class="page-link">${currentPageProduct}</a></li>`);
+        $('#pagination').append(`<li class="page-item active"><a class="page-link">${currentPageEmployee}</a></li>`);
     }
 }
+
+function insertEmployee() {
+    var employee_name = $('#employee_nameInsert').val();
+    var employee_address = $('#employee_addressInsert').val();
+    var employee_email = $('#employee_emailInsert').val();
+    var employee_phone = $('#employee_phoneInsert').val();
+
+    // Regular expression for email validation
+    var email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Regular expression for phone number validation (10 digits starting with 0)
+    var phone_regex = /^0\d{9}$/;
+
+    if (!employee_name) {
+        alert("Tên không được để trống");
+        return;
+    } else if (!employee_address) {
+        alert("Địa chỉ không được để trống");
+        return;
+    } else if (!phone_regex.test(employee_phone)) {
+        alert("Số điện thoại phải 10 số và bắt đầu bằng số 0");
+        return;
+    } else if (!employee_email) {
+        alert("Địa chỉ Email không được để trống");
+        return;
+    } else if (!email_regex.test(employee_email)) {
+        alert("Địa chỉ Email không hợp lệ");
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: `http://localhost/shop/Employee_Admin/insertEmployee`,
+        data: {
+            employee_name: employee_name,
+            employee_phone: employee_phone,
+            employee_address: employee_address,
+            employee_email: employee_email
+        },
+        success: function (response) {
+            var data = JSON.parse(response);
+            if (data.status === 'success') {
+                alert("Insert Employee Successfully");
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        }
+    });
+}
+
+
+function openInsertEmployeeModal() {
+    var html = `
+        <div class="row mt-3">  
+            <div class="col-12">
+                <label for="employee_nameInsert" class="form-label">Employee's Name</label>
+                <input type="text" class="form-control" id="employee_nameInsert" value="" required>
+            </div>
+            <div class="col-12">
+                <label for="employee_emailInsert" class="form-label">Employee's Email</label>
+                <input type="email" class="form-control" id="employee_emailInsert" value="" required>
+            </div>
+            <div class="col-12">
+                <label for="employee_phoneInsert" class="form-label">Employee's Phone</label>
+                <input type="text" class="form-control" id="employee_phoneInsert" value="" required>
+            </div>
+            <div class="col-12">
+                <label for="employee_addressInsert" class="form-label">Employee's Address</label>
+                <input type="text" class="form-control" id="employee_addressInsert" value="" required>
+            </div>
+        </div>
+    `;
+    $('#employeeInsert').html(html);
+}
+
 
 
