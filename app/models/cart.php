@@ -222,5 +222,21 @@ class Cart
             return false;
         }
     }
+
+    public function checkQuantityInStockByProductById($product_id) {
+        $sql = 'SELECT COUNT(*) AS total_count FROM product_seri WHERE product_id = ? AND status = 1';
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param('i', $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $quantity = 0;
+        if($row = $result->fetch_assoc()) {
+            $quantity = $row['total_count'];
+            return $quantity;
+        } else {
+            return false;
+        }
+
+    }
     
 }

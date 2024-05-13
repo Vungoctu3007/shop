@@ -20,19 +20,18 @@
                         <nav class="search w-50">
                             <div class="d-flex" id="id">
                                 <input onkeyup="debounceSearchProduct()" id="search" class="form-control me-2" type="search" placeholder="Tìm kiếm sản phẩm" aria-label="Search" />
-                                <button type="button" class="btn btn-primary fs-6" data-bs-toggle="modal" onclick="modalAddProduct()">+</button>
+                                <button type="button" class="btn btn-primary fs-6" onclick="modalAddProduct()">+</button>
                             </div>
 
                         </nav>
 
                         <div class="d-flex">
-                            <button type="button" class="btn btn-primary" id="btn_import_info" data-bs-toggle="modal">
+                            <button type="button" class="btn btn-primary" id="btn_import_info">
                                 Nhập hàng
                             </button>
 
-                            <a class="ms-2 btn btn-success">
-                                Nhập Excel
-                            </a>
+                            <button onclick="showModalExcel()" class="ms-2 btn btn-success">Nhập Excel</button>
+
                         </div>
 
                     </div>
@@ -52,6 +51,7 @@
                                 <th>Số Lượng</th>
                                 <th>Số seri</th>
                                 <th>Đơn Giá</th>
+                                <th>Giá Bán</th>
                                 <th>Thành Tiền</th>
                             </tr>
                         </thead>
@@ -120,7 +120,30 @@
         </div>
     </div>
 </div>
-
+<!-- modal nhập excel -->
+<div class="modal fade" id="modal_excel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Nhập excel</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="container">
+                <div class="mt-4 tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <input type="file" id="excelFileInput">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" onclick="importExcel()" class="btn btn-primary">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--  modal thêm hàng hóa mới -->
 <div class="modal fade" id="add_new_product" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -131,25 +154,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="container">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Thông tin</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Thông tin chi tiết</button>
-                    </li>
 
-                </ul>
-                <div class="tab-content" id="myTabContent">
+                <div class="" id="">
                     <div class="mt-4 tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Tên sản phẩm</label>
-                                <input value="" type="" class="form-control" name="name_product_new" />
+                                <input value="" type="text" class="form-control" name="name_product_new" />
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Thời gian bản hành</label>
-                                <input value="" type="" min="1" max="12" class="form-control" name="date_insurance" />
+                                <input value="" type="number" min="1" max="12" class="form-control" name="date_insurance" />
                             </div>
                             <div class=" form-group col-md-6 mt-2">
                                 <div>
@@ -166,39 +181,42 @@
                             </div>
 
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">Ram</label>
-                                <input value="" type="" class="form-control" name="ram" />
+                                <input value="" type="number" class="form-control" name="ram" />
                             </div>
                             <div class=" form-group col-md-6">
                                 <label for="inputPassword4">Rom</label>
-                                <input value="" type="" class="form-control" name="rom" />
+                                <input value="" type="number" class="form-control" name="rom" />
                             </div>
                             <div class=" form-group col-md-6">
                                 <label for="inputPassword4">Thời Lượng pin</label>
-                                <input value="" type="" class="form-control" name="product_battery" />
+                                <input value="" type="number" class="form-control" name="product_battery" />
                             </div>
                             <div class=" form-group col-md-6">
                                 <label for="inputPassword4">Màn hình</label>
-                                <input value="" type="" class="form-control" name="screen_product" />
+                                <input value="" type="number" class="form-control" name="screen_product" />
                             </div>
                             <div class=" form-group col-md-6">
                                 <label for="inputPassword4">Xuất xứ</label>
-                                <input value="" type="" class="form-control" name="product_made_in" />
+                                <input value="" type="text" class="form-control" name="product_made_in" />
                             </div>
                             <div class=" form-group col-md-6">
                                 <label for="inputPassword4">Năm sản xuất</label>
-                                <input value="" type="" class="form-control" name="product_year_produce" />
+                                <input value="" type="number" class="form-control" name="product_year_produce" />
                             </div>
-                            <div class="mt form-group col-md-12">
-                                <label for="inputEmail4">Ảnh</label>
-                                <input value="" type="file" class="form-control" name="product_image" />
+                            <div class="mt-2 form-group col-md-6">
+                                <label for="">Ảnh</label>
+                                <input value="" type="file" onchange="chooseImage(this)" class="form-control" id="product_image_db" />
+
+                            </div>
+                            <div class="mt-4 form-group col-md-6">
+                                <img id="img_product" src="" alt="Image preview" class="border border-dark" style="width: 200px; height:200px;">
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -248,13 +266,13 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="inputEmail4">Tên nhà cung cấp</label>
-                            <input value="" type="" class="form-control" name="name_supplier" required />
+                            <input value="" type="text" class="form-control" name="name_supplier" required />
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="inputEmail4">Số điện thoại</label>
-                            <input value="" type="" class="form-control" name="phone_supplier" required />
+                            <input value="" type="text" class="form-control" name="phone_supplier" required />
                         </div>
                     </div>
                     <div class="row">
@@ -266,7 +284,7 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="inputEmail4">địa chỉ</label>
-                            <input value="" type="" class="form-control" name="address_supplier" required />
+                            <input value="" type="text" class="form-control" name="address_supplier" required />
                         </div>
                     </div>
                 </div>
@@ -291,8 +309,27 @@
 <script>
     $(document).ready(function() {
         load_data_category();
-        load_data_supplier()
+        load_data_supplier();
+
+        var preview = document.getElementById('img_product');
+        preview.src = "<?php echo _WEB_ROOT; ?>/public/assets/clients/img/img_default.png";
+
     });
+
+    function chooseImage(input) {
+        var preview = document.getElementById('img_product');
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            // reader.readAsDataURL(input.files[0]);
+            console.log(reader.readAsDataURL(input.files[0]))
+        } else {
+            preview.src = "<?php echo _WEB_ROOT; ?>/public/assets/clients/img/img_default.png";
+        }
+    }
     // load nhà cung cấp
     function load_data_supplier() {
         $.ajax({
@@ -336,7 +373,7 @@
         }
     }
 
-    function createLoadDataRow(product_id, product_name) {
+    function createLoadDataRow(product_id, product_name, product_quantity = 1, product_price = 0, seri_start = "", seri_end = "") {
         return `
         <tr>
             <td>
@@ -351,18 +388,22 @@
             <td>${product_name}</td>
             <td>
                 <input type="button" onclick="decreaseQuantity(this)" value="-" class="button_quantity button_minus border icon-shape icon-sm mx-1">
-                <input type="number" min="1" step="1" value="1" id="quantity" name="quantity" class="quantity border-0 text-center w-50">
+                <input onkeyup="updateTotal(this)" type="number" min="1" step="1" value="${product_quantity}" id="quantity" name="quantity" class="quantity border-0 text-center w-50">
                 <input type="button" onclick="increaseQuantity(this)" value="+" class="increase-quantity button_quantity button_plus border icon-shape icon-sm">
             </td>
             <td>
-                <input type="text" placeholder="seri bắt đầu" value="" name="seri_start" class="seri_start border-0 border-bottom border-danger text-center w-50">
-                <input type="text" placeholder="seri kết thúc" value="" name="seri_end" class="seri_end border-0 border-bottom border-danger text-center w-50">
+                <input type="text" placeholder="seri bắt đầu" value="${seri_start}" name="seri_start" class="seri_start border-0 border-bottom border-danger text-center w-50">
+                <input type="text" placeholder="seri kết thúc" value="${seri_end}" name="seri_end" class="seri_end border-0 border-bottom border-danger text-center w-50">
             </td>
             <td>
-                <input type="number" step=""  value="" id="price" onkeyup="updateTotal(this)" name="price" class="price border-0 border-bottom border-danger text-center w-100">
+                <input type="number" "  value="${product_price}" id="price" onkeyup="updateTotal(this)" name="price" class="price border-0 border-bottom border-danger text-center w-100">
+            </td>
+
+            <td>
+                <input type="number" onkeyup="updateTotal(this)"   value="" name="price_percent" onkeyup=""  class="price border-0 border-bottom border-danger text-center w-100">
             </td>
             <td>
-                <input type="number" step="" max="10" value="" id="total" name="total" class="total border-0 border-bottom border-danger text-center w-100" disabled>
+                <input type="number"  value="" id="total" name="total" class="total border-0 border-bottom border-danger text-center w-100" disabled>
             </td>
         </tr>`;
     }
@@ -435,7 +476,7 @@
             $('#product_search').hide();
         });
     }
-
+    // tìm kiếm sản phẩm có trong db
     function searchProduct() {
         $.ajax({
             url: "http://localhost/php/shop/ImportController/getAllProducts",
@@ -452,28 +493,24 @@
     }
     const debounceSearchProduct = debounce(searchProduct, 1000);
 
-
+    // lấy số seri
     function seriProduct(start, end) {
         let result = [];
-        let startNum = parseInt(start.substring(6));
-        let endNum = parseInt(end.substring(6));
+        let startNum = parseInt(start.substring(8));
+        let endNum = parseInt(end.substring(8));
         // console.log(result.slice(0, 5));
-        for (let i = startNum; i < endNum; i++) {
-            let productId = start.substring(0, 6) + ("00000" + i).slice(-6);
+        for (let i = startNum; i <= endNum; i++) {
+            let productId = start.substring(0, 8) + i
             result.push(productId);
         }
         return result;
     }
-
-
-
-
-
+    // lưu hóa đơn nhập hàng
     function saveGoodReceipt() {
         const loadDataBody = document.querySelector('#load_data tbody');
         let date_good_receipt = document.getElementById('date_good_receipt').value;
         let supplier_id = document.getElementById("supplierSelect").value;
-        let total_good_receipt_input=document.getElementById("total_good_receipt_input").value;
+        let total_good_receipt_input = document.getElementById("total_good_receipt_input").value;
         if (supplier_id === '0-chọn nhà cung cấp') {
             alert('vui lòng chọn nhà cung cấp')
             return;
@@ -493,6 +530,11 @@
             var seriEnd = row.querySelector('input[name="seri_end"]').value;
             var price = row.querySelector('input[name="price"]').value;
             var total = row.querySelector('input[name="total"]').value;
+            var price_percent = row.querySelector('input[name="price_percent"]').value
+
+            // giá bán
+            var price_sale
+            // price_percent
             // TEST88000001  TEST88000010  
             // TEST98000001  TEST98000010 
             let seris = seriProduct(seriStart, seriEnd)
@@ -503,10 +545,9 @@
                 product_details.push({
                     "product_id": productId,
                     "product_seri": seri_product[i],
-                    "price": price,
+                    "price": price_percent,
                 })
             }
-            console.log(product_details)
 
 
             //  end ajax
@@ -522,9 +563,16 @@
                 product_details: product_details
             },
             success: function(data) {
-                $('#import_info').modal('hide');
-                loadDataBody.innerHTML = '';
-                alert('thêm thành công')
+                console.log(data);
+                if (data.error) {
+                    alert(data.error)
+                } else {
+                    alert(data.success)
+                    $('#import_info').modal('hide');
+                    loadDataBody.innerHTML = '';
+                    load_data_supplier()
+                    window.location.href = "http://localhost/php/shop/ImportController";
+                }
             }
 
         })
@@ -553,27 +601,29 @@
             updateTotal(productRow);
         }
     }
-
+    //  tính tiền trong bảng
     function updateTotal(input) {
         const row = input.closest('tr');
-        const quantity = parseFloat(row.querySelector('.quantity').value);
+        const quantity = parseInt(row.querySelector('.quantity').value);
         const price = parseFloat(row.querySelector('.price').value) || 0;
         const total = quantity * price;
-        row.querySelector('.total').value = total.toFixed(2);
+        row.querySelector('.total').value = total;
         updateOverallTotal();
     }
-
+    //  tính tông tiền hóa đơn
     function updateOverallTotal() {
         let overallTotal = 0;
         const totalInputs = document.querySelectorAll('.total');
         totalInputs.forEach(input => {
             overallTotal += parseFloat(input.value) || 0;
         });
-        document.getElementById('total_good_receipt_input').value = overallTotal.toFixed(2);
+        document.getElementById('total_good_receipt_input').value = overallTotal
     }
 
     var table = document.querySelector("#load_data tbody");
     var btn_import_info = document.getElementById("btn_import_info");
+
+    // click vào modal nhập hàng
     btn_import_info.addEventListener('click', function() {
         var rows = table.rows;
         var isCheck = true;
@@ -583,8 +633,24 @@
                 var seriStart = row.querySelector('input[name="seri_start"]').value;
                 var seriEnd = row.querySelector('input[name="seri_end"]').value;
                 var price = row.querySelector('input[name="price"]').value;
-                if (seriStart === '' || seriEnd === '' || price === '') {
+                var price_percent = row.querySelector('input[name="price_percent"]').value;
+                // console.log(typeof parseInt(price_percent))
+                // console.log(typeof price_percent)
+                var a = parseInt(price_percent) - parseInt(price)
+                // console.log(a)
+                if (seriStart === '' || seriEnd === '' || price === '' || price_percent === '') {
                     alert('Vui lòng nhập đầy đủ thông tin trong bảng');
+                    isCheck = false;
+                    break;
+                }
+                if (seriStart.length < 9 || seriEnd.length < 9) {
+                    alert('Seri phải có ít nhất 9 ký tự');
+                    isCheck = false;
+                    break;
+                }
+
+                if (a <= 200000) {
+                    alert('Giá bán phải lớn hơn giá nhập 200 nghàn!')
                     isCheck = false;
                     break;
                 }
@@ -597,7 +663,7 @@
             alert("Không có sản phẩm để nhập hàng.");
         }
     })
-
+    // thêm sản phẩm mới
     function addNewProduct() {
         var name_product = document.querySelector('input[name="name_product_new"]').value;
         var date_insurance = document.querySelector('input[name="date_insurance"]').value;
@@ -609,6 +675,10 @@
         var product_made_in = document.querySelector('input[name="product_made_in"]').value;
         var product_year_produce = document.querySelector('input[name="product_year_produce"]').value;
 
+
+        var product_image_db = document.getElementById('product_image_db').value;
+        var fileName = product_image_db.split('\\').pop();
+
         if (name_product === '' || date_insurance === '' || category_product_new === '0-chọn loại sản phẩm' ||
             ram === '' || rom === '' || product_battery === '' || screen_product === '' || product_made_in === '' || product_year_produce === ''
         ) {
@@ -617,32 +687,49 @@
         }
         if (date_insurance < 1 || date_insurance > 12) {
             alert('thời gian bảo hành nhập từ tháng từ 1 đến 12');
+            return
         }
+        if (!product_image_db) {
+            alert('vui lòng chọn ảnh')
+            return
+        }
+        if (!fileName.split('.')[1].match('jpg') && !fileName.split('.')[1].match('png')) {
+            alert('chọn ảnh có đuôi jpg hoặc png')
+            return
+        }
+
+        var form_Data = new FormData();
+        form_Data.append('category_id', category_product_new);
+        form_Data.append('product_name', name_product);
+        form_Data.append('date_insurance', date_insurance);
+        form_Data.append('ram', ram);
+        form_Data.append('rom', rom);
+        form_Data.append('battery', product_battery);
+        form_Data.append('screen', screen_product);
+        form_Data.append('made_in', product_made_in);
+        form_Data.append('year_produce', product_year_produce);
+        form_Data.append('img', fileName);
+
+
         $.ajax({
             url: "http://localhost/php/shop/ImportController/addNewProduct",
             method: 'POST',
-            data: {
-                category_id: category_product_new,
-                product_name: name_product,
-                date_insurance: date_insurance,
-                ram: ram,
-                rom: rom,
-                battery: product_battery,
-                screen: screen_product,
-                made_in: product_made_in,
-                year_produce: product_year_produce,
-                img: 'samsung1.jpg'
-            },
+            data: form_Data,
+            processData: false,
+            contentType: false,
             success: function(data) {
-                $('#add_new_product').modal('hide');
-                $('#add_new_product').modal('hide');
-                alert('thêm sản phẩm thành công')
                 var responseData = JSON.parse(data);
-                let productId = responseData.data.product_id
-                let name = responseData.data.product_name
-                console.log(productId, name)
-                const newRow = createLoadDataRow(productId, name);
-                $('#load_data tbody').append(newRow);
+                if (responseData) {
+                    alert(responseData.message);
+                    $('#add_new_product').modal('hide');
+                    let productId = responseData.data.product_id
+                    let name = responseData.data.product_name
+                    console.log(productId, name)
+                    const newRow = createLoadDataRow(productId, name);
+                    $('#load_data tbody').append(newRow);
+                }else{
+                    alert(responseData.message); 
+                }
             }
 
         })
@@ -678,6 +765,10 @@
                 load_data_category()
             }
         })
+    }
+    // hiện modal excel
+    function showModalExcel() {
+        $('#modal_excel').modal('show');
     }
     // hiện modal thêm nhà cung cấp
     function showModalSupplier() {
@@ -716,6 +807,53 @@
                 load_data_supplier()
             }
         })
+        alert('Success')
+    }
 
+    function importExcel() {
+        let fileInput = document.getElementById('excelFileInput');
+        if (fileInput.files.length === 0) {
+            alert('vui lòng chọn file')
+            return
+        }
+        let fileName = fileInput.files[0].name
+        let fileNameLast = fileName.split('.')[1].toLowerCase()
+        if (fileNameLast !== 'xlsx') {
+            alert('vui lòng chọn file excel có định dạng .xlsx')
+            return
+        }
+        let formData = new FormData();
+        formData.append('excelFile', fileInput.files[0])
+        $.ajax({
+            url: "http://localhost/php/shop/ImportController/importExcel",
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                // product_id, product_name, product_quantity = 1, product_price, seri_start, seri_end) 
+                console.log(data)
+                if (data.error) {
+                    alert('có lỗi :' + data.error)
+                } else {
+                    data.data.forEach((item) => {
+                        console.log(item)
+                        const newRow = createLoadDataRow(item.product_id, item.product_name, item.product_quantity, item.price, item.seri[0], item.seri[item.seri.length - 1]);
+                        $('#load_data tbody').append(newRow);
+
+                        const inputInNewRow = $(newRow).find('.quantity');
+                        updateTotal(inputInNewRow[0]);
+                    })
+                    $('#modal_excel').modal('hide');
+                    updateOverallTotal()
+
+
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert('Có lỗi xảy ra khi đẩy dữ liệu từ Excel lên máy chủ.');
+            }
+        })
     }
 </script>

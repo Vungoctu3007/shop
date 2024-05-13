@@ -1,3 +1,17 @@
+<?php if(isset($_SESSION['success_message'])): ?>
+    <div class="alert-message alert alert-success alert-dismissible fade show" role="alert">
+        <?php echo $_SESSION['success_message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['success_message']); ?>
+<?php endif; ?>
+<?php if(isset($_SESSION['warning_message'])): ?>
+    <div class="alert-message alert alert-warning alert-dismissible fade show" role="alert">
+        <?php echo $_SESSION['warning_message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['warning_message']); ?>
+<?php endif; ?>
 <section class="h-100 h-custom" style="margin-top: 10px;">
   <div class="container py-5 h-100">
     <div class="row">
@@ -7,6 +21,12 @@
             <h1 class="card-title fw-bold mb-0" style="color: white;">Giỏ hàng</h1>
           </div>
           <div class="card-body">
+          <?php if(!isset($_SESSION['user_session']['user'])) {
+            echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <strong>Bạn cần đăng nhập để xem giỏ hàng!</strong>'
+            .'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+          }?> 
             <?php foreach ($dataCart as $cartItem): ?>
               <div class="row cart-items" data-cart-id="<?= $cartItem['cart_id'] ?>" data-product-id="<?= $cartItem['product_id'] ?>" data-price="<?= $cartItem['product_price'] ?>">
                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex align-items-center justify-content-center">

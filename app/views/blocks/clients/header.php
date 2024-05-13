@@ -14,7 +14,7 @@
                     </div>
                     <div class="top-link pe-2">
                         <?php if(isset($_SESSION['user_session']['user'])) {?> 
-                            <small class="text-white mx-2">Xin chào <?php echo $_SESSION['user_session']['customer']['customer_name'];?></small>
+                            <small class="text-white mx-2">Xin chào <?php echo isset($_SESSION['user_session']['customer']['customer_name']) ? $_SESSION['user_session']['customer']['customer_name'] : $_SESSION['user_session']['user']['username']?></small>
                             <a href="<?php echo _WEB_ROOT; ?>/authenticate/logout" class="text-white">/<small class="text-white mx-2">Đăng xuất</small></a>
                         <?php } else {?>
                         <a href="<?php echo _WEB_ROOT; ?>/authenticate/signin" class="text-white"><small class="text-white mx-2">Đăng nhập</small>/</a>
@@ -25,19 +25,18 @@
             </div>
             <div class="container px-0">
                 <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                    <a href="<?php echo _WEB_ROOT; ?>/trang-chu" class="navbar-brand"><h1 class="text-primary display-6">ELECTRO</h1></a>
+                    <a href="<?php echo _WEB_ROOT; ?>/dien-thoai" class="navbar-brand"><h1 class="text-primary display-6">ELECTRO</h1></a>
                     <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                         <span class="fa fa-bars text-primary"></span>
                     </button>
                     <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                         <div class="navbar-nav mx-auto">
-                            <a href="<?php echo _WEB_ROOT; ?>/trang-chu" class="nav-item nav-link active">Home</a>
                             <a href="<?php echo _WEB_ROOT; ?>/dien-thoai" class="nav-item nav-link">Sản phẩm</a>
                             <a href="<?php echo _WEB_ROOT; ?>/gio-hang" class="nav-item nav-link">Giỏ hàng</a>
                             <a href="<?php echo _WEB_ROOT; ?>/don-hang" class="nav-item nav-link">Đơn hàng</a>
                         </div>
                         <div class="d-flex m-3 me-0">
-                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
+                            
                             <a href="<?php echo _WEB_ROOT; ?>/gio-hang" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
                                 <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;"><?php echo isset($numOfProductInCart) ? $numOfProductInCart : 0;?></span>

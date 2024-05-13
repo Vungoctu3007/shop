@@ -98,4 +98,28 @@ class Orders {
         $stmt->close();
         return $data;
     }
+
+    public function updateStatusProductSeries($product_seri) {
+        $sql = 'UPDATE product_seri SET status = 0 WHERE product_seri = ?';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('s', $product_seri);
+
+        if (!$stmt->execute()) {
+            echo "Lỗi khi thêm sản phẩm vào đơn hàng: " . $stmt->error;
+            return false;
+        }
+        return true;
+    }
+
+    public function cancelOrder($order_id) {
+        $sql = 'UPDATE orders SET status_order_id = 3 WHERE order_id =?';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $order_id);
+
+        if (!$stmt->execute()) {
+            echo "Lỗi khi thêm sản phẩm vào đơn hàng: ". $stmt->error;
+            return false;
+        }
+        return true;
+    }
 }

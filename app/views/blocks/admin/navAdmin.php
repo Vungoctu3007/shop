@@ -11,6 +11,7 @@
     </div>
     <!-- Sidebar navigation-->
     <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+<<<<<<< HEAD
       <ul id="sidebarnav">
         <li class="nav-small-cap">
           <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -88,8 +89,11 @@
         </li>
       </ul>
 
+=======
+   
+>>>>>>> dffb306aae2e3044373f9ef46879ffffc26c55de
     </nav>
     <!-- End Sidebar navigation -->
-  </div>
-  <!-- End Sidebar scroll-->
+    <!-- Sidebar scroll-->
+
 </aside>
