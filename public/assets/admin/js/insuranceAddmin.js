@@ -182,13 +182,24 @@ function openDetailInsuranceModal() {
             <p style="margin:10px 0 10px 0; color: red"><strong>Status Product:</strong> <span>${data.data.status_product}</span></p>
 
             <div class="mb-3">
-                    <label for="equipmentReplacementInsert" class="form-label">Equipment Replacement:</label>
+                    <label for="equipmentReplacementInsert" class="form-label" id="labelequipement">Equipment Replacement:</label>
                     <input type="text" class="form-control" id="equipmentReplacementInsert" value="" required>
             </div>
             `;
                 $('#product_seri').val(key);
                 $('#detailProductforInsurance').html(html);
                 getEmployeeList();
+                
+                // Check if status is 'Hết bảo hành', then hide the 'Create' button
+                if (data.data.status_product === 'Hết bảo hành') {
+                    $('#createInsuranceBtn').hide();
+                    $('#equipmentReplacementInsert').hide();
+                    $('#labelequipement').hide();
+                } else {
+                    $('#createInsuranceBtn').show();
+                    $('#equipmentReplacementInsert').show();
+                }
+                
                 $('#formDetailProductforInsurance').modal('show'); // Hiển thị modal
             }
             else
@@ -231,6 +242,12 @@ function createInsurance() {
     var order_id = $('#order_id').val();
     var employee_id = $('#employee_id').val();
     var equipment_replacement = $('#equipmentReplacementInsert').val();
+
+    if(!equipment_replacement)
+        {
+            alert("KHÔNG ĐƯỢC BỎ TRỐNG THIẾT BỊ THAY THẾ");
+            return;
+        }
     $.ajax({
         type: "POST",
         url: `http://localhost/shop/Insurance_Admin/insertInsurance`,

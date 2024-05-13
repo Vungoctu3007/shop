@@ -73,37 +73,37 @@ function openDetailEmployeeModal(employee_Id)
         type: "GET",
         url: `http://localhost/shop/Employee_Admin/detailEmployeeId?employee_id=${employee_Id}`,
         success: function (data) {
-            console.log(data);
+            console.log(data.data);
             var html = `
                 <div class="row mt-3">  
                     <div class="col-6">
                         <label for="employee_id" class="form-label">EmployeeID:</label>
-                        <input type="text" class="form-control" id="employee_id" value="${data.employee_id}" readonly>
+                        <input type="text" class="form-control" id="employee_id" value="${data.data.employee_id}" readonly>
                     </div>
                     <div class="col-6">
                         <label for="employee_name" class="form-label">Employee's Name</label>
-                        <input type="text" class="form-control" id="employee_name" value="${data.employee_name}" readonly>
+                        <input type="text" class="form-control" id="employee_name" value="${data.data.employee_name}" readonly>
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-6">
                         <label for="employee_phone" class="form-label">Employee's Phone</label>
-                        <input type="text" class="form-control" id="employee_phone" value="${data.employee_phone}" readonly>
+                        <input type="text" class="form-control" id="employee_phone" value="${data.data.employee_phone}" readonly>
                     </div>
                     <div class="col-6">
                         <label for="employee_address" class="form-label">Employee's Address</label>
-                        <input type="text" class="form-control" id="employee_address" value="${data.employee_address}" readonly>
+                        <input type="text" class="form-control" id="employee_address" value="${data.data.employee_address}" readonly>
                     </div>
                 </div>
                 
                 <div class="row mt-4">
                     <div class="col-6">
                         <label for="employee_email" class="form-label">Employee's Email</label>
-                        <input type="text" class="form-control" id="employee_email" value="${data.employee_email}" readonly>
+                        <input type="text" class="form-control" id="employee_email" value="${data.data.employee_email}" readonly>
                     </div>
                     <div class="col-6">
                         <label for="employee_password" class="form-label">Employee's Password</label>
-                        <input type="text" class="form-control" id="employee_email" value="${data.password}" readonly>
+                        <input type="text" class="form-control" id="employee_email" value="${data.data.password}" readonly>
                     </div>
                 </div>
             `;
@@ -190,6 +190,45 @@ function updateEmployee()
                 }
         }
     })
+}
+
+function loadEmployeeSearch(page) {
+    var key = document.getElementById('search-employee-input').value.trim(); // Sử dụng trim để loại bỏ khoảng trắng thừa
+
+    if (key === "") {
+        load_dataProduct(currentPageProduct); // Load lại dữ liệu khi input search trống
+        updatePagination();
+    } else {
+        $.ajax({
+            url: `http://localhost/shop/Product_Admin/search`,
+            method: "POST",
+            data: { keyword: key, page: currentPageEmployee },
+            success: function (data) {
+                if (data != "No products found") {
+                    create_table(data.data);
+                    updatePaginationSearch(data.currentPageProduct, data.total_pageProduct); // Truyền số trang cần cập nhật
+                } else {
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+}
+
+function updatePaginationEmployeeSearch(currentPageEmployee, total_pageEmployee) {
+    $('#current_page').text(currentPageEmployee);
+    $('#total_pages').text(total_pageEmployee);
+    $('#pagination').empty();
+
+    if (total_pageProduct > 1) {
+        for (let i = 1; i <= total_pageProduct; i++) {
+            $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="loadDataSearch(${i})">${i}</a></li>`);
+        }
+    } else {
+        $('#pagination').append(`<li class="page-item active"><a class="page-link">${currentPageProduct}</a></li>`);
+    }
 }
 
 
