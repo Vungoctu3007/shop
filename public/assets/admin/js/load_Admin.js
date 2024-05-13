@@ -144,7 +144,7 @@ function loadNavigationBasedOnPermissions(taskNamesUser, allTaskNames) {
       navLink.setAttribute("aria-expanded", "false");
       navLink.innerHTML = `
       <span>
-        <i class="ti ti-login"></i>
+      <i class="bi bi-arrows-move"></i>
       </span>
       <span class="hide-menu">${taskName}</span>
     `;

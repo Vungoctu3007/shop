@@ -8,7 +8,7 @@ function openDetailProductModal(productId) {
                 <img id="productImage" src="../public/assets/clients/img/${data.data.product_image}" alt="Product Image" style="max-width: 150px; ">
                 <h5 id="productName">Product Name: ${data.data.product_name}</h5>
                 
-                <div class="col-4"><p><strong>Description:</strong> <span id="description">${data.data.product_description}</span></p></div>
+                <div class="col-12"><p><strong>Description:</strong> <span id="description">${data.data.product_description}</span></p></div>
                 <div class= "row mt-3">
                     <div class="col-4"><p><strong>Category Name:</strong> <span id="categoryName">${data.data.category_name}</span></p></div>
                     <div class="col-4"><p><strong>RAM:</strong> <span id="ram">${data.data.product_ram}</span></p></div>
@@ -53,6 +53,32 @@ function updateProduct() {
     var timeInsurance = $('#timeInsuranceUpdate').val();
     var price = $('#priceUpdate').val();
 
+    var numberRegex = /^\d+$/;
+    var textRegex = /^[a-zA-Z]+$/;
+
+    // Validation
+    if (productName === "") {
+        alert("Product name cannot be empty");
+        return;
+    }
+    if (!numberRegex.test(productRam)) {
+        alert("RAM should be a number");
+        return;
+    }
+    if (!numberRegex.test(productRom)) {
+        alert("ROM should be a number");
+        return;
+    }
+    if (!numberRegex.test(productBattery)) {
+        alert("Battery should be a number");
+        return;
+    }
+    if (!numberRegex.test(yearProduce)) {
+        alert("Year produce should be a number");
+        return;
+    }
+
+
     $.ajax({
         type: "POST",
         url: `http://localhost/shop/Product_Admin/update`,
@@ -89,7 +115,7 @@ function updateProduct() {
 }
 
 
-function openUpdateModal(productId) {
+function openUpdateProductModal(productId) {
     $.ajax({
         type: "GET",
         url: `http://localhost/shop/Product_Admin/updateProductId?product_id=${productId}`,
@@ -271,7 +297,7 @@ function create_table(data) {
                         <td>
                         <div>
                             <button class='btn btn-primary me-1 mb-3 w-100 mt-3' data-bs-toggle='modal' data-bs-target='#formDetailProduct' onclick='openDetailProductModal(${item.id || item.product_id})'>Detail</button>
-                            <button class='btn btn-primary me-1 mb-3 w-100 mt-3' data-bs-toggle='modal' data-bs-target='#formUpdateProduct' onclick='openUpdateModal(${item.id || item.product_id})'>Update</button>
+                            <button class='btn btn-primary me-1 mb-3 w-100 mt-3' data-bs-toggle='modal' data-bs-target='#formUpdateProduct' onclick='openUpdateProductModal(${item.id || item.product_id})'>Update</button>
                             <button class='btn btn-primary me-1 mb-3 w-100 mt-3' data-bs-toggle='modal' data-bs-target='#confirmDeleteProduct' onclick='confirmdeleteProduct(${item.id || item.product_id})'>Delete</button>
                         </div>
                         </td>

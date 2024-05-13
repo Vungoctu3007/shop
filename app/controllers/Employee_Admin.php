@@ -64,11 +64,58 @@ class Employee_Admin extends Controller
     public function searchEmployee()
     {
         $keyword = $_POST['keyword'];
+        $sizePage = 8;
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
+        if ($keyword != null) {
+            $employees = $this->model("EmployeeAdminModel");
+            $result = $employees->searchEmployee($keyword, $page, $sizePage);
+            if ($result !== false) {
+                // Count total products
+                $totalEmployees = $employees->countEmployeeBySearch($keyword); // Change to countProductBySearch
+
+                // Calculate total pages
+                $totalPages = ceil($totalEmployees / $sizePage);
+
+                // Return JSON response
+                header('Content-Type: application/json');
+                echo json_encode(array("data" => $result, "current_page" => $page, "total_page" => $totalPages));
+            } else {
+                // Return JSON response if no products found
+                header('Content-Type: application/json');
+                echo json_encode("No products found");
+            }
+        } else {
+            $employees = $this->model("EmployeeAdminModel");
+            $Employees = $employees->getAllEmployees($page, $sizePage);
+            header('Content-Type: application/json');
+            echo json_encode($Employees, $page);
+        }
+    }
+
+    public function insertEmployee()
+    {
+        $employee_name = $_POST['employee_name'];
+        $employee_phone = $_POST['employee_phone'];
+        $employee_address = $_POST['employee_address'];
+        $employee_email = $_POST['employee_email'];
         $employees = $this->model("EmployeeAdminModel");
-        $result = $employees->searchEmployee($keyword, $page);
-        header('Content-Type: application/json');
-        echo json_encode($result, $page);
+        $result = $employees->insertEmployee($employee_name, $employee_phone, $employee_address, $employee_email);
+        // Kiểm tra kết quả và trả về JSON response
+        if ($result) {
+            echo json_encode(
+                array(
+                    "status" => "success",
+                    "message" => "Product insert successfully"
+                )
+            );
+        } else {
+            echo json_encode(
+                array(
+                    "status" => "error",
+                    "message" => "Failed to insert product"
+                )
+            );
+        }
     }
 }
 

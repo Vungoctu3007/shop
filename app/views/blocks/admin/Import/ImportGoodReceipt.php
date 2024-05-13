@@ -82,7 +82,7 @@
                         <span>Nhân viên:</span>
                     </div>
                     <div class="col-8">
-                        <span class="ms-2">Admin</span>
+                        <span id="userInfo" data-id="<?php echo $_SESSION['user_session']['user']['account_id']; ?>" class="ms-2"><?php echo $_SESSION['user_session']['user']['username']; ?></span>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -511,6 +511,10 @@
         let date_good_receipt = document.getElementById('date_good_receipt').value;
         let supplier_id = document.getElementById("supplierSelect").value;
         let total_good_receipt_input = document.getElementById("total_good_receipt_input").value;
+
+        var userId = document.getElementById('userInfo').getAttribute('data-id');
+        console.log("account:"+userId);
+
         if (supplier_id === '0-chọn nhà cung cấp') {
             alert('vui lòng chọn nhà cung cấp')
             return;
@@ -552,13 +556,13 @@
 
             //  end ajax
         });
-        console.log(typeof product_details);
+      
         $.ajax({
             url: "http://localhost/php/shop/ImportController/insertGoodReceipt",
             method: 'POST',
             data: {
                 supplier_id: supplier_id,
-                employee_id: "NV03",
+                employee_id: userId,
                 date_good_receipt: date_good_receipt,
                 total: total_good_receipt_input,
                 product_details: product_details
@@ -728,8 +732,8 @@
                     console.log(productId, name)
                     const newRow = createLoadDataRow(productId, name);
                     $('#load_data tbody').append(newRow);
-                }else{
-                    alert(responseData.message); 
+                } else {
+                    alert(responseData.message);
                 }
             }
 
