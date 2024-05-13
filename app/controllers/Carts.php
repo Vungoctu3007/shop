@@ -67,6 +67,13 @@ class Carts extends Controller {
         $account_id = isset($_SESSION['user_session']['user']['account_id']) ? $_SESSION['user_session']['user']['account_id'] : null;
         $product_id = $_POST['product_id'];
         $quantity = isset($_POST['quantity']) ? htmlspecialchars($_POST['quantity']) : 1;
+        $quantityInStock = $this->model("cart")->checkQuantityInStockByProductById($product_id);
+        if($quantityInStock < $quantity){
+            $response['message_warning'] = 'Số lượng hàng không đủ trong kho';
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            return;
+        }
 
         $cart = $this->model("cart");
 
@@ -81,6 +88,8 @@ class Carts extends Controller {
                 $response['success'] = true;
             }
         }
+
+        $response['message'] = 'Thêm sản phẩm vào giỏ hàng thành công.';
 
         header('Content-Type: application/json');
         echo json_encode($response);

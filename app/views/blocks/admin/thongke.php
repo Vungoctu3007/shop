@@ -284,10 +284,10 @@
         </div>
         <div class="statistic">
             <h2>Tổng Sản Phẩm Đã Bán</h2>
-            <p><?= number_format($totalProductsSold); ?> sản phẩm </p>
+            <p><?= number_format($totalProductsSold); ?> sản phẩm</p>
         </div>
         <div class="statistic">
-            <h2>Tổng Nhân Viên Bán Hàng</h2>
+            <h2 >Tổng Nhân Viên Bán Hàng</h2>
             <p><?= number_format($totalSalesStaff); ?> nhân viên </p>
         </div>
         <div class="statistic">
@@ -297,21 +297,35 @@
     </div>
 
     <div class="controls-container">
+    
         <div class="sort-container">
-            <button class="btn-sort-dropdown">Sắp xếp</button>
+            <button class="btn-sort-dropdown">Sắp xếp theo tên</button>
             <div class="sort-options">
-                <a href="<?= _WEB_ROOT; ?>/thongke?sort=asc" class="btn-sort">Sắp xếp tăng dần</a>
-                <a href="<?= _WEB_ROOT; ?>/thongke?sort=desc" class="btn-sort">Sắp xếp giảm dần</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=asc" class="btn-sort">Giá tăng dần</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=desc" class="btn-sort">Giá giảm dần</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_asc" class="btn-sort">Tên A-Z</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_desc" class="btn-sort">Tên Z-A</a>
             </div>
         </div>
 
+
         <div class="search-container">
-            <form action="<?php echo _WEB_ROOT; ?>/thongke" method="get">
+            <form action="<?php echo _WEB_ROOT; ?>/admin/statistical" method="get">
                 <label for="start_date">Ngày Bắt Đầu:</label>
                 <input type="date" id="start_date" name="start_date" required>
                 <label for="end_date">Ngày Kết Thúc:</label>
                 <input type="date" id="end_date" name="end_date" required>
-                <input type="submit" value="Tìm Kiếm">
+
+
+                <label for="category">Danh Mục:</label>
+                <select id="category" name="category">
+                    <option value="">Chọn loại</option>
+                    <!-- Giả sử bạn đã có danh sách các danh mục từ cơ sở dữ liệu -->
+                    <?php foreach ($categories as $category) : ?>
+                        <option value="<?php echo $category['category_name']; ?>"><?php echo $category['category_name']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <input type="submit" value="Thống kê">
             </form>
         </div>
     </div>
@@ -320,14 +334,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>Mã Hóa Đơn</th>
-                    <th>Mã Tài Khoản</th>
-                    <th>Mã Trạng Thái</th>
-                    <th>Mã Nhân Viên</th>
-                    <th>Tổng Cộng</th>
-                    <th>Ngày Mua</th>
                     <th>Tên sản phẩm</th>
+                    <th>Loại</th>
                     <th>Số lượng</th>
+                    <th>Giá tiền</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -335,30 +346,13 @@
 
                 if (!empty($datathongke)) {
                     foreach ($datathongke as $row) {
-                        $employee_id = !empty($row['employee_id']) ? htmlspecialchars($row['employee_id'], ENT_QUOTES, 'UTF-8') : 'IDAuto';
-
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['order_id'] ?? '') . "</td>";
-                        echo "<td>" . htmlspecialchars($row['account_id'] ?? '') . "</td>";
-                        echo "<td>";
-                        switch ($row['status_order_id']) {
-                            case 1:
-                                echo 'Chờ Xử Lý';
-                                break;
-                            case 2:
-                                echo 'Đã Xử Lý';
-                                break;
-                            case 3:
-                                echo 'Đã Hủy';
-                                break;
-                            default:
-                                echo 'Không xác định'; // Đối với trạng thái không xác định
-                        }
-                        echo "<td>" . $employee_id . "</td>";  // "Auto" nếu mã nhân viên trống
-                        echo "<td>" . htmlspecialchars(number_format($row['total'] ?? 0)) . " VND</td>";
-                        echo "<td>" . htmlspecialchars($row['date_buy'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['product_name'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['category_name'] ?? '') . "</td>";
                         echo "<td>" . htmlspecialchars($row['quantity'] ?? '') . "</td>";
+                        echo "<td>" . htmlspecialchars(number_format($row['total'] ?? 0)) . " VND</td>";
+                        //echo "<td>" . htmlspecialchars($row['date_buy'] ?? '') . "</td>";
+
                         echo "</tr>";
                     }
                 } else {
@@ -371,36 +365,25 @@
 
         <div class="pagination">
             <?php if ($currentPage > 1) : ?>
-                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage - 1 ?>">« Trang Trước</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?page=<?= $currentPage - 1 ?>">« Trang Trước</a>
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $i ?>" <?= $i == $currentPage ? 'class="active"' : '' ?>><?= $i ?></a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?page=<?= $i ?>" <?= $i == $currentPage ? 'class="active"' : '' ?>><?= $i ?></a>
             <?php endfor; ?>
 
             <?php if ($currentPage < $totalPages) : ?>
-                <a href="<?= _WEB_ROOT; ?>/thongke?page=<?= $currentPage + 1 ?>">Trang Sau »</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?page=<?= $currentPage + 1 ?>">Trang Sau »</a>
             <?php endif; ?>
         </div>
 
     </div>
 
-    <div class="year-selection-container">
-        <!-- Hiển thị danh sách năm -->
-        <label for="year">Doanh thu theo năm</label>
-        <select id="year" name="year">
-            <?php foreach ($years as $year) : ?>
-                <option value="<?= $year ?>"><?= $year ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-
 
     <!-- Div chứa biểu đồ cho từng năm -->
-    <div id="chartsContainer">
+    <div id="chartsContainer" style="margin-top: 20px;">
         <?php foreach ($years as $year) : ?>
             <div class="chart-container">
-                <h2>Doanh thu <?= htmlspecialchars($year); ?></h2>
                 <canvas id="chart_<?= htmlspecialchars($year); ?>"></canvas>
             </div>
         <?php endforeach; ?>

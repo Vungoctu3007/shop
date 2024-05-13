@@ -1,5 +1,5 @@
 
-
+		<div class="alert-message"></div>
         <!-- Single Page Header End -->	
 
 		<!-- SECTION -->

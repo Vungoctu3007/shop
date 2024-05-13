@@ -23,7 +23,7 @@
         if (isset($content) && !empty($sub_content)) {
             $this->render('blocks/admin/navAdmin');
             echo '<div class="body-wrapper">';
-           // $this->render('blocks/admin/headerAdmin', $sub_content);
+            $this->render('blocks/admin/headerAdmin', $sub_content);
             echo '<div class="container-fluid">';
             // include('app/views/blocks/admin/orderView.php');
             $this->render($content, $sub_content);
@@ -46,11 +46,7 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
-
-        
-        ?>
-    </div>
+    <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script> 
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/sidebarmenu.js"></script>
@@ -60,10 +56,9 @@
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/productAddmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/insuranceAdddmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/role_Admin.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/accountAdmin.js"></script>
-
-
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/roleAdmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/account_Admin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/loadAdmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
 
 </body>

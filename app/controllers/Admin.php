@@ -1,6 +1,6 @@
 <?php
 class Admin extends Controller {
-    public $data = [], $model = [];
+     public $data = [], $model = [];
 
     public function __construct()
     {
@@ -10,7 +10,7 @@ class Admin extends Controller {
 
     public function index()
     {
-        $limit = 10; // Số mục mỗi trang
+        $limit = 20; // Số mục mỗi trang
         $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $offset = ($currentPage - 1) * $limit;
 
@@ -20,23 +20,40 @@ class Admin extends Controller {
         // Kiểm tra xem có bộ lọc ngày bắt đầu và kết thúc không
         $start_date = $_GET['start_date'] ?? null;
         $end_date = $_GET['end_date'] ?? null;
+        $category_name = $_GET['category'] ?? null;
 
         $datathongke = $this->model->getthongke($offset, $limit);
 
         if ($start_date && $end_date) {
             // Gọi hàm lọc với ngày bắt đầu và kết thúc
-            $datathongke = $this->model->timthongke($start_date, $end_date, $offset, $limit);
+            $datathongke = $this->model->timthongke($start_date, $end_date, $category_name, $offset, $limit);
+            $totalRevenue = $this->model->getTotalRevenue($start_date, $end_date, $category_name);
+            $totalProductsSold = $this->model->getTotalProductsSold($start_date, $end_date, $category_name);
         } else {
             // Lựa chọn truy vấn dữ liệu theo giá trị sắp xếp
             if ($sort === 'asc') {
                 // Sắp xếp tăng dần
                 $datathongke = $this->model->getThongKeAscPaginated($offset, $limit);
+                $totalRevenue = $this->model->TongDoanhThuKL();
+                $totalProductsSold = $this->model->TongSanPhamKL();
             } elseif ($sort === 'desc') {
                 // Sắp xếp giảm dần
                 $datathongke = $this->model->getThongKeDescPaginated($offset, $limit);
+                $totalRevenue = $this->model->TongDoanhThuKL();
+                $totalProductsSold = $this->model->TongSanPhamKL();
+            } elseif ($sort === 'name_asc') {
+                $datathongke = $this->model->getThongKeNameAsc($offset, $limit);
+                $totalRevenue = $this->model->TongDoanhThuKL();
+                $totalProductsSold = $this->model->TongSanPhamKL();
+            } elseif ($sort === 'name_desc') {
+                $datathongke = $this->model->getThongKeNameDesc($offset, $limit);
+                $totalRevenue = $this->model->TongDoanhThuKL();
+                $totalProductsSold = $this->model->TongSanPhamKL();
             } else {
                 // Mặc định hiển thị theo thứ tự trong cơ sở dữ liệu
                 $datathongke = $this->model->getthongke($offset, $limit);
+                $totalRevenue = $this->model->TongDoanhThuKL();
+                $totalProductsSold = $this->model->TongSanPhamKL();
             }
         }
 
@@ -57,14 +74,15 @@ class Admin extends Controller {
         $monthlyRevenue = $this->model->getMonthlyRevenue();
         $salesByCategory = $this->model->getSalesByCategory();
 
-        $totalRevenue = $this->model->getTotalRevenue();
+
         $totalRevenue = is_numeric($totalRevenue) ? $totalRevenue : 0;
 
-        $totalProductsSold = $this->model->getTotalProductsSold();
+
         $totalProductsSold = is_numeric($totalProductsSold) ? $totalProductsSold : 0;
-        
+
         $totalSalesStaff = $this->model->getTotalSalesStaff();
         $totalAccounts = $this->model->getTotalAccounts();
+        $categories = $this->model->getCategories();
 
         // Đặt dữ liệu và view
         $this->data['content'] = 'blocks/admin/thongke';
@@ -80,6 +98,7 @@ class Admin extends Controller {
 
         $this->data['sub_content']['years'] = $years;
         $this->data['sub_content']['yearlyRevenue'] = $yearlyRevenue;
+        $this->data['sub_content']['categories'] = $categories;
 
         $this->render('layouts/admin_layout', $this->data);
     }

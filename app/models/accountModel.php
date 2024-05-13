@@ -8,20 +8,23 @@ class accountModel
         global $db_config;
         $this->__conn = Connection::getInstance($db_config);
     }
-
     public function getAccountLimit($limit)
     {
-        $sql = "SELECT * FROM account LIMIT $limit";
+        $sql = "SELECT *, password AS hashed_password FROM account LIMIT $limit"; // Lấy cả cột password và đặt tên cho nó là hashed_password
         $result = $this->__conn->query($sql);
         if ($result->num_rows > 0) {
             $data = array();
             while ($row = $result->fetch_assoc()) {
+                // Giải mã mật khẩu đã hash bằng cách sử dụng hàm password_verify()
+                $row['password'] = password_verify($row['hashed_password'], $row['password']) ? $row['hashed_password'] : ''; // Nếu mật khẩu không hợp lệ, gán một giá trị rỗng
+                unset($row['hashed_password']); // Loại bỏ cột hashed_password để không hiển thị trong dữ liệu trả về
                 $data[] = $row;
             }
             return $data;
         }
         return false;
     }
+    
 
 
     public function getAllAccount($rowsPerPage, $offset)
@@ -75,6 +78,7 @@ class accountModel
         }
         return false;
     }
+    
     public function getAllCustomerId()
     {
         $sql = "SELECT customer.customer_id FROM customer";
@@ -105,11 +109,23 @@ class accountModel
         }
         return false;
     }
+    public function getAllCustomer(){
+        $sql = "SELECT customer.customer_id FROM customer";
+        $result = $this->__conn->query($sql);
+        if ($result) {
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
 
     public function getAllEmployee()
     {
         $sql = "SELECT employee.employee_id 
-        FROM employee       
+        FROM employee        
         ";
         $result = $this->__conn->query($sql);
         if ($result) {

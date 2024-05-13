@@ -10,8 +10,8 @@ function displayDataAccount($dataAccount)
     echo '<div class="col">';
     echo '<div class="input-group">';
     echo '<input type="text" class="form-control" placeholder="Search Account " aria-label="Search Account" aria-describedby="search-customer-icon" id="search-account-input">';
-    echo '<button class="btn btn-primary" type="button" id="search-customer-icon" onclick="searchAccount()">Search</button>';
-    echo '<button class="btn btn-success ms-4" type="button" id="add-customer-button" data-bs-toggle="modal" data-bs-target="#addAccount"><i class="bi bi-person-plus-fill"></i>Add Account</button>'; // Thêm nút "Thêm" với icon plus-circle
+    echo '<button class="btn btn-primary" type="button" id="search-customer-icon" onclick="searchAccount()"><i class="bi bi-search"></i></button>';
+    echo '<button class="btn btn-success ms-4" type="button" id="add-customer-button" data-bs-toggle="modal" data-bs-target="#addAccount"><i class="bi bi-person-plus-fill"></i></button>'; // Thêm nút "Thêm" với icon plus-circle
     echo '</div>';
     echo '</div>';  
     echo '</div>';
@@ -40,8 +40,8 @@ function displayDataAccount($dataAccount)
             echo '<td>' . $account['password'] . '</td>'; // Giải mã mật khẩu
             echo '<td>' . $account['role_id'] . '</td>';
             echo '<td class="d-flex justify-content-center">'; // Căn giữa nội dung của cột Function
-            echo '<button class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#updateAccount" onclick="openUpdateModal(\'' . $account['account_id'] . '\')">Update</button>';
-            echo '<button class="btn btn-danger" onclick="deleteProduct(\'' . $account['account_id'] . '\')">Delete</button>';
+            echo '<button class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#updateAccount" onclick="openUpdateModal(\'' . $account['account_id'] . '\')"><i class="bi bi-pencil-square"></i></button>';
+            echo '<button class="btn btn-danger" onclick="deleteProduct(\'' . $account['account_id'] . '\')"><i class="bi bi-person-dash"></i></button>';
             echo '</td>';
 
             echo '</tr>';
@@ -68,7 +68,7 @@ function generatePagination($totalRows, $rowsPerPage, $currentPage)
 
     echo '<li class="page-item">';
     echo '<a class="page-link" href="?page=' . ($currentPage - 1) . '" aria-label="Previous">';
-    echo '<span aria-hidden="true">&laquo;</span>';
+    echo '<i class="bi bi-arrow-left"></i>';
     echo '</a>';
     echo '</li>';
 
@@ -79,7 +79,7 @@ function generatePagination($totalRows, $rowsPerPage, $currentPage)
 
     echo '<li class="page-item">';
     echo '<a class="page-link" href="?page=' . ($currentPage + 1) . '" aria-label="Next">';
-    echo '<span aria-hidden="true">&raquo;</span>';
+    echo '<i class="bi bi-arrow-right"></i>';
     echo '</a>';
     echo '</li>';
 
@@ -117,18 +117,8 @@ generatePagination($totalRows, $rowsPerPage, $currentPage);
                 <div id="accountUpdate" class="text-center">
 
                     <label for="username">Username</label>
-                    <select class="form-select" id="userSelectUpdate" name="userSelect">
-                        <?php
-                        $dataCustomer = $customer->getAllEmployee();
-                        if ($dataCustomer) {
-                            foreach ($dataCustomer as $employee) {
-                                echo '<option value="' . $employee['employee_id'] . '">' . $employee['employee_id'] . '</option>';
-                            }
-                        }
-                        ?>
-                        echo '<option value="admin">admin</option>';
-                        ?>
-                    </select>
+                    <input type="text" class="form-control" id="userSelectUpdate" name="userSelectUpdate" readonly>
+
 
                     <label for="newInput">Password</label>
                     <input type="password" class="form-control" id="password" name="passwordName">

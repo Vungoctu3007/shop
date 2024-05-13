@@ -40,7 +40,7 @@ function deleteProduct(accountId) {
       success: function (response) {
         var data = JSON.parse(response);
         if (data.status === "success") {
-          alert("Sản phẩm đã được xóa thành công");
+          alert("Tài khoản đã được xóa thành công");
           location.reload();
         } else {
           alert(data.message);
@@ -52,15 +52,31 @@ function deleteProduct(accountId) {
     });
   }
 }
+
 function updateAccount() {
   var accountId = $("#accountId").val();
   var username = $("#userSelectUpdate").val();
   var password = $("#password").val();
   var roleId = $("#roleSelectUpdate").val();
 
+  // Kiểm tra nếu username hoặc roleId không được chọn và hiển thị thông báo
+  if (username === "" || username === "Chọn username") {
+    alert("Vui lòng chọn username.");
+    return;
+  }
+
+  if (roleId === "" || roleId === "Chọn quyền") {
+    alert("Vui lòng chọn quyền.");
+    return;
+  }
+
+  // Kiểm tra password không được để trống
   if (!password) {
-    alert("Please enter a password.");
-    return; // Dừng việc thực hiện hàm nếu password trống
+    alert("Vui lòng nhập mật khẩu.");
+    return;
+  } else if (password.length < 6) {
+    alert("Mật khẩu phải có ít nhất 6 ký tự.");
+    return;
   }
 
   $.ajax({
@@ -76,6 +92,7 @@ function updateAccount() {
       var data = JSON.parse(response);
       if (data.status === "success") {
         alert("Account information updated successfully!");
+        location.reload()
         // Nếu cần, thực hiện các hành động phản hồi khác sau khi cập nhật thành công
       } else {
         alert(data.message);
@@ -111,10 +128,10 @@ function addAccountNew() {
   if (!password) {
     alert("Vui lòng nhập mật khẩu.");
     return;
+  } else if (password.length < 6) {
+    alert("Mật khẩu phải có ít nhất 6 ký tự.");
+    return;
   }
-
-  // Mã hóa mật khẩu bằng thuật toán SHA-256
-  // var hashedPassword = sha256(password);
 
   // Perform AJAX request to add account
   $.ajax({
@@ -122,7 +139,7 @@ function addAccountNew() {
     url: "http://localhost/shop/admin/account/add", // URL to add account
     data: {
       username: username,
-      password: password, // Gửi mật khẩu đã được mã hóa
+      password: roleId, // Gửi mật khẩu đã được mã hóa
       role_id: roleId,
     },
     success: function (response) {
@@ -143,7 +160,6 @@ function addAccountNew() {
     },
   });
 }
-
 
 function searchAccount() {
   var keyword = $("#search-account-input").val().trim(); // Lấy từ khóa tìm kiếm và loại bỏ khoảng trắng đầu cuối

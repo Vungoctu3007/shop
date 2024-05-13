@@ -274,6 +274,20 @@
             color: #333;
             margin-bottom: 20px;
         }
+
+    @media print {
+   
+
+    .btn-edit, .btn-delete, .btn-view, .search-container, #deleteConfirmationDialog {
+        display: none;
+    
+    }
+
+   
+
+}
+
+        
     </style>
 </head>
 
@@ -282,7 +296,7 @@
     <!-- Trong orderView.php -->
 
     <div class="search-container">
-        <form action="<?php echo _WEB_ROOT; ?>/bill" method="get">
+        <form action="<?php echo _WEB_ROOT; ?>/admin/order" method="get">
             <label for="start_date">Ngày Bắt Đầu:</label>
             <input type="date" id="start_date" name="start_date" required>
             <label for="end_date">Ngày Kết Thúc:</label>
@@ -303,7 +317,7 @@
                     <th>Tổng Cộng</th>
                     <th>Ngày Mua</th>
                     <th class="action-column">Hành động</th>
-                
+
                 </tr>
             </thead>
             <tbody>
@@ -318,7 +332,7 @@
 
                 // Đảm bảo rằng biến $order được truyền vào từ Controller đúng cách
                 if (!empty($dataorders)) {
-                   
+
                     foreach ($dataorders as $row) {
                         $employee_id = !empty($row['employee_id']) ? htmlspecialchars($row['employee_id'], ENT_QUOTES, 'UTF-8') : 'IDAuto';
                         $jsonData = htmlspecialchars(json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
@@ -353,7 +367,7 @@
                         echo "<a href='javascript:void(0);' class='btn-delete' onclick='confirmDeletion(" . $row['order_id'] . "," . $row['status_order_id'] . ")'>Xóa</a>";
                         echo "<a href='javascript:void(0);' class='btn-view' onclick='showDetails(" . json_encode($row, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ")'>Chi Tiết</a>";
                         echo "</td>";
-                     
+
                         // Thêm nút sửa
 
                     }
@@ -431,6 +445,9 @@
             '<div><strong>Ngày Mua:</strong> ' + orderData.date_buy + '</div>' +
             '<div><strong>Trạng Thái:</strong> ' + getStatusText(orderData.status_order_id) + '</div>';
 
+        // Thêm nút in
+        detailsHtml += '<button onclick="printOrderDetails(' + orderData.order_id + ')">In HĐ</button>';
+
         // Thêm nút Xem Sản Phẩm
         detailsHtml += '<button onclick="showOrderProducts(' + orderData.order_id + ')">Xem Sản Phẩm</button>';
 
@@ -445,9 +462,19 @@
         closeButton.style = 'position: absolute; top: 5px; right: 10px; cursor: pointer;';
         detailDiv.appendChild(closeButton);
 
-
     }
 
+
+    function printOrderDetails(orderId) {
+        var printWindow = window.open('', '', 'height=400,width=600');
+        printWindow.document.write('<html><head><title>In Hóa Đơn</title>');
+        printWindow.document.write('<link rel="stylesheet" type="text/css" href="your-stylesheet.css">'); // Đảm bảo liên kết với tệp CSS nếu cần
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(document.getElementById('orderDetails').innerHTML.replace(/<button.*?>.*?<\/button>/g, '')); // Xóa các nút
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
 
 
 
@@ -473,11 +500,7 @@
 
     }
 
-    // Function to print the specific order
-    function printOrder(orderId) {
-        // Replace with your own logic to fetch the specific invoice
-        window.location.href = _WEB_ROOT + '/in-hoa-don/' + orderId;
-    }
+
 
     function confirmDeletion(orderId, statusId) {
         if (statusId === 3) { // Assuming 3 is the status ID for "Đã Hủy"

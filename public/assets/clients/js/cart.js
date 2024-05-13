@@ -72,7 +72,7 @@ $(document).ready(function() {
 
     }
     
-    function updateTotalOnServer(product_id, cart_id, quantity, quantityInput) {
+    function updateTotalOnServer(product_id, cart_id, quantity) {
         $.ajax({
             url: 'http://localhost/shop/carts/updateQuantity',
             type: 'POST',
@@ -84,7 +84,6 @@ $(document).ready(function() {
             success: function(data) {
                 if (!data.success) {
                     alert('Số lượng sản phẩm không đủ trong kho');
-                    quantityInput.val(data.data);
                 }
             },
             error: function(xhr, status, error) {
