@@ -33,7 +33,7 @@
           </a>
         </li>
         <li class="sidebar-item">
-          <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+          <a class="sidebar-link" href="<?php echo _WEB_ROOT; ?>/admin/employee" aria-expanded="false">
             <span>
               <i class="ti ti-login"></i>
             </span>

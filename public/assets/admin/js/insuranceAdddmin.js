@@ -46,9 +46,9 @@ function create_tableInsurance(data) {
                     <td>${item.product_seri}</td>
                     <td>${item.equipment_replacement}</td>
                     <td>
-                        <select class="form-control" id="status_insurance_${item.insurance_id}" onchange="updateInsuranceStatus(${item.insurance_id}, this.value)" style="background-color: rgb(0, 191, 255); color: white; text-align: center;">
-                            <option value="${optionValue === "0" ? "0" : "1"}" >${statusText}</option>
-                            <option value="${optionValue === "0" ? "1" : "0"}" >${statusText === 'Đã xử lý' ? 'Đang xử lý' : 'Đã xử lý'}</option>
+                        <select class="form-control" id="status_insurance_${item.insurance_id}" onchange="updateInsuranceStatus(${item.insurance_id}, this.value)" style="background-color: rgb(0, 191, 255); color: white; text-align: center; cursor:pointer;">
+                            <option style="cursor:pointer;" value="${optionValue === "0" ? "0" : "1"}" >${statusText}</option>
+                            <option style="cursor:pointer;" value="${optionValue === "0" ? "1" : "0"}" >${statusText === 'Đã xử lý' ? 'Đang xử lý' : 'Đã xử lý'}</option>
                         </select>
                     </td>
                     <td class="d-flex justify-content-center">

@@ -15,6 +15,7 @@ $routes['san-pham'] = 'product/detailProduct';
 $routes['admin/dashboard'] = 'admin/index';
 $routes['admin/product'] = 'Product_Admin/index';
 $routes['admin/insurance'] = 'Insurance_Admin/index';
+$routes['admin/employee'] = 'Employee_Admin/index';
 //phần hóa đơn
 
 $routes['bill'] = 'OrderController/index';

@@ -51,6 +51,7 @@
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/simplebar/dist/simplebar.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/productAddmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/employeeAdmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/insuranceAdddmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
