@@ -42,7 +42,8 @@ $routes['get-order-products/([0-9]+)'] = 'OrderController/getOrderProductDetails
 $routes['admin/statistical'] = 'ThongKeController/index';
 
 
-
+// nhập hàng
+$routes['admin/import'] = 'ImportController';
 
 
 
