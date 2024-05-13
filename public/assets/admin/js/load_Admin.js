@@ -163,7 +163,7 @@ function loadNavigationBasedOnPermissions(taskNamesUser, allTaskNames) {
   logoutNavItem.classList.add("sidebar-item");
   var logoutNavLink = document.createElement("a");
   logoutNavLink.classList.add("sidebar-link");
-  logoutNavLink.href = "http://localhost/shop";
+  logoutNavLink.href = "http://localhost/shop/authenticate/logout";
   logoutNavLink.innerHTML = `
   <span>
     <i class="bi bi-box-arrow-left"></i>

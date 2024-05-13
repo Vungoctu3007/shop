@@ -482,8 +482,7 @@ INSERT INTO task (task_name) VALUES
 ('order management'),
 ('employee management'),
 ('role management'),
-('discount management'),
-('good receipt management'),
+('import management'),
 ('statistical management'),
 ('insurance management'),
 ('client');
