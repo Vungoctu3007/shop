@@ -23,6 +23,7 @@ $routes['admin/product'] = 'Product_Admin/index';
 $routes['admin/role'] =  'RoleController';
 
 $routes['admin/insurance'] = 'Insurance_Admin/index';
+$routes['admin/employee'] = 'Employee_Admin/index';
 $routes['admin/import'] = 'ImportController';
 //phần hóa đơn
 
@@ -41,7 +42,8 @@ $routes['get-order-products/([0-9]+)'] = 'OrderController/getOrderProductDetails
 $routes['admin/statistical'] = 'ThongKeController/index';
 
 
-
+// nhập hàng
+$routes['admin/import'] = 'ImportController';
 
 
 

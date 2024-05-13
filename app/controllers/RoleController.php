@@ -22,15 +22,7 @@ class RoleController extends Controller
         header('Content-Type: application/json');
         echo json_encode(array("data" => $listRole));
     }
-    public function detail2()
-    {
-        $role_id = $_GET['id'];
-        $roleModel = $this->model("roleModel");
-        $listRole = $roleModel->getDetailRoleById($role_id);
-
-        header('Content-Type: application/json');
-        echo json_encode(array("data" => $listRole));
-    }
+   
 
     public function detailRole()
     {
@@ -86,17 +78,17 @@ class RoleController extends Controller
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $roleId = $_POST['role_id'];
-            // $roleName = $_POST['role_name'];
+            $roleName = $_POST['role_name'];
             $tasks = $_POST['tasks'];
-    
+
             if (empty($roleId) || empty($tasks) || !is_array($tasks)) {
                 echo json_encode(array("status" => "error", "message" => "Please provide all necessary data for role update"));
                 return;
             }
-    
+
             $roleModel = $this->model("roleModel");
-            $result = $roleModel->updateRole($roleId, $tasks);
-    
+            $result = $roleModel->updateRole($roleId, $tasks,$roleName);
+
             if ($result) {
                 header('Content-Type: application/json');
                 echo json_encode(array("status" => "success", "message" => "Role updated successfully"));
@@ -107,6 +99,7 @@ class RoleController extends Controller
             echo json_encode(array("status" => "error", "message" => "Invalid request method"));
         }
     }
+
 
     public function delete()
     {

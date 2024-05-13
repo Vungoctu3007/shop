@@ -92,6 +92,7 @@ function updateAccount() {
       var data = JSON.parse(response);
       if (data.status === "success") {
         alert("Account information updated successfully!");
+        location.reload()
         // Nếu cần, thực hiện các hành động phản hồi khác sau khi cập nhật thành công
       } else {
         alert(data.message);
@@ -138,7 +139,7 @@ function addAccountNew() {
     url: "http://localhost/shop/admin/account/add", // URL to add account
     data: {
       username: username,
-      password: roleId, // Gửi mật khẩu đã được mã hóa
+      password: password, // Gửi mật khẩu đã được mã hóa
       role_id: roleId,
     },
     success: function (response) {

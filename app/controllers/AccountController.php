@@ -38,8 +38,8 @@ class AccountController extends Controller
     
             // Add the account to the database
             $accountModel = $this->model("accountModel");
-            $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-            $result = $accountModel->addAccount($username, $hashPassword, $roleId);
+            // $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+            $result = $accountModel->addAccount($username, $password, $roleId);
     
             if ($result) {
                 echo json_encode(array("status" => "success", "message" => "Account added successfully"));
@@ -68,9 +68,9 @@ class AccountController extends Controller
 
             // Update the account in the database
             $accountModel = $this->model("accountModel");
-            $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+            // $hashPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $result = $accountModel->updateAccount($accountId, $username, $hashPassword, $roleId);
+            $result = $accountModel->updateAccount($accountId, $username, $password, $roleId);
 
             if ($result) {
                 echo json_encode(array("status" => "success", "message" => "Account updated successfully"));

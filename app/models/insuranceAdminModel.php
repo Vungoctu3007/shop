@@ -47,7 +47,8 @@ class InsuranceAdminModel
     FROM product_seri pr 
     JOIN detail_order d ON pr.product_seri = d.product_seri 
     JOIN orders o ON d.order_id = o.order_id 
-    JOIN customer c ON o.customer_id = c.customer_id 
+    JOIN account a ON o.account_id = a.account_id
+    JOIN customer c ON a.username = c.customer_id 
     JOIN product p ON p.product_id = pr.product_id
     WHERE pr.product_seri = ?";
 

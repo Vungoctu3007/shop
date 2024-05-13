@@ -109,6 +109,8 @@ function openUpdateModel(roleId) {
 
 function updateRole() {
   var roleId = $("#roleId").val();
+  var roleName = $("#roleNameUpdate").val();
+  console.log(roleName)
   var selectedTasks = [];
 
   $("#taskCheckboxesUpdate input:checked").each(function () {
@@ -117,16 +119,27 @@ function updateRole() {
 
   var selectedTasksWithId = [];
 
+  if(!roleName){
+    alert("Vui lòng nhập tên quyền");
+    return;
+  }
+
   $("#taskCheckboxesUpdate input:checked").each(function () {
     var task_id = $(this).attr("id");
     selectedTasksWithId.push({ task_id: task_id, task_name: $(this).val() });
   });
 
+  if (selectedTasksWithId.length === 0) {
+    alert("Vui lòng chọn ít nhất một task");
+    return;
+  }
+  
   $.ajax({
     type: "POST",
     url: "http://localhost/shop/admin/role/update",
     data: {
       role_id: roleId,
+      role_name: roleName,
       tasks: selectedTasksWithId,
     },
     success: function (response) {
@@ -154,7 +167,7 @@ function updateRole() {
 $(document).ready(function () {
   $("#roleList tbody tr").click(function () {
     var roleId = $(this).find("td:eq(1)").text();
-    // console.log(roleId);
+    console.log(roleId);
     // showListDetailRole(roleId);
   });
 });

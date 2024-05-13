@@ -81,32 +81,41 @@ class OrderController extends Controller
     public function update($orderId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Lấy trạng thái hiện tại của đơn hàng
+            // Lấy thông tin đơn hàng hiện tại
             $currentOrder = $this->model->getOrderById($orderId);
             if (!$currentOrder) {
                 echo "Không tìm thấy đơn hàng.";
                 return;
             }
-
-            // Chỉ cho phép cập nhật nếu trạng thái hiện tại là "Chờ Xử Lý" (Pending) hoặc "Đã Hủy" (Cancelled)
+    
+            // Chỉ cho phép cập nhật nếu trạng thái hiện tại là "Chờ Xử Lý" hoặc "Đã Hủy"
             if ($currentOrder['status_order_id'] != 1 && $currentOrder['status_order_id'] != 3) {
                 echo "Không thể cập nhật đơn hàng đã 'Đã Xử Lý'.";
                 return;
             }
-
+    
+            // Không cho phép cập nhật nếu đơn hàng đã bị hủy
+            if ($currentOrder['status_order_id'] == 3) {
+                echo "Đơn hàng đã hủy không thể thay đổi trạng thái.";
+                return;
+            }
+    
             // Lấy trạng thái mới từ form
             $status_order_id = $_POST['status_order_id']; // Đảm bảo form có trường này
-
+    
+            // Lấy tên người dùng từ session
+            $username = $_SESSION['user_session']['user']['username'];
+    
             // Chuẩn bị dữ liệu để cập nhật
             $orderData = [
-                'status_order_id' => $status_order_id
+                'status_order_id' => $status_order_id,
+                'employee_id' => $username  // Lưu tên người dùng làm employee_id
             ];
-
+    
             // Thực hiện cập nhật thông qua model
             $result = $this->model->updateOrder($orderId, $orderData);
-
             if ($result) {
-                // Chuyển hướng đến danh sách hóa đơn sau khi cập nhật thành công
+                // Chuyển hướng đến danh sách đơn hàng sau khi cập nhật thành công
                 header('Location: ' . _WEB_ROOT . '/admin/order');
                 exit;
             } else {
@@ -114,10 +123,11 @@ class OrderController extends Controller
                 echo "Có lỗi khi cập nhật hóa đơn. Vui lòng thử lại.";
             }
         } else {
-            // Trường hợp không phải POST request, có thể xử lý khác hoặc trả về lỗi
+            // Xử lý trường hợp không phải POST request
             echo "Yêu cầu không hợp lệ.";
         }
     }
+    
 
 
 
