@@ -1,125 +1,178 @@
-<?php 
+<?php
 class CustomerModel
 {
-    private $conn;
-    public function __construct()
+    private $__conn;
+
+    function __construct()
     {
         global $db_config;
-        $this->conn = Connection::getInstance($db_config);
+        $this->__conn = Connection::getInstance($db_config);
     }
-
-public function getAllCustomer($page, $pageSize)
-{
-    $page = (int) $page;
-    $pageSize = (int) $pageSize;
-
-    // Calculate the starting row
-    $start = ($page - 1) * $pageSize;
-    if ($start < 0) {
-        $start = 0;
-    }
-
-    // Prepare the SQL query with LIMIT clause
-    $sql = "SELECT * FROM customer LIMIT ?, ?";
-    $stmt = $this->conn->prepare($sql);
-
-    if ($stmt) {
-        // Bind parameters and execute
-        $stmt->bind_param("ii", $start, $pageSize);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result) {
-            $data = array();
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
-            }
-            $stmt->close();
-
-            // Get total records count
-            $sql_count = "SELECT COUNT(*) as total_records FROM customer";
-            $result_count = $this->conn->query($sql_count);
-            $total_records = $result_count->fetch_assoc()['total_records'];
-
-            // Calculate total pages
-            $total_pages = ceil($total_records / $pageSize);
-
-            return array("data" => $data, "total_page" => $total_pages);
-        } else {
-            $stmt->close();
-            return false;
-        }
-    } else {
-        // Handle SQL statement preparation error
-        return false;
-    }
-}
-
-    public function getEmployeeById($employee_id)
+    public function getAccountLimit($limit)
     {
-        $sql = "SELECT * FROM employee e
-        JOIN account a ON a.username = e.employee_id
-        WHERE employee_id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $employee_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
-        }
-        return false;
-    }
-    public function insertEmployee($employee_name, $employee_phone, $employee_address, $employee_email)
-    {
-        $sql = "INSERT INTO employee(employee_name, employee_phone, employee_address, employee_email) VALUES(?,?,?,?)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssss", $employee_name, $employee_phone, $employee_address, $employee_email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
-        }
-        return false;
-    }
-    public function updateEmployee($employee_id, $employee_name, $employee_phone, $employee_address, $employee_email)
-    {
-        $sql = "UPDATE employee SET employee_name = ?, employee_phone = ?, employee_address = ?, employee_email = ? WHERE employee_id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sssss", $employee_name, $employee_phone, $employee_address, $employee_email, $employee_id);
-        if ($stmt->execute()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public function searchEmployee($keyword, $page)
-    {
-        $page = (int) $page;
-        $pageSize = (int) 8;
-
-        // Calculate the starting row
-        $start = ($page - 1) * $pageSize;
-        if ($start < 0) {
-            $start = 0;
-        }
-        $sql = "SELECT * FROM employee e WHERE e.employee_id LIKE '%$keyword%' 
-        or e.employee_name LIKE '%$keyword%' 
-        or e.employee_phone LIKE '%$keyword%' 
-        or e.employee_email LIKE '%$keyword%'
-        LIMIT $start, $pageSize
-        ";
-        $result = $this->conn->query($sql);
-
+        $sql = "SELECT * FROM customer LIMIT $limit"; // Lấy cả cột password và đặt tên cho nó là hashed_password
+        $result = $this->__conn->query($sql);
         if ($result->num_rows > 0) {
             $data = array();
             while ($row = $result->fetch_assoc()) {
                 $data[] = $row;
             }
             return $data;
-        } else {
-            return false;
         }
+        return false;
+    }
 
+
+
+    public function getAllAccount($rowsPerPage, $offset)
+    {
+        $sql = "SELECT * FROM customer  LIMIT ?, ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("ii", $offset, $rowsPerPage);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+    public function getAccountById($accountId)
+    {
+        $sql = "SELECT * FROM customer  WHERE customer_id = ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("s", $accountId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+        return false;
+    }
+    public function getTotalQuantityAccount()
+    {
+        $sql = "SELECT COUNT(*) AS total FROM customer ";
+        $result = $this->__conn->query($sql);
+        if ($result) {
+            $row = $result->fetch_assoc();
+            return $row['total'];
+        }
+        return false;
+    }
+   
+    public function getAllEmployeeId()
+    {
+        $sql = "SELECT employee.employee_id 
+        FROM employee 
+        LEFT JOIN account ON employee.employee_id = account.username 
+        WHERE account.username IS NULL         
+        ";
+        $result = $this->__conn->query($sql);
+        if ($result) {
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+    public function getAllCustomer()
+    {
+        $sql = "SELECT customer.customer_id FROM customer";
+        $result = $this->__conn->query($sql);
+        if ($result) {
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function getAllEmployee()
+    {
+        $sql = "SELECT employee.employee_id 
+        FROM employee        
+        ";
+        $result = $this->__conn->query($sql);
+        if ($result) {
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+
+    public function updateAccountStatusById($accountId)
+    {
+        $sql = "UPDATE account SET status_account = 0 WHERE account_id = ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("i", $accountId);
+        $stmt->execute();
+        if ($stmt->affected_rows > 0) {
+            return true;
+        }
+        return false;
+    }
+
+
+    public function updateCustomer($customerId,$customerName, $customerAddress, $customerPhone, $customerEmail)
+    {
+        $sql = "UPDATE customer SET customer_name = ?, customer_address = ?, customer_phone = ?, customer_email = ? WHERE customer_id = ?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("sssss", $customerName, $customerAddress, $customerPhone, $customerEmail,$customerId);
+        $stmt->execute();
+        if ($stmt->affected_rows > 0) {
+            return true;
+        }
+        return false;
+    }
+    public function addAccount($username, $password, $roleId)
+    {
+        $sql = "INSERT INTO account (username, password, role_id, status_account) VALUES (?, ?, ?, 1)";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("ssi", $username, $password, $roleId);
+        $stmt->execute();
+        if ($stmt->affected_rows > 0) {
+            return true;
+        }
+        return false;
+    }
+    public function searchCustomer($keyword)
+    {
+        // Thực hiện tìm kiếm account với từ khóa
+        $sql = "SELECT * FROM customer WHERE customer_id LIKE ? OR customer_name LIKE ?";
+        $stmt = $this->__conn->prepare($sql);
+        // Định dạng keyword để tìm kiếm các từ khóa tương tự
+        $keywordLike = "%" . $keyword . "%";
+        $stmt->bind_param("ss", $keywordLike, $keywordLike);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+    public function deleteCustomer($customerId){
+        $sql = "DELETE FROM customer WHERE customer_id =?";
+        $stmt = $this->__conn->prepare($sql);
+        $stmt->bind_param("i", $customerId);
+        $stmt->execute();
+        if ($stmt->affected_rows > 0) {
+            return true;
+        }
+        return false;
     }
 }
-?>

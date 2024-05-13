@@ -45,6 +45,17 @@ function loadPermissionsFromDatabase(taskNamesUser) {
   });
 }
 
+function handleTabClick(event) {
+  // Xóa lớp được chọn từ tất cả các tab
+  var allTabs = document.querySelectorAll(".sidebar-link");
+  allTabs.forEach(function(tab) {
+    tab.classList.remove("active");
+  });
+
+  // Thêm lớp được chọn vào tab được click
+  event.currentTarget.classList.add("active");
+}
+
 function loadNavigationBasedOnPermissions(taskNamesUser, allTaskNames) {
   // Lấy thẻ nav
   var sidebarNav = document.querySelector(".sidebar-nav");
@@ -87,6 +98,12 @@ function loadNavigationBasedOnPermissions(taskNamesUser, allTaskNames) {
   .hide-menu {
     display: inline-block;
   }
+
+  .sidebar-link.active {
+    font-weight: bold; /* Tô đậm tab */
+    color: #000; /* Màu chữ tương ứng */
+    background-color: #f0f0f0; /* Màu nền */
+  }
   `;
 
   // Create a style element and add CSS
@@ -97,18 +114,6 @@ function loadNavigationBasedOnPermissions(taskNamesUser, allTaskNames) {
     style.appendChild(document.createTextNode(css));
   }
   document.getElementsByTagName("head")[0].appendChild(style);
-
-  // Thêm sự kiện click cho các tab
-  function handleTabClick(event) {
-    // Xóa lớp được chọn từ tất cả các tab
-    var allTabs = document.querySelectorAll(".sidebar-link");
-    allTabs.forEach(function (tab) {
-      tab.classList.remove("active");
-    });
-
-    // Thêm lớp được chọn vào tab được click
-    event.currentTarget.classList.add("active");
-  }
 
   // Thêm trang chủ vào đầu danh sách navigation
   var homeNavItem = document.createElement("li");
@@ -126,7 +131,7 @@ function loadNavigationBasedOnPermissions(taskNamesUser, allTaskNames) {
   sidebarNav.appendChild(homeNavItem);
 
   // Duyệt qua danh sách tất cả các tên nhiệm vụ
-  allTaskNames.forEach(function (taskName) {
+  allTaskNames.forEach(function(taskName) {
     // Kiểm tra xem tên nhiệm vụ có trong danh sách của người dùng không
     if (taskNamesUser.includes(taskName)) {
       // Nếu có, thêm mục navigation tương ứng
