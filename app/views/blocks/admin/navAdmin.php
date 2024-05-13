@@ -11,7 +11,7 @@
     </div>
     <!-- Sidebar navigation-->
     <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-   
+    
     </nav>
     <!-- End Sidebar navigation -->
     <!-- Sidebar scroll-->

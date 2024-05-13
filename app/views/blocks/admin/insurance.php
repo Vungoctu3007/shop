@@ -61,7 +61,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-secondary" onclick="createInsurance()">Create</button>
+                <button type="button" class="btn btn-secondary" id="createInsuranceBtn"onclick="createInsurance()">Create</button>
             </div>
         </div>
     </div>

@@ -53,12 +53,15 @@
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/app.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/libs/simplebar/dist/simplebar.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/productAddmin.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/insuranceAdddmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/productAdmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/employeeeAdmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/insuranceAddmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/dashboard.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/roleAdmin.js"></script>
-    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/account_Admin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/accountAdmin.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/loadAdmin.js"></script>
+    <script src="<?php echo _WEB_ROOT; ?>/public/assets/admin/js/customerAdmin.js"></script>
+
     <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
 
 </body>

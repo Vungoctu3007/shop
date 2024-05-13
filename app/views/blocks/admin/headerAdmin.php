@@ -29,7 +29,15 @@
       margin-left: 16px;
 
     }
-  
+
+    .announcement {
+      text-align: center;
+      /* Căn giữa nội dung */
+    }
+
+    .announcement h1 {
+      margin-left: 245px;
+    }
   </style>
 </head>
 
@@ -49,7 +57,7 @@
           </a>
         </li>
       </ul>
-      <div class="announcement">
+      <div class="announcement" style="text-align: center;">
         <h1>Chúc <?php echo $_SESSION['user_session']['user']['username']; ?> một ngày tốt lành!</h1>
       </div>
       <div class="navbar-collapse justify-content-end px-0" id="navbarNav">

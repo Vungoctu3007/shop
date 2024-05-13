@@ -235,6 +235,7 @@
 
     function load_data() {
         $.ajax({
+
             url: `http://localhost/php/shop_2/ImportController/getAll?page=${currentPage}`,
             method: "GET",
             page: {
@@ -285,7 +286,7 @@
     function searchByEmployee() {
 
         $.ajax({
-            url: `http://localhost/php/shop/ImportController/searchGoodReceipt`,
+            url: `http://localhost/shop/ImportController/searchGoodReceipt`,
             method: 'POST',
             data: {
                 searchInput: $('#search').val(),
@@ -298,7 +299,7 @@
 
     function searchByDate() {
         $.ajax({
-            url: 'http://localhost/php/shop/ImportController/searchGoodReceiptByDate',
+            url: 'http://localhost/shop/ImportController/searchGoodReceiptByDate',
             method: 'POST',
             data: {
                 startDate: $('#startDate').val(),
@@ -319,7 +320,7 @@
     // document.querySelector('input[name="detail_person"]').value=data.employee_name.toFixed(2)
     function detail(id) {
         $.ajax({
-            url: "http://localhost/php/shop/ImportController/getAllDetailGoodById",
+            url: "http://localhost/shop/ImportController/getAllDetailGoodById",
             method: 'POST',
             data: {
                 id: id

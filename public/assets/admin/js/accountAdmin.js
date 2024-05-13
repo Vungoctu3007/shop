@@ -1,3 +1,5 @@
+
+
 function openUpdateModal(accountId) {
   $.ajax({
     type: "GET",
@@ -139,7 +141,7 @@ function addAccountNew() {
     url: "http://localhost/shop/admin/account/add", // URL to add account
     data: {
       username: username,
-      password: roleId, // Gửi mật khẩu đã được mã hóa
+      password: password, // Gửi mật khẩu đã được mã hóa
       role_id: roleId,
     },
     success: function (response) {
@@ -161,7 +163,7 @@ function addAccountNew() {
   });
 }
 
-function searchAccount() {
+function searchCustomer() {
   var keyword = $("#search-account-input").val().trim(); // Lấy từ khóa tìm kiếm và loại bỏ khoảng trắng đầu cuối
   console.log(keyword);
 
