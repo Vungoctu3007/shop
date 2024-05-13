@@ -46,9 +46,9 @@ function create_tableInsurance(data) {
                     <td>${item.product_seri}</td>
                     <td>${item.equipment_replacement}</td>
                     <td>
-                        <select class="form-control" id="status_insurance_${item.insurance_id}" onchange="updateInsuranceStatus(${item.insurance_id}, this.value)" style="background-color: rgb(0, 191, 255); color: white; text-align: center;">
-                            <option value="${optionValue === "0" ? "0" : "1"}" >${statusText}</option>
-                            <option value="${optionValue === "0" ? "1" : "0"}" >${statusText === 'Đã xử lý' ? 'Đang xử lý' : 'Đã xử lý'}</option>
+                        <select class="form-control" id="status_insurance_${item.insurance_id}" onchange="updateInsuranceStatus(${item.insurance_id}, this.value)" style="background-color: rgb(0, 191, 255); color: white; text-align: center; cursor:pointer;">
+                            <option style="cursor:pointer;" value="${optionValue === "0" ? "0" : "1"}" >${statusText}</option>
+                            <option style="cursor:pointer;" value="${optionValue === "0" ? "1" : "0"}" >${statusText === 'Đã xử lý' ? 'Đang xử lý' : 'Đã xử lý'}</option>
                         </select>
                     </td>
                     <td class="d-flex justify-content-center">
@@ -182,13 +182,24 @@ function openDetailInsuranceModal() {
             <p style="margin:10px 0 10px 0; color: red"><strong>Status Product:</strong> <span>${data.data.status_product}</span></p>
 
             <div class="mb-3">
-                    <label for="equipmentReplacementInsert" class="form-label">Equipment Replacement:</label>
+                    <label for="equipmentReplacementInsert" class="form-label" id="labelequipement">Equipment Replacement:</label>
                     <input type="text" class="form-control" id="equipmentReplacementInsert" value="" required>
             </div>
             `;
                 $('#product_seri').val(key);
                 $('#detailProductforInsurance').html(html);
                 getEmployeeList();
+                
+                // Check if status is 'Hết bảo hành', then hide the 'Create' button
+                if (data.data.status_product === 'Hết bảo hành') {
+                    $('#createInsuranceBtn').hide();
+                    $('#equipmentReplacementInsert').hide();
+                    $('#labelequipement').hide();
+                } else {
+                    $('#createInsuranceBtn').show();
+                    $('#equipmentReplacementInsert').show();
+                }
+                
                 $('#formDetailProductforInsurance').modal('show'); // Hiển thị modal
             }
             else
@@ -231,6 +242,12 @@ function createInsurance() {
     var order_id = $('#order_id').val();
     var employee_id = $('#employee_id').val();
     var equipment_replacement = $('#equipmentReplacementInsert').val();
+
+    if(!equipment_replacement)
+        {
+            alert("KHÔNG ĐƯỢC BỎ TRỐNG THIẾT BỊ THAY THẾ");
+            return;
+        }
     $.ajax({
         type: "POST",
         url: `http://localhost/shop/Insurance_Admin/insertInsurance`,

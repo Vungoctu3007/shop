@@ -38,9 +38,9 @@ function openDetailProductModal(productId) {
 }
 
 function updateProduct() {
-    var productImage = $('#productImage').val();
-    // Tách tên tệp từ đường dẫn
-    var fileName = productImage.split('\\').pop();
+    var beforeProductImage = $('#BeforeproductImage').val();
+    var productImage = $('#productImage').prop('files')[0];
+    var fileName = productImage ? productImage.name : beforeProductImage;
     var productId = $('#productId').val();
     var productName = $('#productNameUpdate').val();
     var productDescription = $('#productDescriptionUpdate').val();
@@ -96,13 +96,15 @@ function openUpdateModal(productId) {
         success: function (data) {
             toastr.success('Nhập thông tin khách hàng thành công');
             var html = `
-                <div class="row">
-                    <div class="mb-3">
-                        <label for="productImage" class="form-label">Product Image:</label>
-                        <input type="file" class="form-control" id="productImage">
-                        <img id="previewUpdate" src="../public/assets/clients/img/${data.data.product_image}" alt="Image preview" style="max-width: 150px; margin: 10px 0 10px 0;">
-                    </div>
+            <input id="BeforeproductImage" value="${data.data.product_image}" hidden>
+            <div class="row">
+                <div class="mb-3" style="display: flex; align-items: center;">
+                    <label for="productImage" class="form-label">Product Image:</label>
+                    <input type="file" class="form-control" id="productImage" value="${data.data.product_image}"/>
+                    <img id="previewUpdate" src="../public/assets/clients/img/${data.data.product_image}" alt="Image preview" style="max-width: 150px; margin-left: 10px;">
                 </div>
+            </div>
+        
                 <div class="row">
                     <div class="mb-3">
                         <label for="productNameUpdate" class="form-label">Product Name:</label>
@@ -126,23 +128,23 @@ function openUpdateModal(productId) {
                     </div>
                     <div class="mb-3 col-6">
                         <label for="ramUpdate" class="form-label">RAM (Gb):</label>
-                        <input type="text" class="form-control" id="ramUpdate" value="${data.data.product_ram}"  required>
+                        <input type="number" class="form-control" id="ramUpdate" value="${data.data.product_ram}"  required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="mb-3 col-6">
                         <label for="romUpdate" class="form-label">ROM (Gb):</label>
-                        <input type="text" class="form-control" id="romUpdate" value="${data.data.product_rom}"  required>
+                        <input type="number" class="form-control" id="romUpdate" value="${data.data.product_rom}"  required>
                     </div>
                     <div class="mb-3 col-6">
                         <label for="batteryUpdate" class="form-label">Battery (Mh):</label>
-                        <input type="text" class="form-control" id="batteryUpdate" value="${data.data.product_battery}"  required>
+                        <input type="number" class="form-control" id="batteryUpdate" value="${data.data.product_battery}"  required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="mb-3 col-6">
                         <label for="screeUpdate" class="form-label">Screen:</label>
-                        <input type="text" class="form-control" id="screenUpdate" value="${data.data.product_screen}"  required>
+                        <input type="number" class="form-control" id="screenUpdate" value="${data.data.product_screen}"  required>
                     </div>
                     <div class="mb-3 col-6">
                         <label for="madeInUpdate" class="form-label">Made In:</label>
@@ -164,11 +166,21 @@ function openUpdateModal(productId) {
             $('#productUpdates').html(html);
             $('#productId').val(productId);
 
-            $('#productImage').on('input', function (e) {
+            $('#productImage').on('change', function (e) {
                 if (this.files.length) {
-                    $('#previewUpdate').attr('src', URL.createObjectURL(this.files[0])); // Hiển thị hình ảnh preview
+                    var file = this.files[0]; // Lấy file từ input
+                    $('#previewUpdate').attr('src', URL.createObjectURL(file)); // Hiển thị hình ảnh preview
+            
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        var imageUrl = event.target.result;
+                        $('#previewUpdate').attr('src', imageUrl); // Hiển thị hình ảnh
+                    };
+                    reader.readAsDataURL(file); // Chuyển đổi file thành URL dạng data
                 }
             });
+            
+            
 
         },
         error: function (xhr, status, error) {
@@ -178,38 +190,38 @@ function openUpdateModal(productId) {
 }
 
 
-let currentPage = 1;
-let total_page = 0;
+let currentPageProduct = 1;
+let total_pageProduct = 0;
 
 $(function () {
-    load_dataProduct(currentPage);
+    load_dataProduct(currentPageProduct);
 });
 
 function load_next_page() {
-    currentPage++;
-    if (currentPage > total_page) {
-        currentPage = total_page;
+    currentPageProduct++;
+    if (currentPageProduct > total_pageProduct) {
+        currentPageProduct = total_pageProduct;
     }
     if (isSoftPagination()) {
-        loadDataSoft(currentPage); // Chỉ cần truyền trang
+        loadDataSoft(currentPageProduct); // Chỉ cần truyền trang
     } else if ($('#search-product-input').val() !== '') {
-        loadDataSearch(currentPage); // Truyền trang cho tìm kiếm
+        loadDataSearch(currentPageProduct); // Truyền trang cho tìm kiếm
     } else {
-        load_dataProduct(currentPage);
+        load_dataProduct(currentPageProduct);
     }
 }
 
 function load_prev_page() {
-    currentPage--;
-    if (currentPage < 1) {
-        currentPage = 1;
+    currentPageProduct--;
+    if (currentPageProduct < 1) {
+        currentPageProduct = 1;
     }
     if (isSoftPagination()) {
-        loadDataSoft(currentPage); // Chỉ cần truyền trang
+        loadDataSoft(currentPageProduct); // Chỉ cần truyền trang
     } else if ($('#search-product-input').val() !== '') {
-        loadDataSearch(currentPage); // Truyền trang cho tìm kiếm
+        loadDataSearch(currentPageProduct); // Truyền trang cho tìm kiếm
     } else {
-        load_dataProduct(currentPage);
+        load_dataProduct(currentPageProduct);
     }
 }
 
@@ -225,7 +237,7 @@ function load_dataProduct(page) {
         method: "GET",
         success: function (data) {
             create_table(data.data);
-            total_page = data.total_page;
+            total_pageProduct = data.total_page;
             updatePagination();
         }
     });
@@ -233,11 +245,11 @@ function load_dataProduct(page) {
 
 
 function updatePagination() {
-    $('#current_page').text(currentPage);
-    $('#total_pages').text(total_page);
+    $('#current_page').text(currentPageProduct);
+    $('#total_pages').text(total_pageProduct);
     $('#pagination').empty();
-    for (let i = 1; i <= total_page; i++) {
-        $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="load_data(${i})">${i}</a></li>`);
+    for (let i = 1; i <= total_pageProduct; i++) {
+        $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="load_dataProduct(${i})">${i}</a></li>`);
     }
 }
 
@@ -323,7 +335,7 @@ function softInfo(column, page) {
         data: { columnProduct: column, sortOrderProduct: sortOrder[column], page: currentPage },
         success: function (response) {
             create_table(response.data);
-            updatePaginationSort(response.total_page); // Corrected function call
+            updatePaginationSort(response.total_pageProduct); // Corrected function call
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);
@@ -342,18 +354,18 @@ function loadDataSoft(page) {
         data: { columnProduct: column, sortOrderProduct: sortOrderValue, page: page },
         success: function (data) {
             create_table(data.data);
-            updatePaginationSort(data.total_page); // Truyền số trang cần cập nhật
+            updatePaginationSort(data.total_pageProduct); // Truyền số trang cần cập nhật
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);
         }
     });
 }
-function updatePaginationSort(total_page) {
-    $('#current_page').text(currentPage);
-    $('#total_pages').text(total_page);
+function updatePaginationSort(total_ptotal_pageProductage) {
+    $('#current_page').text(currentPageProduct);
+    $('#total_pages').text(total_pageProduct);
     $('#pagination').empty();
-    for (let i = 1; i <= total_page; i++) {
+    for (let i = 1; i <= total_pageProduct; i++) {
         $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="loadDataSoft(${i})">${i}</a></li>`);
     }
 }
@@ -362,18 +374,18 @@ function updatePaginationSort(total_page) {
 function searchProduct() {
     var key = document.getElementById('search-product-input').value;
     if (key.trim() === '') {
-        load_dataProduct(currentPage); // Load lại dữ liệu khi input search trống
+        load_dataProduct(currentPageProduct); // Load lại dữ liệu khi input search trống
         updatePagination();
     } else {
         $.ajax({
             type: 'POST',
             url: 'http://localhost/shop/Product_Admin/search',
-            data: { keyword: key, page: currentPage },
+            data: { keyword: key, page: currentPageProduct },
             success: function (response) {
                 create_table(response.data);
-                currentPage = response.current_page;
-                total_page = response.total_page;
-                updatePaginationSearch(response.current_page, response.total_page);
+                currentPageProduct = response.currentPageProduct;
+                total_pageProduct = response.total_pageProduct;
+                updatePaginationSearch(response.currentPageProduct, response.total_pageProduct);
             },
             error: function (xhr, status, error) {
                 console.error(xhr.responseText);
@@ -386,17 +398,17 @@ function loadDataSearch(page) {
     var key = document.getElementById('search-product-input').value.trim(); // Sử dụng trim để loại bỏ khoảng trắng thừa
 
     if (key === "") {
-        load_dataProduct(currentPage); // Load lại dữ liệu khi input search trống
+        load_dataProduct(currentPageProduct); // Load lại dữ liệu khi input search trống
         updatePagination();
     } else {
         $.ajax({
             url: `http://localhost/shop/Product_Admin/search`,
             method: "POST",
-            data: { keyword: key, page: currentPage },
+            data: { keyword: key, page: currentPageProduct },
             success: function (data) {
                 if (data != "No products found") {
                     create_table(data.data);
-                    updatePaginationSearch(data.current_page, data.total_page); // Truyền số trang cần cập nhật
+                    updatePaginationSearch(data.currentPageProduct, data.total_pageProduct); // Truyền số trang cần cập nhật
                 } else {
                 }
             },
@@ -408,17 +420,17 @@ function loadDataSearch(page) {
 }
 
 
-function updatePaginationSearch(currentPage, total_page) {
-    $('#current_page').text(currentPage);
-    $('#total_pages').text(total_page);
+function updatePaginationSearch(currentPageProduct, total_pageProduct) {
+    $('#current_page').text(currentPageProduct);
+    $('#total_pages').text(total_pageProduct);
     $('#pagination').empty();
 
-    if (total_page > 1) {
-        for (let i = 1; i <= total_page; i++) {
+    if (total_pageProduct > 1) {
+        for (let i = 1; i <= total_pageProduct; i++) {
             $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="loadDataSearch(${i})">${i}</a></li>`);
         }
     } else {
-        $('#pagination').append(`<li class="page-item active"><a class="page-link">${currentPage}</a></li>`);
+        $('#pagination').append(`<li class="page-item active"><a class="page-link">${currentPageProduct}</a></li>`);
     }
 }
 
