@@ -236,6 +236,8 @@ class Authenticate extends Controller
     public function logout()
     {
         Session::delete('user');
+
+        $_SESSION['success_message'] = "Đăng xuất thành công!";
         $response = new Response();
         $response->redirect('authenticate/signin');
     }
