@@ -220,12 +220,13 @@ class ImportController extends Controller
     public function insertGoodReceipt()
     {
         $good_receipt = $this->model('ImportModel');
+        $price_percent=$_POST["price_percent"];
         $supplier_id = $_POST["supplier_id"];
         $employee_id = $_POST["employee_id"];
         $date_good_receipt = $_POST["date_good_receipt"];
         $total = $_POST["total"];
         $product_details = $_POST["product_details"];
-        $good_receipt_id = $good_receipt->insertGoodReceipt($supplier_id, $employee_id, $date_good_receipt, $total, $product_details);
+        $good_receipt_id = $good_receipt->insertGoodReceipt($supplier_id, $employee_id, $date_good_receipt, $total, $product_details,$price_percent);
         if ($good_receipt_id) {
             header('Content-Type: application/json');
             echo json_encode(["success" => "thêm phiếu nhập thành công: " . $good_receipt_id], JSON_UNESCAPED_UNICODE);

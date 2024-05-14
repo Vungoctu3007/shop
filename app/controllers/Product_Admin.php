@@ -36,7 +36,7 @@ class Product_Admin extends Controller
         echo json_encode(array("data" => $product));
     }
 
-    public function deletProduct()
+    public function deleteProduct()
     {
         $product_id = $_POST['product_id'];
         $productModel = $this->model("ProductAdminModel");

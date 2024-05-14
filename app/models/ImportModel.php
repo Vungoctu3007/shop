@@ -175,7 +175,7 @@ class ImportModel extends Connection
             return false;
         }
     }
-    public function insertGoodReceipt($supplier_id, $employee_id, $date_good_receipt, $total, $product_details)
+    public function insertGoodReceipt($supplier_id, $employee_id, $date_good_receipt, $total, $product_details,$price_percent)
     {
 
         try {
@@ -196,7 +196,7 @@ class ImportModel extends Connection
                 $price = $product_detail['price'];
 
                 // Thêm product_seri 
-                $sql_insert_product_seri = "INSERT IGNORE INTO product_seri (product_seri, product_id) VALUES (?, ?)";
+                $sql_insert_product_seri = "INSERT IGNORE INTO product_seri (product_seri, product_id,status) VALUES (?, ?,1)";
                 $stmt_insert_product_seri = $this->connection->prepare($sql_insert_product_seri);
                 $stmt_insert_product_seri->bind_param("si", $product_seri, $product_id);
                 $stmt_insert_product_seri->execute();
@@ -206,9 +206,9 @@ class ImportModel extends Connection
                 $stmt2->execute();
 
                 // Cập nhật số lượng sản phẩm trong bảng product
-                $sql_update_product_quantity = "UPDATE product SET quantity = quantity + 1 WHERE product_id = ?";
+                $sql_update_product_quantity = "UPDATE product SET quantity = quantity + 1,product_price=? WHERE product_id = ?";
                 $stmt_update_product_quantity = $this->connection->prepare($sql_update_product_quantity);
-                $stmt_update_product_quantity->bind_param("i", $product_id);
+                $stmt_update_product_quantity->bind_param("di",$price_percent,$product_id);
                 $stmt_update_product_quantity->execute();
             }
             $this->connection->commit();

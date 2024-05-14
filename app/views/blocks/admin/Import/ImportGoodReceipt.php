@@ -82,15 +82,13 @@
                         <span>Nhân viên:</span>
                     </div>
                     <div class="col-8">
-<<<<<<< HEAD
+
                         <span id="userInfo" data-id="<?php echo $_SESSION['user_session']['user']['username']; ?>" class="ms-2"><?php echo $_SESSION['user_session']['user']['username']; ?></span>
-=======
-<<<<<<< HEAD
-                        <span id="userInfo" data-id="<?php echo $_SESSION['user_session']['user']['account_id']; ?>"><?php echo $_SESSION['user_session']['user']['username']; ?></span>
-=======
-                        <span id="userInfo" data-id="<?php echo $_SESSION['user_session']['user']['account_id']; ?>" class="ms-2"><?php echo $_SESSION['user_session']['user']['username']; ?></span>
->>>>>>> 463e92027e9e8456ab539f2584d75c53be722261
->>>>>>> 42937685096e3ede8bcaa972c4075bb4185c3b45
+
+                       
+
+                      
+
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -531,6 +529,7 @@
         }
         var tableBody = document.querySelector('#load_data tbody');
         let result = [];
+        let price_percent
         // lấy tất cả hàng trong body
         var rows = tableBody.querySelectorAll('tr');
         // chi tiết
@@ -544,10 +543,10 @@
             var seriEnd = row.querySelector('input[name="seri_end"]').value;
             var price = row.querySelector('input[name="price"]').value;
             var total = row.querySelector('input[name="total"]').value;
-            var price_percent = row.querySelector('input[name="price_percent"]').value
+            price_percent = row.querySelector('input[name="price_percent"]').value
 
             // giá bán
-            var price_sale
+            // var price_sale
             // price_percent
             // TEST88000001  TEST88000010  
             // TEST98000001  TEST98000010 
@@ -559,7 +558,7 @@
                 product_details.push({
                     "product_id": productId,
                     "product_seri": seri_product[i],
-                    "price": price_percent,
+                    "price": price,
                 })
             }
 
@@ -575,7 +574,7 @@
                 employee_id: userId,
                 // employee_id: "NV01",
 
-                
+                price_percent:price_percent,
                 date_good_receipt: date_good_receipt,
                 total: total_good_receipt_input,
                 product_details: product_details

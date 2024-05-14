@@ -323,7 +323,7 @@ function confirmdeleteProduct(productId) {
 
 
 
-function deleteProduct() {
+function deleteProduct_de() {
     var productId = $('#productId').val();
     $.ajax({
         type: "POST",
@@ -405,7 +405,7 @@ function searchProduct() {
     } else {
         $.ajax({
             type: 'POST',
-            url: 'http://localhost/shop/Product_Admin/search',
+            url: 'http://localhost/shop/Product_Admin/searchProduct',
             data: { keyword: key, page: currentPageProduct },
             success: function (response) {
                 create_table(response.data);

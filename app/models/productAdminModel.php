@@ -176,50 +176,44 @@ class ProductAdminModel
         $row = $result->fetch_assoc();
         return $row['total_count'];
     }
-
     public function deleteProduct($product_id)
     {
-        // Kiểm tra xem có tồn tại product_seri trong insurance hoặc detail_order không
-        $check_sql = "SELECT COUNT(*) AS count
-                  FROM product_seri s
-                  LEFT JOIN insurance i ON s.product_seri = i.product_seri
-                  LEFT JOIN detail_order d ON s.product_seri = d.product_seri
-                  WHERE s.product_id = ?";
-
-        $stmt_check = $this->conn->prepare($check_sql);
-        $stmt_check->bind_param("i", $product_id);
-        $stmt_check->execute();
-        $result_check = $stmt_check->get_result();
-        $row = $result_check->fetch_assoc();
-
-        // Nếu có sản phẩm_seri tương ứng trong insurance hoặc detail_order, không thể xóa
-        if ($row['count'] > 0) {
-            return false;
-        }
-
-        // Xóa product_seri có status = 1 trước khi xóa product
-        $delete_seri_sql = "UPDATE product_seri SET WHERE product_id = ? AND status = 1";
-
-        $stmt_delete_seri = $this->conn->prepare($delete_seri_sql);
-        $stmt_delete_seri->bind_param("i", $product_id);
-        $stmt_delete_seri->execute();
-
-        // Thực hiện xóa sản phẩm
-        $sql = "DELETE FROM product WHERE product_id = ?";
-
-        $stmt_delete = $this->conn->prepare($sql);
-        $stmt_delete->bind_param("i", $product_id);
-        $stmt_delete->execute();
-
-        // Kiểm tra số hàng bị ảnh hưởng
-        if ($stmt_delete->affected_rows > 0) {
-            return true; // Xóa thành công
+        // Kiểm tra xem có tồn tại product_seri nào với product_id cần xóa hay không
+        $check_seri_sql = "SELECT COUNT(*) AS count FROM product_seri WHERE product_id = ?";
+        $stmt_check_seri = $this->conn->prepare($check_seri_sql);
+        $stmt_check_seri->bind_param("i", $product_id);
+        $stmt_check_seri->execute();
+        $result_check_seri = $stmt_check_seri->get_result();
+        $row_seri = $result_check_seri->fetch_assoc();
+    
+        // Nếu không có product_seri nào liên quan, xóa sản phẩm
+        if ($row_seri['count'] == 0) {
+            $delete_product_sql = "DELETE FROM product WHERE product_id = ?";
+            $stmt_delete_product = $this->conn->prepare($delete_product_sql);
+            $stmt_delete_product->bind_param("i", $product_id);
+            $stmt_delete_product->execute();
+    
+            // Kiểm tra số hàng bị ảnh hưởng
+            if ($stmt_delete_product->affected_rows > 0) {
+                return true; // Xóa thành công sản phẩm
+            } else {
+                return false; // Không có sản phẩm nào bị xóa
+            }
         } else {
-            return false; // Không có gì bị xóa
+            // Chuyển status của product_seri từ 1 sang 2 nếu tồn tại product_seri với status = 1
+            $update_seri_sql = "UPDATE product_seri SET status = 2 WHERE product_id = ? AND status = 1";
+            $stmt_update_seri = $this->conn->prepare($update_seri_sql);
+            $stmt_update_seri->bind_param("i", $product_id);
+            $stmt_update_seri->execute();
+    
+            // Kiểm tra số hàng bị ảnh hưởng
+            if ($stmt_update_seri->affected_rows > 0) {
+                return true; // Cập nhật thành công product_seri từ status 1 sang 2
+            } else {
+                return false; // Không có product_seri nào được cập nhật
+            }
         }
     }
-
-
-
-
+    
+    
 }
