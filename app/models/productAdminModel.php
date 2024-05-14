@@ -197,7 +197,14 @@ class ProductAdminModel
             return false;
         }
 
-        // Nếu không có sản phẩm_seri tương ứng trong insurance hoặc detail_order, thực hiện xóa sản phẩm
+        // Xóa product_seri có status = 1 trước khi xóa product
+        $delete_seri_sql = "UPDATE product_seri SET WHERE product_id = ? AND status = 1";
+
+        $stmt_delete_seri = $this->conn->prepare($delete_seri_sql);
+        $stmt_delete_seri->bind_param("i", $product_id);
+        $stmt_delete_seri->execute();
+
+        // Thực hiện xóa sản phẩm
         $sql = "DELETE FROM product WHERE product_id = ?";
 
         $stmt_delete = $this->conn->prepare($sql);
@@ -211,6 +218,7 @@ class ProductAdminModel
             return false; // Không có gì bị xóa
         }
     }
+
 
 
 

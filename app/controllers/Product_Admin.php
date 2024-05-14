@@ -22,6 +22,7 @@ class Product_Admin extends Controller
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $products = $this->model("ProductAdminModel");
         $Products = $products->getAllProducts($page, $pageSize);
+        $products->updateProductQuantity();
         header('Content-Type: application/json');
         echo json_encode($Products, $page);
     }
@@ -40,6 +41,7 @@ class Product_Admin extends Controller
         $product_id = $_POST['product_id'];
         $productModel = $this->model("ProductAdminModel");
         $product = $productModel->deleteProduct($product_id);
+        $productModel->updateProductQuantity();
         if ($product) {
             echo json_encode(
                 array(
@@ -65,7 +67,7 @@ class Product_Admin extends Controller
         header('Content-Type: application/json');
         echo json_encode(array("data" => $product));
     }
-    public function soft()
+    public function softProduct()
     {
         $sizePage = 4;
         $page = isset($_POST['page']) ? $_POST['page'] : 1;
@@ -98,7 +100,7 @@ class Product_Admin extends Controller
         }
     }
 
-    public function update()
+    public function updateProduct()
     {
         $product_id = $_POST['product_id'] ?? null;
         if ($product_id != null) {
@@ -146,7 +148,7 @@ class Product_Admin extends Controller
         }
     }
 
-    public function search()
+    public function searchProduct()
     {
         $keyword = $_POST['keyword'] ?? '';
         $sizePage = 4;

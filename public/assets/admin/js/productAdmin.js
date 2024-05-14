@@ -81,7 +81,7 @@ function updateProduct() {
 
     $.ajax({
         type: "POST",
-        url: `http://localhost/shop/Product_Admin/update`,
+        url: `http://localhost/shop/Product_Admin/updateProduct`,
         data: {
             product_image: fileName,
             product_id: productId,
@@ -327,7 +327,7 @@ function deleteProduct() {
     var productId = $('#productId').val();
     $.ajax({
         type: "POST",
-        url: `http://localhost/shop/Product_Admin/deletProduct`,
+        url: `http://localhost/shop/Product_Admin/deleteProduct`,
         data: {
             product_id: productId,
         },
@@ -357,8 +357,8 @@ function softInfo(column, page) {
 
     $.ajax({
         type: 'POST',
-        url: 'http://localhost/shop/Product_Admin/soft',
-        data: { columnProduct: column, sortOrderProduct: sortOrder[column], page: currentPage },
+        url: 'http://localhost/shop/Product_Admin/softProduct',
+        data: { columnProduct: column, sortOrderProduct: sortOrder[column], page: currentPageProduct },
         success: function (response) {
             create_table(response.data);
             updatePaginationSort(response.total_pageProduct); // Corrected function call
@@ -375,7 +375,7 @@ function loadDataSoft(page) {
     var sortOrderValue = sortOrder[column];
 
     $.ajax({
-        url: `http://localhost/shop/Product_Admin/soft`,
+        url: `http://localhost/shop/Product_Admin/softProduct`,
         method: "POST",
         data: { columnProduct: column, sortOrderProduct: sortOrderValue, page: page },
         success: function (data) {
@@ -428,7 +428,7 @@ function loadDataSearch(page) {
         updatePagination();
     } else {
         $.ajax({
-            url: `http://localhost/shop/Product_Admin/search`,
+            url: `http://localhost/shop/Product_Admin/searchProduct`,
             method: "POST",
             data: { keyword: key, page: currentPageProduct },
             success: function (data) {

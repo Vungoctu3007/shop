@@ -111,8 +111,7 @@
                 <input id="productId" hidden>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    loadProductTable()>Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-secondary" onclick="deleteProduct()">Delete</button>
             </div>
         </div>
