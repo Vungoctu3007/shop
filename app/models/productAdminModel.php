@@ -81,7 +81,7 @@ class ProductAdminModel
                 SET quantity = (
                     SELECT COUNT(*) 
                     FROM product_seri 
-                    WHERE product_seri.product_id = product.product_id
+                    WHERE product_seri.product_id = product.product_id and product_seri.status = 1
                 )";
 
         $result = $this->conn->query($sql);
