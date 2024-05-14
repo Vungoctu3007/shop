@@ -287,7 +287,7 @@
             <p><?= number_format($totalProductsSold); ?> sản phẩm</p>
         </div>
         <div class="statistic">
-            <h2 >Tổng Nhân Viên Bán Hàng</h2>
+            <h2>Tổng Nhân Viên Bán Hàng</h2>
             <p><?= number_format($totalSalesStaff); ?> nhân viên </p>
         </div>
         <div class="statistic">
@@ -297,16 +297,17 @@
     </div>
 
     <div class="controls-container">
-    
+
         <div class="sort-container">
-            <button class="btn-sort-dropdown">Sắp xếp theo tên</button>
+            <button class="btn-sort-dropdown">Sắp xếp</button>
             <div class="sort-options">
-                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=asc" class="btn-sort">Giá tăng dần</a>
-                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=desc" class="btn-sort">Giá giảm dần</a>
-                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_asc" class="btn-sort">Tên A-Z</a>
-                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_desc" class="btn-sort">Tên Z-A</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=asc<?= '&page=' . $currentPage; ?>" class="btn-sort">Giá tăng dần</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=desc<?= '&page=' . $currentPage; ?>" class="btn-sort">Giá giảm dần</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_asc<?= '&page=' . $currentPage; ?>" class="btn-sort">Tên A-Z</a>
+                <a href="<?= _WEB_ROOT; ?>/admin/statistical?sort=name_desc<?= '&page=' . $currentPage; ?>" class="btn-sort">Tên Z-A</a>
             </div>
         </div>
+
 
 
         <div class="search-container">
