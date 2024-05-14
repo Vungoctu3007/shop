@@ -46,7 +46,7 @@ $routes['admin/statistical'] = 'ThongKeController/index';
 
 
 // nhập hàng
-$routes['admin/import'] = 'ImportController';
+// $routes['admin/import'] = 'ImportController';
 
 //customer
 

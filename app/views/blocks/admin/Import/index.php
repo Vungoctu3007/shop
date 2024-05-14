@@ -1,10 +1,13 @@
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-
-
+ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <div class="container-fluid">
+    <div id="dulieu"></div>
     <div class="row">
         <div class="col-2 ">
             <span>Phiếu Nhập Hàng</span>
@@ -18,14 +21,14 @@
                 </nav>
                 <div class="d-flex">
                     <div class="dropdown ">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <!-- <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Thao Tác
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Xuất Excel</a></li>
                             <li><a class="dropdown-item" href="#">Xuất DPF</a></li>
 
-                        </ul>
+                        </ul> -->
                     </div>
 
                     <a href="<?php echo _WEB_ROOT; ?>/ImportController/ImportGoodReceipt" class="ms-2 btn btn-success">
@@ -36,30 +39,35 @@
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-2 d-flex">
+        <div class="col-8 d-flex">
             <div>
                 <label for="start">Từ:</label>
-                <input onchange="searchByDate()" class="w-100 border-0" type="date" id="startDate" name="trip-start" value="2024-04-20" min="2018-01-01" max="2030-12-31" />
+                <input onchange="searchByDate_good()"  class="w-100 border-0" type="date" id="startDate_good"  value=""  />
             </div>
+            <br />
             <div class="ms-4">
-                <label for="start">Đến:</label>
-                <input onchange="searchByDate()" class="w-100 border-0" type="date" id="endDate" name="trip-start" value="2024-04-20" min="2018-01-01" max="2030-12-31" />
+                <label for="end">Đến:</label>
+                <input onchange="searchByDate_good()" class="w-100 border-0" type="date" id="endDate_good"  value=""  />
             </div>
+          
+            <!-- <div>
+                <button onclick="searchByDate_good()" class="btn btn-success ms-4">lọc</button>
+            </div> -->
         </div>
-        <div class="col-8"></div>
+        <div class="col-2"></div>
         <div class="col-2">
             <nav aria-label="Page navigation example ">
                 <ul class="pagination d-flex justify-content-center ">
                     <li class="page-item">
-                        <a onclick="load_prev_page()" class="page-link  text-dark fs-3" href="#" aria-label="Previous">
+                        <a onclick="load_prev_page_good()" class="page-link  text-dark fs-3" href="#" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <span class="page-link text-dark fw-semibold"> <span id="current_page" class="text-primary"></span>/<span id="total_pages"></span></span>
+                        <span class="page-link text-dark fw-semibold"> <span id="current_page_good" class="text-primary"></span>/<span id="total_pages_good"></span></span>
                     </li>
                     <li class="page-item">
-                        <a onclick="load_next_page()" class="page-link  text-dark fs-3" href="#" aria-label="Next">
+                        <a onclick="load_next_page_good()" class="page-link  text-dark fs-3" href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -70,8 +78,8 @@
     <div class="row">
 
         <div class="col-12">
-            <div id="id"></div>
-            <table id="load_data" class="table table-striped">
+            <!-- <div id="id"></div> -->
+            <table id="load_data_import" class="table table-striped">
                 <thead>
                     <tr>
                         <th>Mã Nhập Hàng</th>
@@ -197,27 +205,42 @@
 </div>
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
 
-        load_data();
+        load_data_good();
     });
 </script>
 <script>
-    let currentPage = 1
-    let total_page = 0
+     function setCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const currentDate = `${year}-${month}-${day}`;
+        
+        document.getElementById('endDate_good').value = currentDate;
+    }
 
-    function create_table(data) {
-        $('#load_data tbody').empty();
+    // Call the function to set the current date when the page loads
+    window.onload = setCurrentDate;
+
+    let currentPage_good = 1
+    let tongsotrang = 0
+    
+    function create_tablee(data) {
+        $('#load_data_import tbody').empty();
+        // $('#load_data_import tbody').text(data)
         data.forEach(item => {
-            $('#load_data tbody').append(`
+            $('#load_data_import tbody').append(`
               <tr>
-               
+
                 <td>${item.good_receipt_id}</td>
                 <td>${item.date_good_receipt}</td>
                 <td>${item.supplier_id}</td>
                 <td>${item.total}</td>
-              
+
                 <td>
                     <button onclick="detail('${item.good_receipt_id}')" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
@@ -227,45 +250,49 @@
                     </button>
                 </td>
               </tr>
-            
+
             `)
         })
     }
 
-    function load_data() {
+    function load_data_good() {
         $.ajax({
-            url: `http://localhost/shop/ImportController/getAll?page=${currentPage}`,
+            url: `http://localhost/shop/ImportController/getAllGood?page=${currentPage_good}`,
             method: "GET",
             page: {
-                currentPage
+                currentPage_good
             },
             success: function(data) {
-                create_table(data.data)
-                total_page = data.total_page
-                updatePagination();
+                create_tablee(data.data)
+                tongsotrang = data.total_page
+                updatePagination_good();
+             
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi khi tải dữ liệu:', status, error);
             }
         });
     }
 
-    function updatePagination() {
-        $('#current_page').text(currentPage);
-        $('#total_pages').text(total_page);
+    function updatePagination_good() {
+        $('#current_page_good').text(currentPage_good);
+        $('#total_pages_good').text(tongsotrang);
     }
 
-    function load_next_page() {
-        currentPage++;
-        if (currentPage > total_page) {
-            currentPage = 1
+    function load_next_page_good() {
+        currentPage_good++;
+        if (currentPage_good > tongsotrang) {
+            currentPage_good = 1
         }
-        load_data();
+        load_data_good();
     }
 
-    function load_prev_page() {
-        currentPage--;
-        if (currentPage < 1) {
-            currentPage = 1
+    function load_prev_page_good() {
+        currentPage_good--;
+        if (currentPage_good < 1) {
+            currentPage_good = 1
         }
-        load_data();
+        load_data_good();
     }
 
     function debounce(callback, delay) {
@@ -289,21 +316,21 @@
                 searchInput: $('#search').val(),
             },
             success: function(data) {
-                create_table(data.data);
+                create_tablee(data.data);
             }
         })
     }
 
-    function searchByDate() {
+    function searchByDate_good() {
         $.ajax({
             url: 'http://localhost/shop/ImportController/searchGoodReceiptByDate',
             method: 'POST',
             data: {
-                startDate: $('#startDate').val(),
-                endDate: $('#endDate').val()
+                startDate: $('#startDate_good').val(),
+                endDate: $('#endDate_good').val()
             },
             success: function(data) {
-                create_table(data.data);
+                create_tablee(data.data);
             }
         })
 
@@ -399,7 +426,7 @@
 
         // Tạo một đối tượng jsPDF
         const doc = new jsPDF();
-        
+
         // Định dạng tiêu đề
         doc.setFontSize(18);
         doc.text('Hóa đơn', 105, 15, null, null, 'center');
@@ -410,7 +437,7 @@
         const lineHeight = 10; // Độ cao của mỗi dòng văn bản
 
         doc.setFontSize(12);
-       
+
         doc.text(`Mã Hóa Đơn : ${invoiceData.goodId}`, 15, currentY);
         currentY += lineHeight; // Cập nhật vị trí y
         doc.text(`Người Nhập Hàng: ${invoiceData.person}`, 15, currentY);

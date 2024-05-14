@@ -22,7 +22,7 @@ class ImportController extends Controller
         $this->render('layouts/admin_layout', $this->data);
         // require_once("app/views/blocks/admin/Import/index.php");
     }
-    public function getAll()
+    public function getAllGood()
     {
         $pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 5;
         $page = isset($_GET['page']) ? $_GET['page'] : 1;

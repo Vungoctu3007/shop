@@ -82,7 +82,7 @@
                         <span>Nhân viên:</span>
                     </div>
                     <div class="col-8">
-                        <span id="userInfo" data-id="<?php echo $_SESSION['user_session']['user']['account_id']; ?>" class="ms-2"><?php echo $_SESSION['user_session']['user']['username']; ?></span>
+                        <span id="userInfo" data-id="<?php echo $_SESSION['user_session']['user']['username']; ?>" class="ms-2"><?php echo $_SESSION['user_session']['user']['username']; ?></span>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -333,7 +333,7 @@
     // load nhà cung cấp
     function load_data_supplier() {
         $.ajax({
-            url: `http://localhost/php/shop/ImportController/getAllSupplier`,
+            url: `http://localhost/shop/ImportController/getAllSupplier`,
             method: "GET",
             success: function(data) {
                 var select = document.getElementById('supplierSelect');
@@ -349,7 +349,7 @@
     // load loại sản phẩm
     function load_data_category() {
         $.ajax({
-            url: `http://localhost/php/shop/ImportController/getAllCategory`,
+            url: `http://localhost/shop/ImportController/getAllCategory`,
             method: "GET",
             success: function(data) {
                 var select = document.getElementById('category_id');
@@ -479,7 +479,7 @@
     // tìm kiếm sản phẩm có trong db
     function searchProduct() {
         $.ajax({
-            url: "http://localhost/php/shop/ImportController/getAllProducts",
+            url: "http://localhost/shop/ImportController/getAllProducts",
             method: 'POST',
             data: {
                 searchInput: $('#search').val(),
@@ -558,11 +558,14 @@
         });
       
         $.ajax({
-            url: "http://localhost/php/shop/ImportController/insertGoodReceipt",
+            url: "http://localhost/shop/ImportController/insertGoodReceipt",
             method: 'POST',
             data: {
                 supplier_id: supplier_id,
                 employee_id: userId,
+                // employee_id: "NV01",
+
+                
                 date_good_receipt: date_good_receipt,
                 total: total_good_receipt_input,
                 product_details: product_details
@@ -576,7 +579,7 @@
                     $('#import_info').modal('hide');
                     loadDataBody.innerHTML = '';
                     load_data_supplier()
-                    window.location.href = "http://localhost/php/shop/ImportController";
+                    // window.location.href = "http://localhost/shop/ImportController";
                 }
             }
 
@@ -717,7 +720,7 @@
 
 
         $.ajax({
-            url: "http://localhost/php/shop/ImportController/addNewProduct",
+            url: "http://localhost/shop/ImportController/addNewProduct",
             method: 'POST',
             data: form_Data,
             processData: false,
@@ -759,7 +762,7 @@
             return;
         }
         $.ajax({
-            url: "http://localhost/php/shop/ImportController/add_category",
+            url: "http://localhost/shop/ImportController/add_category",
             method: 'POST',
             data: {
                 name_category: name_category
@@ -798,7 +801,7 @@
             return;
         }
         $.ajax({
-            url: "http://localhost/php/shop/ImportController/add_supplier",
+            url: "http://localhost/shop/ImportController/add_supplier",
             method: 'POST',
             data: {
                 name_supplier: name_supplier,
@@ -830,7 +833,7 @@
         let formData = new FormData();
         formData.append('excelFile', fileInput.files[0])
         $.ajax({
-            url: "http://localhost/php/shop/ImportController/importExcel",
+            url: "http://localhost/shop/ImportController/importExcel",
             method: 'POST',
             data: formData,
             contentType: false,
