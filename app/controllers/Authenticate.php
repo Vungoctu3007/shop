@@ -40,22 +40,23 @@ class Authenticate extends Controller
     }
 
 
-    public function processSignin() {
+    public function processSignin()
+    {
         if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
             http_response_code(403);
             exit('Access denied');
         }
-        $response = Array();
+        $response = array();
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if(empty($username)) {
+        if (empty($username)) {
             $response += [
                 'error_message_username' => 'Vui lòng nhập vào trường này'
             ];
         }
 
-        if(empty($password)) { 
+        if (empty($password)) {
             $response += [
                 'error_message_password' => 'Vui lòng nhập vào trường này'
             ];
@@ -71,11 +72,11 @@ class Authenticate extends Controller
 
             Session::data('user', $user);
 
-            if($user['role_id'] == 1) {
+            if ($user['role_id'] == 1) {
                 $response += [
                     'redirect_url' => 'http://localhost/shop/admin'
                 ];
-            } else if($user['role_id'] == 3) { 
+            } else if ($user['role_id'] == 3) {
                 Session::data('customer', $customer);
                 $response += [
                     'redirect_url' => 'http://localhost/shop/dien-thoai'
@@ -83,9 +84,12 @@ class Authenticate extends Controller
             } else {
                 $response += [
                     'redirect_url' => 'http://localhost/shop/admin'
-                ]; 
+                ];
             }
-        }else {
+            // Thêm dòng này để sử dụng username từ session
+            $username = $_SESSION['user_session']['user']['username'];
+          
+        } else {
             $response += [
                 'success' => false,
             ];
@@ -99,7 +103,8 @@ class Authenticate extends Controller
         echo json_encode($response);
     }
 
-    public function processSignUp() {
+    public function processSignUp()
+    {
         if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
             http_response_code(403);
             exit('Access denied');
@@ -182,7 +187,7 @@ class Authenticate extends Controller
         } else if ($password !== $confirmPassword) {
             $response['error_messages']['confirmPassword'] = 'Mật khẩu không trùng khớp.';
         }
- 
+
         if (empty($response['error_messages'])) {
             try {
                 $account = $this->model('account');
@@ -207,7 +212,8 @@ class Authenticate extends Controller
     }
 
 
-    public function authenticate_user($username, $password) {
+    public function authenticate_user($username, $password)
+    {
         $user = $this->model('user');
         $dataUser = $user->getAccountByUsername($username, $password);
         return $dataUser;
@@ -230,23 +236,26 @@ class Authenticate extends Controller
     public function logout()
     {
         Session::delete('user');
+
+        $_SESSION['success_message'] = "Đăng xuất thành công!";
         $response = new Response();
         $response->redirect('authenticate/signin');
     }
 
     public function getPermissions()
     {
-        $role_id = $_GET['role_id']; 
+        $role_id = $_GET['role_id'];
         $userModel = $this->model("user");
         $listPermission = $userModel->getPermissionsByRoleId($role_id);
-        
+
         header('Content-Type: application/json');
         echo json_encode(array("status" => "success", "listPermission" => $listPermission));
     }
-    public function getAllPermissions(){
+    public function getAllPermissions()
+    {
         $userModel = $this->model("user");
         $listPermission = $userModel->getAllPermissions();
-        
+
         header('Content-Type: application/json');
         echo json_encode(array("status" => "success", "listPermission" => $listPermission));
     }

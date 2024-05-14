@@ -482,11 +482,9 @@ INSERT INTO task (task_name) VALUES
 ('order management'),
 ('employee management'),
 ('role management'),
-('discount management'),
-('good receipt management'),
+('import management'),
 ('statistical management'),
-('insurance management'),
-('client');
+('insurance management');
 
 -- Thêm dữ liệu vào bảng activity
 INSERT INTO activity (activity_name) VALUES
@@ -507,9 +505,7 @@ INSERT INTO detail_task_role (role_id, task_id, activity_id) VALUES
 (1, 7, 1),
 (1, 8, 1),
 (1, 9, 1),
-(1, 10, 1),
-(2, 1, 1),
-(3, 11, 5);
+(2, 1, 1);
 
 -- Thêm dữ liệu vào bảng good_receipt
 INSERT INTO good_receipt (supplier_id, employee_id, date_good_receipt, total) VALUES
@@ -712,7 +708,13 @@ INSERT INTO detail_good_receipt (good_receipt_id, product_id, product_seri, pric
 
 INSERT INTO account (username, password, role_id, status_account) VALUES
 ('KH01', 'kh01abc', 3, 1),
-('admin', 'admin', 1, 1);
+('admin', 'admin', 1, 1),
+('NV01', 'NV01abc',2, 1),
+('NV02', 'NV02abc',2, 1),
+('NV03', 'NV03abc',2, 1),
+('NV04', 'NV04abc',2, 1),
+('NV05', 'NV05abc',2, 1),
+('NV06', 'NV06abc',2, 1);
 
 ALTER TABLE product_seri
 ADD COLUMN status INT;

@@ -15,6 +15,9 @@ $routes['san-pham'] = 'product/detailProduct';
 $routes['admin/account'] = 'AccountController';
 
 
+$routes['admin/customer'] = 'CustomerController';
+
+
 // Route admin      
 $routes['admin/dashboard'] = 'admin/index';
 $routes['admin/product'] = 'Product_Admin/index';
@@ -43,8 +46,8 @@ $routes['admin/statistical'] = 'ThongKeController/index';
 
 
 // nhập hàng
-$routes['admin/import'] = 'ImportController';
+// $routes['admin/import'] = 'ImportController';
 
-
+//customer
 
 ?>

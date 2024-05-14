@@ -9,10 +9,16 @@
     <link rel="stylesheet" type="text/css" href="<?php echo _WEB_ROOT; ?>/node_modules/toastr/build/toastr.css" >
 </head>
 <body>
-
+<?php if(isset($_SESSION['success_message'])): ?>
+    <div class="alert-message alert alert-success alert-dismissible fade show" role="alert">
+        <?php echo $_SESSION['success_message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['success_message']); ?>
+<?php endif; ?>
 <!-- Section: Design Block -->
 <section class="text-center text-lg-start">
-
+`
   <!-- Jumbotron -->
   <div class="container py-4">
     <div class="row g-0 align-items-center">
@@ -58,7 +64,8 @@
   <!-- Jumbotron -->
 </section>
 <!-- Section: Design Block -->
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/jquery.min.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/node_modules/toastr/toastr.js"></script>
     <script src="<?php echo _WEB_ROOT; ?>/public/assets/clients/js/login.js"></script>
