@@ -113,7 +113,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                     loadProductTable()>Close</button>
-                <button type="button" class="btn btn-secondary" onclick="deleteProduct()">Delete</button>
+                <button type="button" class="btn btn-secondary" onclick="deleteProduct_de()">Delete</button>
             </div>
         </div>
     </div>

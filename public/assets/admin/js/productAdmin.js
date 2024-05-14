@@ -323,7 +323,7 @@ function confirmdeleteProduct(productId) {
 
 
 
-function deleteProduct() {
+function deleteProduct_de() {
     var productId = $('#productId').val();
     $.ajax({
         type: "POST",

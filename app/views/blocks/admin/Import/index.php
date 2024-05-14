@@ -273,8 +273,6 @@
             },
             error: function(xhr, status, error) {
                 console.error('Lỗi khi tải dữ liệu:', status, error);
-
-    
             }
         });
     }
