@@ -4,73 +4,80 @@ class CustomerController extends Controller
     public $data = [], $model = [];
     public function __construct()
     {
-
     }
     public function index()
     {
-        $pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 8;
-        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-        $employees = $this->model("customerModel");
-        $Employees = $employees->getAllCustomer($page, $pageSize);
+        $products = $this->model("customerModel");
+        $Products = $products->getAccountLimit(5);
         $this->data['content'] = 'blocks/admin/customerView';
-        $this->data['sub_content']['dataEmployee'] = $Employees;
+        $this->data['sub_content']['dataProduct'] = $Products;
         $this->render('layouts/admin_layout', $this->data);
     }
-    public function loadDataEmployee()
-    {
-        $pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 8;
-        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-        $employees = $this->model("customerModel");
-        $Employees = $employees->getAllCustomer($page, $pageSize);
-        header('Content-Type: application/json');
-        echo json_encode($Employees, $page);
-    }
 
-    public function detailEmployeeId()
-    {
-        $employee_id = $_GET['employee_id'];
-        $employee = $this->model("EmployeeAdminModel");
-        $Employee = $employee->getEmployeeById($employee_id);
+    public function detail(){
+        $account_id = $_GET['id']; 
+        $accountModel = $this->model("customerModel");
+        $listAccount = $accountModel->getAccountById($account_id);
+        
         header('Content-Type: application/json');
-        echo json_encode(array("data" => $Employee));
+        echo json_encode(array("status" => "success", "customer" => $listAccount));
     }
-
-    public function updateEmployee()
+    
+    
+    public function update()
     {
-        $employee_id = $_POST['employee_id'];
-        $employee_name = $_POST['employee_name'];
-        $employee_phone = $_POST['employee_phone'];
-        $employee_address = $_POST['employee_address'];
-        $employee_email = $_POST['employee_email'];
-        $employees = $this->model("EmployeeAdminModel");
-        $result = $employees->updateEmployee($employee_id, $employee_name, $employee_phone, $employee_address, $employee_email);
-        // Kiểm tra kết quả và trả về JSON response
-        if ($result) {
-            echo json_encode(
-                array(
-                    "status" => "success",
-                    "message" => "Product updated successfully"
-                )
-            );
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Retrieve updated account information from the request
+            $customerId = $_POST['customer_id'];
+            $customerName = $_POST['customer_name'];
+            $customerAddress = $_POST['customer_address'];
+            $customerPhone = $_POST['customer_phone'];
+            $customerEmail = $_POST['customer_email'];
+
+         
+
+            $accountModel = $this->model("customerModel");
+
+            $result = $accountModel->updateCustomer($customerId,$customerName, $customerAddress, $customerPhone, $customerEmail);
+
+            if ($result) {
+                echo json_encode(array("status" => "success", "message" => "Account updated successfully"));
+            } else {
+                echo json_encode(array("status" => "error", "message" => "Failed to update account"));
+            }
         } else {
-            echo json_encode(
-                array(
-                    "status" => "error",
-                    "message" => "Failed to update product"
-                )
-            );
+            echo json_encode(array("status" => "error", "message" => "Invalid request method"));
         }
     }
-    public function searchEmployee()
+
+    public function delete()
     {
-        $keyword = $_POST['keyword'];
-        $page = isset($_POST['page']) ? $_POST['page'] : 1;
-        $employees = $this->model("EmployeeAdminModel");
-        $result = $employees->searchEmployee($keyword, $page);
-        header('Content-Type: application/json');
-        echo json_encode($result, $page);
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $accountId = $_POST['customer_id'];
+
+            $accountModel = $this->model("customerModel");
+            $result = $accountModel->deleteCustomer($accountId);
+
+            if ($result) {
+                echo json_encode(array("status" => "success", "message" => "Account deleted successfully"));
+            } else {
+                echo json_encode(array("status" => "error", "message" => "Failed to account product"));
+            }
+        } else {
+            echo json_encode(array("status" => "error", "message" => "Invalid request method"));
+        }
     }
+    public function search(){
+        $keyword = $_POST['keyword'] ?? '';
+        if ($keyword != null) {
+            $accountModel = $this->model("customerModel");
+            // Thêm từ khóa tìm kiếm vào phương thức searchAccount() của model
+            $listAccount = $accountModel->searchCustomer($keyword);
+            header('Content-Type: application/json');
+            echo json_encode(array("status" => "success", "account" => $listAccount));
+        } else {
+            echo json_encode(array("status" => "error", "message" => "Invalid request method"));
+        }   
+    }
+    
 }
-
-
-?>

@@ -1,234 +1,201 @@
-let currentPageEmployee = 1;
-let total_pageEmployee = 0;
 
-$(function () {
-    load_dataEmployee(currentPageEmployee);
-});
 
-function load_next_pageEmployee() {
-    currentPageEmployee++;
-    if (currentPageEmployee > total_pageEmployee) {
-        currcurrentPageEmployeeentPage = total_pageEmployee;
-    }
-    load_dataEmployee(currentPageEmployee);
+
+function openUpdateModal(customerId) {
+  console.log(customerId);
+  $.ajax({
+    type: "GET",
+    url: `http://localhost/shop/admin/customer/detail?id=${customerId}`,
+    success: function (response) {
+      console.log(response);
+      var customerId = response.customer.customer_id;
+      // console.log(customerId)
+
+      // Đặt giá trị cho input Customer ID
+      $("#customerId").val(response.customer.customer_id);
+
+      // Đặt giá trị cho input Customer Name
+      $("#customerName").val(response.customer.customer_name);
+
+      // Đặt giá trị cho input Customer Address
+      $("#customerAddress").val(response.customer.customer_address);
+
+      // Đặt giá trị cho input Customer Phone
+      $("#customerPhone").val(response.customer.customer_phone);
+
+      // Đặt giá trị cho input Customer Email
+      $("#customerEmail").val(response.customer.customer_email);
+    },
+    error: function (xhr, status, error) {
+      console.error(
+        "An error occurred while retrieving account information: ",
+        error
+      );
+    },
+  });
 }
 
-function load_prev_pageEmployee() {
-    currentPageEmployee--;
-    if (currentPageEmployee < 1) {
-        currentPageEmployee = 1;
-    }
-    load_dataEmployee(currentPageEmployee);
-}
-function create_tableEmployee(data) {
-    $('#dataEmployee').empty();
-
-        data.data.forEach(item => {
-
-            $('#dataEmployee').append(`
-                <tr>
-                    <td>${item.employee_id}</id>
-                    <td>${item.employee_name}</td>
-                    <td>${item.employee_phone}</td>
-                    <td>${item.employee_address}</td>
-                    <td>${item.employee_email}</td>
-                    <td>
-                        <div>
-                            <button class='btn btn-primary me-1 mb-3 w-100 mt-3' data-bs-toggle='modal' data-bs-target='#formDetailEmployee' onclick='openDetailEmployeeModal("${item.employee_id}")'>Detail</button>
-                            <button class='btn btn-primary me-1 mb-3 w-100' data-bs-toggle='modal' data-bs-target='#formUpdateEmployee' onclick='openUpdateEmployeeModal("${item.employee_id}")'>Update</button>
-                        </div>
-                    </td>
-
-                </tr>
-            
-            `)
-        })
-}
-function load_dataEmployee(page) {
+// Hàm xác nhận xóa
+function deleteCustomer(customerId) {
+  if (confirm("Bạn có chắc chắn muốn xóa khách hàng này không?")) {
     $.ajax({
-        url: `http://localhost/shop/Employee_Admin/loadDataEmployee?page=${page}`,
-        method: "GET",
-        success: function (data) {
-            console.log(data);
-            create_tableEmployee(data);
-            total_pageEmployee = data.total_page;
-            console.log(total_pageEmployee);
-            updatePanigationEmployee();
+      type: "POST", // Hoặc có thể sử dụng phương thức DELETE tùy thuộc vào cách bạn cấu hình server
+      url: `http://localhost/shop/admin/customer/delete`, // URL để gửi yêu cầu xóa
+      data: {
+        customer_id: customerId,
+      },
+      success: function (response) {
+        var data = JSON.parse(response);
+        if (data.status == "success") {
+          alert("Khách hàng đã được xóa thành công");
+          location.reload();
+        } else {
+          alert(data.message);
         }
-    })
-}
-
-function updatePanigationEmployee() {
-    $('#current_pageEmployee').text(currentPageEmployee);
-    $('#total_pagesEmployee').text(total_pageEmployee);
-    $('#pagination').empty();
-    for (let i = 1; i <= total_pageEmployee; i++) {
-        $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="load_dataEmployee(${i})">${i}</a></li>`);
-    }
-}
-
-function openDetailEmployeeModal(employee_Id)
-{
-    $.ajax({
-        type: "GET",
-        url: `http://localhost/shop/Employee_Admin/detailEmployeeId?employee_id=${employee_Id}`,
-        success: function (data) {
-            console.log(data.data);
-            var html = `
-                <div class="row mt-3">  
-                    <div class="col-6">
-                        <label for="employee_id" class="form-label">EmployeeID:</label>
-                        <input type="text" class="form-control" id="employee_id" value="${data.data.employee_id}" readonly>
-                    </div>
-                    <div class="col-6">
-                        <label for="employee_name" class="form-label">Employee's Name</label>
-                        <input type="text" class="form-control" id="employee_name" value="${data.data.employee_name}" readonly>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-6">
-                        <label for="employee_phone" class="form-label">Employee's Phone</label>
-                        <input type="text" class="form-control" id="employee_phone" value="${data.data.employee_phone}" readonly>
-                    </div>
-                    <div class="col-6">
-                        <label for="employee_address" class="form-label">Employee's Address</label>
-                        <input type="text" class="form-control" id="employee_address" value="${data.data.employee_address}" readonly>
-                    </div>
-                </div>
-                
-                <div class="row mt-4">
-                    <div class="col-6">
-                        <label for="employee_email" class="form-label">Employee's Email</label>
-                        <input type="text" class="form-control" id="employee_email" value="${data.data.employee_email}" readonly>
-                    </div>
-                    <div class="col-6">
-                        <label for="employee_password" class="form-label">Employee's Password</label>
-                        <input type="text" class="form-control" id="employee_email" value="${data.data.password}" readonly>
-                    </div>
-                </div>
-            `;
-            $('#employeeDetail').html(html);
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
-        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Đã xảy ra lỗi khi xóa khách hàng:", error);
+      },
     });
+  }
 }
 
-function openUpdateEmployeeModal(employee_Id)
-{
+function updateCustomer() {
+  var customerId = $("#customerId").val();
+  var customerName = $("#customerName").val();
+  var customerAddress = $("#customerAddress").val();
+  var customerPhone = $("#customerPhone").val();
+  var customerEmail = $("#customerEmail").val();
+
+  console.log(customerId);
+  // Kiểm tra nếu username hoặc roleId không được chọn và hiển thị thông báo
+  if (!customerName) {
+    alert("Vui lòng nhập tên khách hàng.");
+    return;
+  }
+  if (!customerAddress) {
+    alert("Vui lòng nhập địa chỉ khách hàng.");
+    return;
+  }
+  if (!customerPhone) {
+    alert("Vui lòng nhập số điện thoại khách hàng.");
+    return;
+  }
+  if (!customerEmail) {
+    alert("Vui lòng nhập email khách hàng.");
+    return;
+  }
+
+  $.ajax({
+    type: "POST",
+    url: `http://localhost/shop/admin/customer/update`,
+    data: {
+      customer_id: customerId,
+      customer_name: customerName,
+      customer_address: customerAddress,
+      customer_phone: customerPhone,
+      customer_email: customerEmail,
+    },
+    success: function (response) {
+      var data = JSON.parse(response);
+      if (data.status === "success") {
+        alert("Customer information updated successfully!");
+        location.reload();
+        // Nếu cần, thực hiện các hành động phản hồi khác sau khi cập nhật thành công
+      } else {
+        alert(data.message);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error(
+        "An error occurred while updating account information: ",
+        error
+      );
+    },
+  });
+}
+
+function addAccountNew() {
+  // Retrieve values from the input fields
+  var username = $("#userSelectAdd").val();
+  var password = $("#passwordAdd").val();
+  var roleId = $("#roleSelectAdd").val();
+
+  // Kiểm tra nếu username hoặc roleId không được chọn và hiển thị thông báo
+  if (username === "" || username === "Chọn username") {
+    alert("Vui lòng chọn username.");
+    return;
+  }
+
+  if (roleId === "" || roleId === "Chọn quyền") {
+    alert("Vui lòng chọn quyền.");
+    return;
+  }
+
+  // Kiểm tra password không được để trống
+  if (!password) {
+    alert("Vui lòng nhập mật khẩu.");
+    return;
+  } else if (password.length < 6) {
+    alert("Mật khẩu phải có ít nhất 6 ký tự.");
+    return;
+  }
+
+  // Perform AJAX request to add account
+  $.ajax({
+    type: "POST",
+    url: "http://localhost/shop/admin/account/add", // URL to add account
+    data: {
+      username: username,
+      password: password, // Gửi mật khẩu đã được mã hóa
+      role_id: roleId,
+    },
+    success: function (response) {
+      var data = JSON.parse(response);
+      if (data.status === "success") {
+        alert("Account added successfully.");
+        // Close the form
+        $("#addAccount").modal("hide");
+        // Update the table (assuming you have a function to update the table)
+        location.reload();
+      } else {
+        alert("Error: " + data.message);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("An error occurred while adding account: ", error);
+      alert("Error: Failed to add account. Please try again later.");
+    },
+  });
+}
+
+function searchCustomer() {
+  var keyword = $("#search-customer-input").val().trim(); // Lấy từ khóa tìm kiếm và loại bỏ khoảng trắng đầu cuối
+  console.log(keyword);
+
+  // Thực hiện tìm kiếm chỉ khi có từ khóa
+  if (keyword) {
     $.ajax({
-        type: "GET",
-        url: `http://localhost/shop/Employee_Admin/detailEmployeeId?employee_id=${employee_Id}`,
-        success: function (data) {
-            var html = `
-                <div class="row mt-3">  
-                    <div class="col-6">
-                        <label for="employee_idUpdate" class="form-label">EmployeeID:</label>
-                        <input type="text" class="form-control" id="employee_idUpdate" value="${data.data.employee_id}" readonly>
-                    </div>
-                    <div class="col-6">
-                        <label for="employee_nameUpdate" class="form-label">Employee's Name</label>
-                        <input type="text" class="form-control" id="employee_nameUpdate" value="${data.data.employee_name}" required>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-6">
-                        <label for="employee_phoneUpdate" class="form-label">Employee's Phone</label>
-                        <input type="text" class="form-control" id="employee_phoneUpdate" value="${data.data.employee_phone}" required>
-                    </div>
-                    <div class="col-6">
-                        <label for="employee_addressUpdate" class="form-label">Employee's Address</label>
-                        <input type="text" class="form-control" id="employee_addressUpdate" value="${data.data.employee_address}" required>
-                    </div>
-                </div>
-                
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <label for="employee_emailUpdate" class="form-label">Employee's Email</label>
-                        <input type="email" class="form-control" id="employee_emailUpdate" value="${data.data.employee_email}" required>
-                    </div>
-                </div>
-            `;
-            $('#employeeUpdate').html(html);
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
+      type: "POST",
+      url: "http://localhost/shop/admin/customer/search",
+      data: {
+        keyword: keyword,
+      },
+      success: function (response) {
+        // console.log(response);
+        if (response.status === "success") {
+            displayDataAccount(response.data); // Gọi hàm hiển thị dữ liệu khách hàng với dữ liệu từ kết quả tìm kiếm
+        } else {
+          alert(response.message);
         }
+      },
+      error: function (xhr, status, error) {
+        console.error("An error occurred while searching account: ", error);
+        alert("Error: Failed to search account. Please try again later.");
+      },
     });
+  } else {
+    // Hiển thị thông báo khi từ khóa tìm kiếm không được nhập
+    alert("Please enter a keyword to search.");
+  }
 }
-
-function updateEmployee()
-{
-    var employee_id = $('#employee_idUpdate').val();
-    var employee_name = $('#employee_nameUpdate').val();
-    var employee_phone = $('#employee_phoneUpdate').val();
-    var employee_address = $('#employee_addressUpdate').val();
-    var employee_email= $('#employee_emailUpdate').val();
-
-    $.ajax({
-        type: "POST",
-        url:`http://localhost/shop/Employee_Admin/updateEmployee`,
-        data: {
-            employee_id: employee_id,
-            employee_name: employee_name,
-            employee_phone: employee_phone,
-            employee_address: employee_address,
-            employee_email: employee_email
-        },
-        success: function(response)
-        {
-            var data = JSON.parse(response);
-            if(data.status === 'success')
-                {
-                    alert("Update Employee Successfully");
-                    location.reload();
-                }
-                else
-                {
-                    alert(data.message);
-                }
-        }
-    })
-}
-
-function loadEmployeeSearch(page) {
-    var key = document.getElementById('search-employee-input').value.trim(); // Sử dụng trim để loại bỏ khoảng trắng thừa
-
-    if (key === "") {
-        load_dataProduct(currentPageProduct); // Load lại dữ liệu khi input search trống
-        updatePagination();
-    } else {
-        $.ajax({
-            url: `http://localhost/shop/Product_Admin/search`,
-            method: "POST",
-            data: { keyword: key, page: currentPageEmployee },
-            success: function (data) {
-                if (data != "No products found") {
-                    create_table(data.data);
-                    updatePaginationSearch(data.currentPageProduct, data.total_pageProduct); // Truyền số trang cần cập nhật
-                } else {
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error(xhr.responseText);
-            }
-        });
-    }
-}
-
-function updatePaginationEmployeeSearch(currentPageEmployee, total_pageEmployee) {
-    $('#current_page').text(currentPageEmployee);
-    $('#total_pages').text(total_pageEmployee);
-    $('#pagination').empty();
-
-    if (total_pageProduct > 1) {
-        for (let i = 1; i <= total_pageProduct; i++) {
-            $('#pagination').append(`<li class="page-item"><a class="page-link" onclick="loadDataSearch(${i})">${i}</a></li>`);
-        }
-    } else {
-        $('#pagination').append(`<li class="page-item active"><a class="page-link">${currentPageProduct}</a></li>`);
-    }
-}
-
-

@@ -1,3 +1,5 @@
+
+
 function openUpdateModal(accountId) {
   $.ajax({
     type: "GET",
@@ -161,7 +163,7 @@ function addAccountNew() {
   });
 }
 
-function searchAccount() {
+function searchCustomer() {
   var keyword = $("#search-account-input").val().trim(); // Lấy từ khóa tìm kiếm và loại bỏ khoảng trắng đầu cuối
   console.log(keyword);
 

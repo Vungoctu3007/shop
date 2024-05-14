@@ -86,6 +86,7 @@
                         <th>Ngày Nhập</th>
                         <th>Nhà Cung Cấp</th>
                         <th>Tổng Tiền</th>
+                        <!-- <th></th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -257,12 +258,14 @@
 
     function load_data_good() {
         $.ajax({
+
             url: `http://localhost/shop/ImportController/getAllGood?page=${currentPage_good}`,
             method: "GET",
             page: {
                 currentPage_good
             },
             success: function(data) {
+
                 create_tablee(data.data)
                 tongsotrang = data.total_page
                 updatePagination_good();
@@ -270,6 +273,8 @@
             },
             error: function(xhr, status, error) {
                 console.error('Lỗi khi tải dữ liệu:', status, error);
+
+    
             }
         });
     }

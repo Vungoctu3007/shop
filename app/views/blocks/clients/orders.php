@@ -49,7 +49,7 @@
             <?php endforeach; 
         } elseif(!isset($_SESSION['user_session']['user'])) {
           echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
-          <strong>Bạn cần đăng nhập để xem giỏ hàng!</strong>'
+          <strong>Bạn cần đăng nhập để xem đơn hàng!</strong>'
           .'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>';
         }
