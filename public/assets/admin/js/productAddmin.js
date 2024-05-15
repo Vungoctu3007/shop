@@ -123,6 +123,7 @@ function openUpdateProductModal(productId) {
             toastr.success('Nhập thông tin khách hàng thành công');
             var html = `
             <input id="BeforeproductImage" value="${data.data.product_image}" hidden>
+            <button class='btn btn-primary me-1 mb-3 w-100 mt-3' id="deleteImageButton" onclick='deleteImage()'>Delete Image</button>
             <div class="row">
                 <div class="mb-3" style="display: flex; align-items: center;">
                     <label for="productImage" class="form-label">Product Image:</label>
@@ -213,6 +214,12 @@ function openUpdateProductModal(productId) {
             console.error(xhr.responseText);
         }
     })
+}
+function deleteImage() {
+    const defaultImage = 'img_default.png';
+    $('#productImage').val('');
+    $('#previewUpdate').attr('src', `../public/assets/clients/img/${defaultImage}`);
+    $('#BeforeproductImage').val(defaultImage);  // Cập nhật giá trị cho input ẩn
 }
 
 
